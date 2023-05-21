@@ -1,6 +1,6 @@
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useCurrentUser } from '@lib/context';
-import { useSpaceUser } from '@lib/hooks';
+import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from '@lib/hooks';
 import { Space, SpaceUserRole } from '@prisma/client';
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,9 +14,10 @@ export default function ManageMembers({ space }: Props) {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<SpaceUserRole>(SpaceUserRole.USER);
     const user = useCurrentUser();
-    const { findMany, create: addMember, del: delMember } = useSpaceUser();
+    const create = useCreateSpaceUser();
+    const del = useDeleteSpaceUser();
 
-    const { data: members } = findMany({
+    const { data: members } = useFindManySpaceUser({
         where: {
             spaceId: space.id,
         },
@@ -30,7 +31,7 @@ export default function ManageMembers({ space }: Props) {
 
     const inviteUser = async () => {
         try {
-            const r = await addMember({
+            const r = await create.mutateAsync({
                 data: {
                     user: {
                         connect: {
@@ -64,7 +65,7 @@ export default function ManageMembers({ space }: Props) {
 
     const removeMember = async (id: string) => {
         if (confirm(`Are you sure to remove this member from space?`)) {
-            await delMember({ where: { id } });
+            await del.mutate({ where: { id } });
         }
     };
 
@@ -104,17 +105,12 @@ export default function ManageMembers({ space }: Props) {
 
             <ul className="space-y-2">
                 {members?.map((member) => (
-                    <li
-                        key={member.id}
-                        className="flex flex-wrap w-full justify-between"
-                    >
+                    <li key={member.id} className="flex flex-wrap w-full justify-between">
                         <div className="flex items-center">
                             <div className="hidden md:block mr-2">
                                 <Avatar user={member.user} size={32} />
                             </div>
-                            <p className="w-36 md:w-48 line-clamp-1 mr-2">
-                                {member.user.name || member.user.email}
-                            </p>
+                            <p className="w-36 md:w-48 line-clamp-1 mr-2">{member.user.name || member.user.email}</p>
                             <p>{member.role}</p>
                         </div>
                         <div className="flex items-center">

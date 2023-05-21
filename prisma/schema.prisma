@@ -31,8 +31,10 @@ model Space {
     slug String @unique()
     members SpaceUser[]
     lists List[]
+
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?
+
     @@index([zenstack_transaction])
 }
 
@@ -48,8 +50,10 @@ model SpaceUser {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
     role SpaceUserRole
+
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?
+
     @@index([zenstack_transaction])
     @@unique([userId, spaceId])
 }
@@ -74,8 +78,10 @@ model User {
     lists List[]
     todos Todo[]
     accounts Account[]
+
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?
+
     @@index([zenstack_transaction])
 }
 
@@ -96,8 +102,10 @@ model List {
     title String
     private Boolean @default(false)
     todos Todo[]
+
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?
+
     @@index([zenstack_transaction])
 }
 
@@ -116,8 +124,10 @@ model Todo {
     /// @length(1, 100)
     title String
     completedAt DateTime?
+
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?
+
     @@index([zenstack_transaction])
 }
 
@@ -136,6 +146,5 @@ model Account {
     id_token String?
     session_state String?
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    zenstack_guard Boolean @default(true)
     @@unique([provider, providerAccountId])
 }

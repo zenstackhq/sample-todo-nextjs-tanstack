@@ -3,7 +3,7 @@ import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { createContext } from 'react';
-import { useSpace } from './hooks';
+import { useFindManySpace } from './hooks';
 
 export const UserContext = createContext<User | undefined>(undefined);
 
@@ -16,15 +16,14 @@ export const SpaceContext = createContext<Space | undefined>(undefined);
 
 export function useCurrentSpace() {
     const router = useRouter();
-    const { findMany } = useSpace();
-    const { data: spaces } = findMany(
+    const { data: spaces } = useFindManySpace(
         {
             where: {
                 slug: router.query.slug as string,
             },
         },
         {
-            disabled: !router.query.slug,
+            enabled: !!router.query.slug,
         }
     );
 

@@ -1,6 +1,6 @@
-import { requestHandler } from '@zenstackhq/next';
+import { NextRequestHandler } from '@zenstackhq/server/next';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
-export default requestHandler({
+export default NextRequestHandler({
     getPrisma: (req, res) => getEnhancedPrisma({ req, res }),
 });

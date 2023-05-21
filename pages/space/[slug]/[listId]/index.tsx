@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useCurrentUser } from '@lib/context';
-import { useTodo } from '@lib/hooks';
+import { useCreateTodo, useFindManyTodo } from '@lib/hooks';
 import { List, Space, Todo, User } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
 import TodoComponent from 'components/Todo';
@@ -19,9 +19,9 @@ type Props = {
 export default function TodoList(props: Props) {
     const user = useCurrentUser();
     const [title, setTitle] = useState('');
-    const { findMany, create } = useTodo();
+    const create = useCreateTodo();
 
-    const { data: todos, mutate: refetch } = findMany(
+    const { data: todos } = useFindManyTodo(
         {
             where: { listId: props.list.id },
             include: {
@@ -31,12 +31,12 @@ export default function TodoList(props: Props) {
                 updatedAt: 'desc',
             },
         },
-        { initialData: props.todos, disabled: !props.list }
+        { initialData: props.todos, enabled: !!props.list }
     );
 
     const _createTodo = async () => {
         try {
-            const todo = await create({
+            const todo = await create.mutateAsync({
                 data: {
                     title,
                     owner: { connect: { id: user!.id } },
@@ -45,11 +45,8 @@ export default function TodoList(props: Props) {
             });
             console.log(`Todo created: ${todo}`);
             setTitle('');
-            refetch();
         } catch (err: any) {
-            toast.error(
-                `Failed to create todo: ${err.info?.message || err.message}`
-            );
+            toast.error(`Failed to create todo: ${err.info?.message || err.message}`);
         }
     };
 
@@ -63,9 +60,7 @@ export default function TodoList(props: Props) {
                 <BreadCrumb space={props.space} list={props.list} />
             </div>
             <div className="container w-full flex flex-col items-center pt-12">
-                <h1 className="text-2xl font-semibold mb-4">
-                    {props.list?.title}
-                </h1>
+                <h1 className="text-2xl font-semibold mb-4">{props.list?.title}</h1>
                 <div className="flex space-x-2">
                     <input
                         type="text"
@@ -87,16 +82,7 @@ export default function TodoList(props: Props) {
                 </div>
                 <ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
                     {todos?.map((todo) => (
-                        <TodoComponent
-                            key={todo.id}
-                            value={todo}
-                            updated={() => {
-                                refetch();
-                            }}
-                            deleted={() => {
-                                refetch();
-                            }}
-                        />
+                        <TodoComponent key={todo.id} value={todo} />
                     ))}
                 </ul>
             </div>
@@ -104,11 +90,7 @@ export default function TodoList(props: Props) {
     );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-    req,
-    res,
-    params,
-}) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, params }) => {
     const db = await getEnhancedPrisma({ req, res });
     const space = await db.space.findUnique({
         where: { slug: params!.slug as string },

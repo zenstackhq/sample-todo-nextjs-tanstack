@@ -1,4 +1,4 @@
-import { useUser } from '@lib/hooks';
+import { useCreateUser } from '@lib/hooks';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,12 +8,12 @@ import { toast } from 'react-toastify';
 export default function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { create: signup } = useUser();
+    const signup = useCreateUser();
 
     async function onSignup(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
-            await signup({ data: { email, password } });
+            await signup.mutateAsync({ data: { email, password } });
         } catch (err: any) {
             console.error(err);
             if (err.info?.prisma === true) {
@@ -50,19 +50,10 @@ export default function Signup() {
             </Link>
             <div className="items-center justify-center w-full bg-white rounded-lg shadow lg:flex md:mt-0 lg:max-w-screen-md xl:p-0">
                 <div className="w-full p-6 space-y-8 sm:p-8 lg:p-16">
-                    <h2 className="text-2xl font-bold text-gray-900 lg:text-3xl">
-                        Create a Free Account
-                    </h2>
-                    <form
-                        className="mt-8"
-                        action="#"
-                        onSubmit={(e) => onSignup(e)}
-                    >
+                    <h2 className="text-2xl font-bold text-gray-900 lg:text-3xl">Create a Free Account</h2>
+                    <form className="mt-8" action="#" onSubmit={(e) => onSignup(e)}>
                         <div className="mb-6">
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-sm font-medium text-gray-900"
-                            >
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
                                 Your email
                             </label>
                             <input
@@ -76,10 +67,7 @@ export default function Signup() {
                             />
                         </div>
                         <div className="mb-6">
-                            <label
-                                htmlFor="password"
-                                className="block mb-2 text-sm font-medium text-gray-900"
-                            >
+                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">
                                 Your password
                             </label>
                             <input
@@ -104,15 +92,9 @@ export default function Signup() {
                                 />
                             </div>
                             <div className="ml-3 text-sm">
-                                <label
-                                    htmlFor="remember"
-                                    className="font-medium text-gray-900"
-                                >
+                                <label htmlFor="remember" className="font-medium text-gray-900">
                                     I accept the{' '}
-                                    <a
-                                        href="#"
-                                        className="text-primary-700 hover:underline"
-                                    >
+                                    <a href="#" className="text-primary-700 hover:underline">
                                         Terms and Conditions
                                     </a>
                                 </label>

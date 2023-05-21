@@ -1,5 +1,5 @@
 import { SpaceContext, UserContext } from '@lib/context';
-import { useList } from '@lib/hooks';
+import { useCreateList, useFindManyList } from '@lib/hooks';
 import { List, Space, User } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
 import SpaceMembers from 'components/SpaceMembers';
@@ -7,18 +7,11 @@ import TodoList from 'components/TodoList';
 import WithNavBar from 'components/WithNavBar';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import {
-    ChangeEvent,
-    FormEvent,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
-function CreateDialog({ created }: { created: (list: List) => void }) {
+function CreateDialog() {
     const user = useContext(UserContext);
     const space = useContext(SpaceContext);
 
@@ -26,21 +19,15 @@ function CreateDialog({ created }: { created: (list: List) => void }) {
     const [title, setTitle] = useState('');
     const [_private, setPrivate] = useState(false);
 
-    const { create } = useList();
+    const create = useCreateList();
 
     const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if (modalOpen) {
-            inputRef.current?.focus();
-        }
-    }, [modalOpen]);
 
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
         try {
-            const list = await create({
+            await create.mutateAsync({
                 data: {
                     title,
                     private: _private,
@@ -48,14 +35,8 @@ function CreateDialog({ created }: { created: (list: List) => void }) {
                     owner: { connect: { id: user!.id } },
                 },
             });
-
-            if (created && list) {
-                created(list);
-            }
         } catch (err: any) {
-            toast.error(
-                `Failed to create list: ${err.info?.message || err.message}`
-            );
+            toast.error(`Failed to create list: ${err.info?.message || err.message}`);
             return;
         }
 
@@ -82,16 +63,11 @@ function CreateDialog({ created }: { created: (list: List) => void }) {
             />
             <div className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-xl mb-8">
-                        Create a Todo list
-                    </h3>
+                    <h3 className="font-bold text-xl mb-8">Create a Todo list</h3>
                     <form onSubmit={onSubmit}>
                         <div className="flex flex-col space-y-4">
                             <div className="flex items-center">
-                                <label
-                                    htmlFor="title"
-                                    className="text-lg inline-block w-20"
-                                >
+                                <label htmlFor="title" className="text-lg inline-block w-20">
                                     Title
                                 </label>
                                 <input
@@ -102,38 +78,24 @@ function CreateDialog({ created }: { created: (list: List) => void }) {
                                     ref={inputRef}
                                     className="input input-bordered w-full max-w-xs mt-2"
                                     value={title}
-                                    onChange={(
-                                        e: FormEvent<HTMLInputElement>
-                                    ) => setTitle(e.currentTarget.value)}
+                                    onChange={(e: FormEvent<HTMLInputElement>) => setTitle(e.currentTarget.value)}
                                 />
                             </div>
                             <div className="flex items-center">
-                                <label
-                                    htmlFor="private"
-                                    className="text-lg inline-block w-20"
-                                >
+                                <label htmlFor="private" className="text-lg inline-block w-20">
                                     Private
                                 </label>
                                 <input
                                     id="private"
                                     type="checkbox"
                                     className="checkbox"
-                                    onChange={(
-                                        e: FormEvent<HTMLInputElement>
-                                    ) => setPrivate(e.currentTarget.checked)}
+                                    onChange={(e: FormEvent<HTMLInputElement>) => setPrivate(e.currentTarget.checked)}
                                 />
                             </div>
                         </div>
                         <div className="modal-action">
-                            <input
-                                className="btn btn-primary"
-                                type="submit"
-                                value="Create"
-                            />
-                            <label
-                                htmlFor="create-list-modal"
-                                className="btn btn-outline"
-                            >
+                            <input className="btn btn-primary" type="submit" value="Create" />
+                            <label htmlFor="create-list-modal" className="btn btn-outline">
                                 Cancel
                             </label>
                         </div>
@@ -151,9 +113,8 @@ type Props = {
 
 export default function SpaceHome(props: Props) {
     const router = useRouter();
-    const { findMany } = useList();
 
-    const { data: lists, mutate: refetch } = findMany(
+    const { data: lists } = useFindManyList(
         {
             where: {
                 space: {
@@ -168,10 +129,14 @@ export default function SpaceHome(props: Props) {
             },
         },
         {
-            disabled: !router.query.slug,
+            enabled: !!router.query.slug,
             initialData: props.lists,
         }
     );
+
+    useEffect(() => {
+        console.log('Lists:', JSON.stringify(lists));
+    }, [lists]);
 
     return (
         <WithNavBar>
@@ -180,10 +145,7 @@ export default function SpaceHome(props: Props) {
             </div>
             <div className="p-8">
                 <div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-                    <label
-                        htmlFor="create-list-modal"
-                        className="btn btn-primary btn-wide modal-button"
-                    >
+                    <label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button">
                         Create a list
                     </label>
                     <SpaceMembers />
@@ -192,22 +154,18 @@ export default function SpaceHome(props: Props) {
                 <ul className="flex flex-wrap gap-6">
                     {lists?.map((list) => (
                         <li key={list.id}>
-                            <TodoList value={list} deleted={() => refetch()} />
+                            <TodoList value={list} />
                         </li>
                     ))}
                 </ul>
 
-                <CreateDialog created={() => refetch()} />
+                <CreateDialog />
             </div>
         </WithNavBar>
     );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-    req,
-    res,
-    params,
-}) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, params }) => {
     const db = await getEnhancedPrisma({ req, res });
 
     const space = await db.space.findUnique({

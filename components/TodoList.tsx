@@ -1,5 +1,4 @@
 import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useList } from '@lib/hooks';
 import { List } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
 import { User } from 'next-auth';
@@ -8,23 +7,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Avatar from './Avatar';
 import TimeInfo from './TimeInfo';
+import { useDeleteList } from '@lib/hooks';
 
 type Props = {
     value: List & { owner: User };
-    deleted?: (value: List) => void;
 };
 
-export default function TodoList({ value, deleted }: Props) {
+export default function TodoList({ value }: Props) {
     const router = useRouter();
 
-    const { del } = useList();
+    const del = useDeleteList();
 
     const deleteList = async () => {
         if (confirm('Are you sure to delete this list?')) {
-            await del({ where: { id: value.id } });
-            if (deleted) {
-                deleted(value);
-            }
+            del.mutate({ where: { id: value.id } });
         }
     };
 
@@ -34,9 +30,7 @@ export default function TodoList({ value, deleted }: Props) {
                 <a>
                     <figure>
                         <Image
-                            src={`https://picsum.photos/300/200?r=${customAlphabet(
-                                '0123456789'
-                            )(4)}`}
+                            src={`https://picsum.photos/300/200?r=${customAlphabet('0123456789')(4)}`}
                             width={320}
                             height={200}
                             alt="Cover"
@@ -47,9 +41,7 @@ export default function TodoList({ value, deleted }: Props) {
             <div className="card-body">
                 <Link href={`${router.asPath}/${value.id}`}>
                     <a>
-                        <h2 className="card-title line-clamp-1">
-                            {value.title || 'Missing Title'}
-                        </h2>
+                        <h2 className="card-title line-clamp-1">{value.title || 'Missing Title'}</h2>
                     </a>
                 </Link>
                 <div className="card-actions flex w-full justify-between">

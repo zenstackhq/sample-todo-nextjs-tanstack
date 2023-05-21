@@ -14,9 +14,10 @@ generator js {
     provider = 'prisma-client-js'
 }
 
-plugin reactHooks {
-    provider = '@zenstackhq/react'
+plugin hooks {
+    provider = '@zenstackhq/tanstack-query'
     output = 'lib/hooks'
+    target = 'react'
 }
 
 /*
@@ -59,7 +60,7 @@ model SpaceUser {
     id String @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    space Space @relation(fields:[spaceId], references: [id], onDelete: Cascade)
+    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
     spaceId String
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String

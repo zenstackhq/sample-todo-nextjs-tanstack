@@ -59,7 +59,7 @@ export default function TodoList(props: Props) {
             <div className="px-8 py-2">
                 <BreadCrumb space={props.space} list={props.list} />
             </div>
-            <div className="container w-full flex flex-col items-center pt-12">
+            <div className="container w-full flex flex-col items-center pt-12 mx-auto">
                 <h1 className="text-2xl font-semibold mb-4">{props.list?.title}</h1>
                 <div className="flex space-x-2">
                     <input

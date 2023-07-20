@@ -2,19 +2,22 @@
 import type { Prisma, Todo } from '@prisma/client';
 import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
-import { RequestHandlerContext } from './_helper';
-import { query, postMutation, putMutation, deleteMutation } from './_helper';
+import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
+import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateTodo(
-    options?: Omit<UseMutationOptions<Todo, unknown, Prisma.TodoCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.TodoCreateArgs, Todo>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.TodoCreateArgs, Todo, true>(
         'Todo',
         `${endpoint}/todo/create`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -22,18 +25,16 @@ export function useCreateTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>,
+                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoCreateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Todo,
-                Prisma.TodoGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -43,12 +44,14 @@ export function useCreateManyTodo(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.TodoCreateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.TodoCreateManyArgs, Prisma.BatchPayload, false>(
         'Todo',
         `${endpoint}/todo/createMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -69,36 +72,38 @@ export function useFindManyTodo<T extends Prisma.TodoFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>,
     options?: UseQueryOptions<Array<Prisma.TodoGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Array<Prisma.TodoGetPayload<T>>>('Todo', `${endpoint}/todo/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Array<Prisma.TodoGetPayload<T>>>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.TodoFindUniqueArgs>,
     options?: UseQueryOptions<Prisma.TodoGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.TodoGetPayload<T>>('Todo', `${endpoint}/todo/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.TodoGetPayload<T>>('Todo', `${endpoint}/todo/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstTodo<T extends Prisma.TodoFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindFirstArgs>,
     options?: UseQueryOptions<Prisma.TodoGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.TodoGetPayload<T>>('Todo', `${endpoint}/todo/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.TodoGetPayload<T>>('Todo', `${endpoint}/todo/findFirst`, args, options, fetch);
 }
 
 export function useUpdateTodo(
-    options?: Omit<UseMutationOptions<Todo, unknown, Prisma.TodoUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.TodoUpdateArgs, Todo>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.TodoUpdateArgs, Todo, true>(
         'Todo',
         `${endpoint}/todo/update`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -106,18 +111,16 @@ export function useUpdateTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>,
+                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Todo,
-                Prisma.TodoGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -127,12 +130,14 @@ export function useUpdateManyTodo(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.TodoUpdateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.TodoUpdateManyArgs, Prisma.BatchPayload, false>(
         'Todo',
         `${endpoint}/todo/updateMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -150,15 +155,17 @@ export function useUpdateManyTodo(
 }
 
 export function useUpsertTodo(
-    options?: Omit<UseMutationOptions<Todo, unknown, Prisma.TodoUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.TodoUpsertArgs, Todo>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.TodoUpsertArgs, Todo, true>(
         'Todo',
         `${endpoint}/todo/upsert`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -166,33 +173,33 @@ export function useUpsertTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>,
+                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Todo,
-                Prisma.TodoGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
 }
 
 export function useDeleteTodo(
-    options?: Omit<UseMutationOptions<Todo, unknown, Prisma.TodoDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.TodoDeleteArgs, Todo>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.TodoDeleteArgs, Todo, true>(
         'Todo',
         `${endpoint}/todo/delete`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -200,18 +207,16 @@ export function useDeleteTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>,
+                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Todo,
-                Prisma.TodoGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -221,12 +226,14 @@ export function useDeleteManyTodo(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.TodoDeleteManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.TodoDeleteManyArgs, Prisma.BatchPayload, false>(
         'Todo',
         `${endpoint}/todo/deleteMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -247,8 +254,8 @@ export function useAggregateTodo<T extends Prisma.TodoAggregateArgs>(
     args: Prisma.SelectSubset<T, Prisma.TodoAggregateArgs>,
     options?: UseQueryOptions<Prisma.GetTodoAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.GetTodoAggregateType<T>>('Todo', `${endpoint}/todo/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.GetTodoAggregateType<T>>('Todo', `${endpoint}/todo/aggregate`, args, options, fetch);
 }
 
 export function useGroupByTodo<
@@ -258,7 +265,7 @@ export function useGroupByTodo<
         ? { orderBy: Prisma.TodoGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.TodoGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -305,7 +312,7 @@ export function useGroupByTodo<
     options?: UseQueryOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.TodoGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -316,11 +323,11 @@ export function useGroupByTodo<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.TodoGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -329,7 +336,7 @@ export function useGroupByTodo<
                   }
               >
             : InputErrors
-    >('Todo', `${endpoint}/todo/groupBy`, args, options);
+    >('Todo', `${endpoint}/todo/groupBy`, args, options, fetch);
 }
 
 export function useCountTodo<T extends Prisma.TodoCountArgs>(
@@ -342,12 +349,12 @@ export function useCountTodo<T extends Prisma.TodoCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
             : number
-    >('Todo', `${endpoint}/todo/count`, args, options);
+    >('Todo', `${endpoint}/todo/count`, args, options, fetch);
 }

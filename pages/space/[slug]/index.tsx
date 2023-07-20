@@ -7,7 +7,7 @@ import TodoList from 'components/TodoList';
 import WithNavBar from 'components/WithNavBar';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
@@ -133,10 +133,6 @@ export default function SpaceHome(props: Props) {
             initialData: props.lists,
         }
     );
-
-    useEffect(() => {
-        console.log('Lists:', JSON.stringify(lists));
-    }, [lists]);
 
     return (
         <WithNavBar>

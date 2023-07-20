@@ -2,19 +2,22 @@
 import type { Prisma, Space } from '@prisma/client';
 import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
-import { RequestHandlerContext } from './_helper';
-import { query, postMutation, putMutation, deleteMutation } from './_helper';
+import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
+import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateSpace(
-    options?: Omit<UseMutationOptions<Space, unknown, Prisma.SpaceCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.SpaceCreateArgs, Space>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.SpaceCreateArgs, Space, true>(
         'Space',
         `${endpoint}/space/create`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -22,18 +25,16 @@ export function useCreateSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>,
+                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Space,
-                Prisma.SpaceGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -43,12 +44,14 @@ export function useCreateManySpace(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.SpaceCreateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.SpaceCreateManyArgs, Prisma.BatchPayload, false>(
         'Space',
         `${endpoint}/space/createMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -69,36 +72,38 @@ export function useFindManySpace<T extends Prisma.SpaceFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs>,
     options?: UseQueryOptions<Array<Prisma.SpaceGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Array<Prisma.SpaceGetPayload<T>>>('Space', `${endpoint}/space/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Array<Prisma.SpaceGetPayload<T>>>('Space', `${endpoint}/space/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueSpace<T extends Prisma.SpaceFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.SpaceFindUniqueArgs>,
     options?: UseQueryOptions<Prisma.SpaceGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.SpaceGetPayload<T>>('Space', `${endpoint}/space/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.SpaceGetPayload<T>>('Space', `${endpoint}/space/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstSpace<T extends Prisma.SpaceFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindFirstArgs>,
     options?: UseQueryOptions<Prisma.SpaceGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.SpaceGetPayload<T>>('Space', `${endpoint}/space/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.SpaceGetPayload<T>>('Space', `${endpoint}/space/findFirst`, args, options, fetch);
 }
 
 export function useUpdateSpace(
-    options?: Omit<UseMutationOptions<Space, unknown, Prisma.SpaceUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.SpaceUpdateArgs, Space>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.SpaceUpdateArgs, Space, true>(
         'Space',
         `${endpoint}/space/update`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -106,18 +111,16 @@ export function useUpdateSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>,
+                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUpdateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Space,
-                Prisma.SpaceGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -127,12 +130,14 @@ export function useUpdateManySpace(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.SpaceUpdateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.SpaceUpdateManyArgs, Prisma.BatchPayload, false>(
         'Space',
         `${endpoint}/space/updateMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -150,15 +155,17 @@ export function useUpdateManySpace(
 }
 
 export function useUpsertSpace(
-    options?: Omit<UseMutationOptions<Space, unknown, Prisma.SpaceUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.SpaceUpsertArgs, Space>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.SpaceUpsertArgs, Space, true>(
         'Space',
         `${endpoint}/space/upsert`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -166,33 +173,33 @@ export function useUpsertSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>,
+                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Space,
-                Prisma.SpaceGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
 }
 
 export function useDeleteSpace(
-    options?: Omit<UseMutationOptions<Space, unknown, Prisma.SpaceDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.SpaceDeleteArgs, Space>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.SpaceDeleteArgs, Space, true>(
         'Space',
         `${endpoint}/space/delete`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -200,18 +207,16 @@ export function useDeleteSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>,
+                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Space,
-                Prisma.SpaceGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -221,12 +226,14 @@ export function useDeleteManySpace(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.SpaceDeleteManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.SpaceDeleteManyArgs, Prisma.BatchPayload, false>(
         'Space',
         `${endpoint}/space/deleteMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -247,8 +254,8 @@ export function useAggregateSpace<T extends Prisma.SpaceAggregateArgs>(
     args: Prisma.SelectSubset<T, Prisma.SpaceAggregateArgs>,
     options?: UseQueryOptions<Prisma.GetSpaceAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.GetSpaceAggregateType<T>>('Space', `${endpoint}/space/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.GetSpaceAggregateType<T>>('Space', `${endpoint}/space/aggregate`, args, options, fetch);
 }
 
 export function useGroupBySpace<
@@ -258,7 +265,7 @@ export function useGroupBySpace<
         ? { orderBy: Prisma.SpaceGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.SpaceGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -305,7 +312,7 @@ export function useGroupBySpace<
     options?: UseQueryOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.SpaceGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.SpaceGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -316,11 +323,11 @@ export function useGroupBySpace<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.SpaceGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.SpaceGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -329,7 +336,7 @@ export function useGroupBySpace<
                   }
               >
             : InputErrors
-    >('Space', `${endpoint}/space/groupBy`, args, options);
+    >('Space', `${endpoint}/space/groupBy`, args, options, fetch);
 }
 
 export function useCountSpace<T extends Prisma.SpaceCountArgs>(
@@ -342,12 +349,12 @@ export function useCountSpace<T extends Prisma.SpaceCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType>
             : number
-    >('Space', `${endpoint}/space/count`, args, options);
+    >('Space', `${endpoint}/space/count`, args, options, fetch);
 }

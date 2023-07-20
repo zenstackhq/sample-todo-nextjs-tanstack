@@ -2,19 +2,22 @@
 import type { Prisma, User } from '@prisma/client';
 import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
-import { RequestHandlerContext } from './_helper';
-import { query, postMutation, putMutation, deleteMutation } from './_helper';
+import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
+import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateUser(
-    options?: Omit<UseMutationOptions<User, unknown, Prisma.UserCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.UserCreateArgs, User>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.UserCreateArgs, User, true>(
         'User',
         `${endpoint}/user/create`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -22,18 +25,16 @@ export function useCreateUser(
             args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>,
+                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserCreateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                User,
-                Prisma.UserGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -43,12 +44,14 @@ export function useCreateManyUser(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.UserCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.UserCreateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.UserCreateManyArgs, Prisma.BatchPayload, false>(
         'User',
         `${endpoint}/user/createMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -69,36 +72,38 @@ export function useFindManyUser<T extends Prisma.UserFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.UserFindManyArgs>,
     options?: UseQueryOptions<Array<Prisma.UserGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Array<Prisma.UserGetPayload<T>>>('User', `${endpoint}/user/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Array<Prisma.UserGetPayload<T>>>('User', `${endpoint}/user/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueUser<T extends Prisma.UserFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserFindUniqueArgs>,
     options?: UseQueryOptions<Prisma.UserGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.UserGetPayload<T>>('User', `${endpoint}/user/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.UserGetPayload<T>>('User', `${endpoint}/user/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstUser<T extends Prisma.UserFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>,
     options?: UseQueryOptions<Prisma.UserGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.UserGetPayload<T>>('User', `${endpoint}/user/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.UserGetPayload<T>>('User', `${endpoint}/user/findFirst`, args, options, fetch);
 }
 
 export function useUpdateUser(
-    options?: Omit<UseMutationOptions<User, unknown, Prisma.UserUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.UserUpdateArgs, User>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.UserUpdateArgs, User, true>(
         'User',
         `${endpoint}/user/update`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -106,18 +111,16 @@ export function useUpdateUser(
             args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>,
+                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserUpdateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                User,
-                Prisma.UserGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -127,12 +130,14 @@ export function useUpdateManyUser(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.UserUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.UserUpdateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.UserUpdateManyArgs, Prisma.BatchPayload, false>(
         'User',
         `${endpoint}/user/updateMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -150,15 +155,17 @@ export function useUpdateManyUser(
 }
 
 export function useUpsertUser(
-    options?: Omit<UseMutationOptions<User, unknown, Prisma.UserUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.UserUpsertArgs, User>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.UserUpsertArgs, User, true>(
         'User',
         `${endpoint}/user/upsert`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -166,33 +173,33 @@ export function useUpsertUser(
             args: Prisma.SelectSubset<T, Prisma.UserUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>,
+                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserUpsertArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                User,
-                Prisma.UserGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
 }
 
 export function useDeleteUser(
-    options?: Omit<UseMutationOptions<User, unknown, Prisma.UserDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.UserDeleteArgs, User>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.UserDeleteArgs, User, true>(
         'User',
         `${endpoint}/user/delete`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -200,18 +207,16 @@ export function useDeleteUser(
             args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>,
+                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserDeleteArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                User,
-                Prisma.UserGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -221,12 +226,14 @@ export function useDeleteManyUser(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.UserDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.UserDeleteManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.UserDeleteManyArgs, Prisma.BatchPayload, false>(
         'User',
         `${endpoint}/user/deleteMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -247,8 +254,8 @@ export function useAggregateUser<T extends Prisma.UserAggregateArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserAggregateArgs>,
     options?: UseQueryOptions<Prisma.GetUserAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.GetUserAggregateType<T>>('User', `${endpoint}/user/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.GetUserAggregateType<T>>('User', `${endpoint}/user/aggregate`, args, options, fetch);
 }
 
 export function useGroupByUser<
@@ -258,7 +265,7 @@ export function useGroupByUser<
         ? { orderBy: Prisma.UserGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.UserGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -305,7 +312,7 @@ export function useGroupByUser<
     options?: UseQueryOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.UserGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.UserGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.UserGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -316,11 +323,11 @@ export function useGroupByUser<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.UserGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.UserGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.UserGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -329,7 +336,7 @@ export function useGroupByUser<
                   }
               >
             : InputErrors
-    >('User', `${endpoint}/user/groupBy`, args, options);
+    >('User', `${endpoint}/user/groupBy`, args, options, fetch);
 }
 
 export function useCountUser<T extends Prisma.UserCountArgs>(
@@ -342,12 +349,12 @@ export function useCountUser<T extends Prisma.UserCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.UserCountAggregateOutputType>
             : number
-    >('User', `${endpoint}/user/count`, args, options);
+    >('User', `${endpoint}/user/count`, args, options, fetch);
 }

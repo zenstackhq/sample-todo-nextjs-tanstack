@@ -2,19 +2,22 @@
 import type { Prisma, Account } from '@prisma/client';
 import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
-import { RequestHandlerContext } from './_helper';
-import { query, postMutation, putMutation, deleteMutation } from './_helper';
+import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
+import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateAccount(
-    options?: Omit<UseMutationOptions<Account, unknown, Prisma.AccountCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.AccountCreateArgs, Account>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.AccountCreateArgs, Account, true>(
         'Account',
         `${endpoint}/account/create`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -22,18 +25,16 @@ export function useCreateAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>,
+                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountCreateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Account,
-                Prisma.AccountGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -43,12 +44,14 @@ export function useCreateManyAccount(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.AccountCreateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.AccountCreateManyArgs, Prisma.BatchPayload, false>(
         'Account',
         `${endpoint}/account/createMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -69,36 +72,38 @@ export function useFindManyAccount<T extends Prisma.AccountFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindManyArgs>,
     options?: UseQueryOptions<Array<Prisma.AccountGetPayload<T>>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Array<Prisma.AccountGetPayload<T>>>('Account', `${endpoint}/account/findMany`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Array<Prisma.AccountGetPayload<T>>>('Account', `${endpoint}/account/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueAccount<T extends Prisma.AccountFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.AccountFindUniqueArgs>,
     options?: UseQueryOptions<Prisma.AccountGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.AccountGetPayload<T>>('Account', `${endpoint}/account/findUnique`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.AccountGetPayload<T>>('Account', `${endpoint}/account/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstAccount<T extends Prisma.AccountFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.AccountFindFirstArgs>,
     options?: UseQueryOptions<Prisma.AccountGetPayload<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.AccountGetPayload<T>>('Account', `${endpoint}/account/findFirst`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.AccountGetPayload<T>>('Account', `${endpoint}/account/findFirst`, args, options, fetch);
 }
 
 export function useUpdateAccount(
-    options?: Omit<UseMutationOptions<Account, unknown, Prisma.AccountUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.AccountUpdateArgs, Account>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.AccountUpdateArgs, Account, true>(
         'Account',
         `${endpoint}/account/update`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -106,18 +111,16 @@ export function useUpdateAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>,
+                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Account,
-                Prisma.AccountGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -127,12 +130,14 @@ export function useUpdateManyAccount(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.AccountUpdateManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = putMutation<Prisma.AccountUpdateManyArgs, Prisma.BatchPayload, false>(
         'Account',
         `${endpoint}/account/updateMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -150,15 +155,17 @@ export function useUpdateManyAccount(
 }
 
 export function useUpsertAccount(
-    options?: Omit<UseMutationOptions<Account, unknown, Prisma.AccountUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.AccountUpsertArgs, Account>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = postMutation<Prisma.AccountUpsertArgs, Account, true>(
         'Account',
         `${endpoint}/account/upsert`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -166,33 +173,33 @@ export function useUpsertAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>,
+                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Account,
-                Prisma.AccountGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
 }
 
 export function useDeleteAccount(
-    options?: Omit<UseMutationOptions<Account, unknown, Prisma.AccountDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.AccountDeleteArgs, Account>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.AccountDeleteArgs, Account, true>(
         'Account',
         `${endpoint}/account/delete`,
         options,
+        fetch,
         invalidateQueries,
+        true,
     );
     const mutation = {
         ..._mutation,
@@ -200,18 +207,16 @@ export function useDeleteAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>,
+                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>
                 >,
                 'mutationFn'
             >,
         ) {
-            return (await _mutation.mutateAsync(args, options as any)) as Prisma.CheckSelect<
-                T,
-                Account,
-                Prisma.AccountGetPayload<T>
-            >;
+            return (await _mutation.mutateAsync(args, options as any)) as
+                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | undefined;
         },
     };
     return mutation;
@@ -221,12 +226,14 @@ export function useDeleteManyAccount(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.AccountDeleteManyArgs, Prisma.BatchPayload>(
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    const _mutation = deleteMutation<Prisma.AccountDeleteManyArgs, Prisma.BatchPayload, false>(
         'Account',
         `${endpoint}/account/deleteMany`,
         options,
+        fetch,
         invalidateQueries,
+        false,
     );
     const mutation = {
         ..._mutation,
@@ -247,8 +254,8 @@ export function useAggregateAccount<T extends Prisma.AccountAggregateArgs>(
     args: Prisma.SelectSubset<T, Prisma.AccountAggregateArgs>,
     options?: UseQueryOptions<Prisma.GetAccountAggregateType<T>>,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
-    return query<Prisma.GetAccountAggregateType<T>>('Account', `${endpoint}/account/aggregate`, args, options);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return query<Prisma.GetAccountAggregateType<T>>('Account', `${endpoint}/account/aggregate`, args, options, fetch);
 }
 
 export function useGroupByAccount<
@@ -258,7 +265,7 @@ export function useGroupByAccount<
         ? { orderBy: Prisma.AccountGroupByArgs['orderBy'] }
         : { orderBy?: Prisma.AccountGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends Prisma.TupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
     HavingFields extends Prisma.GetHavingFields<T['having']>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
@@ -305,7 +312,7 @@ export function useGroupByAccount<
     options?: UseQueryOptions<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.AccountGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.AccountGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -316,11 +323,11 @@ export function useGroupByAccount<
             : InputErrors
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         {} extends InputErrors
             ? Array<
-                  Prisma.PickArray<Prisma.AccountGroupByOutputType, T['by']> & {
+                  PickEnumerable<Prisma.AccountGroupByOutputType, T['by']> & {
                       [P in keyof T & keyof Prisma.AccountGroupByOutputType]: P extends '_count'
                           ? T[P] extends boolean
                               ? number
@@ -329,7 +336,7 @@ export function useGroupByAccount<
                   }
               >
             : InputErrors
-    >('Account', `${endpoint}/account/groupBy`, args, options);
+    >('Account', `${endpoint}/account/groupBy`, args, options, fetch);
 }
 
 export function useCountAccount<T extends Prisma.AccountCountArgs>(
@@ -342,12 +349,12 @@ export function useCountAccount<T extends Prisma.AccountCountArgs>(
             : number
     >,
 ) {
-    const { endpoint } = useContext(RequestHandlerContext);
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<
         T extends { select: any }
             ? T['select'] extends true
                 ? number
                 : Prisma.GetScalarType<T['select'], Prisma.AccountCountAggregateOutputType>
             : number
-    >('Account', `${endpoint}/account/count`, args, options);
+    >('Account', `${endpoint}/account/count`, args, options, fetch);
 }

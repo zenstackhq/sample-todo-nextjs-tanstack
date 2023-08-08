@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
 import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateTodo(
     options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoCreateArgs>, 'mutationFn'>,
@@ -25,7 +25,7 @@ export function useCreateTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
+                    CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoCreateArgs>
                 >,
@@ -33,7 +33,7 @@ export function useCreateTodo(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
         },
     };
@@ -111,7 +111,7 @@ export function useUpdateTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
+                    CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>
                 >,
@@ -119,7 +119,7 @@ export function useUpdateTodo(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
         },
     };
@@ -173,7 +173,7 @@ export function useUpsertTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
+                    CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>
                 >,
@@ -181,7 +181,7 @@ export function useUpsertTodo(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
         },
     };
@@ -207,7 +207,7 @@ export function useDeleteTodo(
             args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
+                    CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>
                 >,
@@ -215,7 +215,7 @@ export function useDeleteTodo(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
+                | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
         },
     };

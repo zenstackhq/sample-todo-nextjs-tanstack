@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
 import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateSpace(
     options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceCreateArgs>, 'mutationFn'>,
@@ -25,7 +25,7 @@ export function useCreateSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
+                    CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceCreateArgs>
                 >,
@@ -33,7 +33,7 @@ export function useCreateSpace(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
                 | undefined;
         },
     };
@@ -111,7 +111,7 @@ export function useUpdateSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
+                    CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUpdateArgs>
                 >,
@@ -119,7 +119,7 @@ export function useUpdateSpace(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
                 | undefined;
         },
     };
@@ -173,7 +173,7 @@ export function useUpsertSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
+                    CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUpsertArgs>
                 >,
@@ -181,7 +181,7 @@ export function useUpsertSpace(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
                 | undefined;
         },
     };
@@ -207,7 +207,7 @@ export function useDeleteSpace(
             args: Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
+                    CheckSelect<T, Space, Prisma.SpaceGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceDeleteArgs>
                 >,
@@ -215,7 +215,7 @@ export function useDeleteSpace(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
+                | CheckSelect<T, Space, Prisma.SpaceGetPayload<T>>
                 | undefined;
         },
     };

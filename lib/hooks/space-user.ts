@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
 import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateSpaceUser(
     options?: Omit<UseMutationOptions<SpaceUser | undefined, unknown, Prisma.SpaceUserCreateArgs>, 'mutationFn'>,
@@ -25,7 +25,7 @@ export function useCreateSpaceUser(
             args: Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
+                    CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>
                 >,
@@ -33,7 +33,7 @@ export function useCreateSpaceUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
+                | CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
                 | undefined;
         },
     };
@@ -121,7 +121,7 @@ export function useUpdateSpaceUser(
             args: Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
+                    CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>
                 >,
@@ -129,7 +129,7 @@ export function useUpdateSpaceUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
+                | CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
                 | undefined;
         },
     };
@@ -187,7 +187,7 @@ export function useUpsertSpaceUser(
             args: Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
+                    CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>
                 >,
@@ -195,7 +195,7 @@ export function useUpsertSpaceUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
+                | CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
                 | undefined;
         },
     };
@@ -221,7 +221,7 @@ export function useDeleteSpaceUser(
             args: Prisma.SelectSubset<T, Prisma.SpaceUserDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
+                    CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.SpaceUserDeleteArgs>
                 >,
@@ -229,7 +229,7 @@ export function useDeleteSpaceUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
+                | CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>>
                 | undefined;
         },
     };

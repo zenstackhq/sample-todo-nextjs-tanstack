@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
 import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateList(
     options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListCreateArgs>, 'mutationFn'>,
@@ -25,7 +25,7 @@ export function useCreateList(
             args: Prisma.SelectSubset<T, Prisma.ListCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
+                    CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.ListCreateArgs>
                 >,
@@ -33,7 +33,7 @@ export function useCreateList(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>
+                | CheckSelect<T, List, Prisma.ListGetPayload<T>>
                 | undefined;
         },
     };
@@ -111,7 +111,7 @@ export function useUpdateList(
             args: Prisma.SelectSubset<T, Prisma.ListUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
+                    CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.ListUpdateArgs>
                 >,
@@ -119,7 +119,7 @@ export function useUpdateList(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>
+                | CheckSelect<T, List, Prisma.ListGetPayload<T>>
                 | undefined;
         },
     };
@@ -173,7 +173,7 @@ export function useUpsertList(
             args: Prisma.SelectSubset<T, Prisma.ListUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
+                    CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.ListUpsertArgs>
                 >,
@@ -181,7 +181,7 @@ export function useUpsertList(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>
+                | CheckSelect<T, List, Prisma.ListGetPayload<T>>
                 | undefined;
         },
     };
@@ -207,7 +207,7 @@ export function useDeleteList(
             args: Prisma.SelectSubset<T, Prisma.ListDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
+                    CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.ListDeleteArgs>
                 >,
@@ -215,7 +215,7 @@ export function useDeleteList(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, List, Prisma.ListGetPayload<T>>
+                | CheckSelect<T, List, Prisma.ListGetPayload<T>>
                 | undefined;
         },
     };

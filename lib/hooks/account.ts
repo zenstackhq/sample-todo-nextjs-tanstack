@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
 import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateAccount(
     options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountCreateArgs>, 'mutationFn'>,
@@ -25,7 +25,7 @@ export function useCreateAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
+                    CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountCreateArgs>
                 >,
@@ -33,7 +33,7 @@ export function useCreateAccount(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
                 | undefined;
         },
     };
@@ -111,7 +111,7 @@ export function useUpdateAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
+                    CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>
                 >,
@@ -119,7 +119,7 @@ export function useUpdateAccount(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
                 | undefined;
         },
     };
@@ -173,7 +173,7 @@ export function useUpsertAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
+                    CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>
                 >,
@@ -181,7 +181,7 @@ export function useUpsertAccount(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
                 | undefined;
         },
     };
@@ -207,7 +207,7 @@ export function useDeleteAccount(
             args: Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
+                    CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>
                 >,
@@ -215,7 +215,7 @@ export function useDeleteAccount(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
+                | CheckSelect<T, Account, Prisma.AccountGetPayload<T>>
                 | undefined;
         },
     };

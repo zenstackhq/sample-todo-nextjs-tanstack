@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
 import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable } from '@zenstackhq/tanstack-query/runtime';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateUser(
     options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserCreateArgs>, 'mutationFn'>,
@@ -25,7 +25,7 @@ export function useCreateUser(
             args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
+                    CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserCreateArgs>
                 >,
@@ -33,7 +33,7 @@ export function useCreateUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | CheckSelect<T, User, Prisma.UserGetPayload<T>>
                 | undefined;
         },
     };
@@ -111,7 +111,7 @@ export function useUpdateUser(
             args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
+                    CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserUpdateArgs>
                 >,
@@ -119,7 +119,7 @@ export function useUpdateUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | CheckSelect<T, User, Prisma.UserGetPayload<T>>
                 | undefined;
         },
     };
@@ -173,7 +173,7 @@ export function useUpsertUser(
             args: Prisma.SelectSubset<T, Prisma.UserUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
+                    CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserUpsertArgs>
                 >,
@@ -181,7 +181,7 @@ export function useUpsertUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | CheckSelect<T, User, Prisma.UserGetPayload<T>>
                 | undefined;
         },
     };
@@ -207,7 +207,7 @@ export function useDeleteUser(
             args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
-                    Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
+                    CheckSelect<T, User, Prisma.UserGetPayload<T>> | undefined,
                     unknown,
                     Prisma.SelectSubset<T, Prisma.UserDeleteArgs>
                 >,
@@ -215,7 +215,7 @@ export function useDeleteUser(
             >,
         ) {
             return (await _mutation.mutateAsync(args, options as any)) as
-                | Prisma.CheckSelect<T, User, Prisma.UserGetPayload<T>>
+                | CheckSelect<T, User, Prisma.UserGetPayload<T>>
                 | undefined;
         },
     };

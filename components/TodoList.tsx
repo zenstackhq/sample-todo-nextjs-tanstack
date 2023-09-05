@@ -31,6 +31,7 @@ export default function TodoList({ value }: Props) {
                     <figure>
                         <Image
                             src={`https://picsum.photos/300/200?r=${customAlphabet('0123456789')(4)}`}
+                            className="rounded-t-2xl"
                             width={320}
                             height={200}
                             alt="Cover"

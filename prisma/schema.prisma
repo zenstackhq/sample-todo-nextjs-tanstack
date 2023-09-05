@@ -10,7 +10,7 @@ datasource db {
 
 generator js {
     provider = "prisma-client-js"
-    previewFeatures = ["extendedWhereUnique"]
+    previewFeatures = ["extendedWhereUnique","fieldReference"]
 }
 
 enum SpaceUserRole {
@@ -32,11 +32,6 @@ model Space {
     slug String @unique()
     members SpaceUser[]
     lists List[]
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 /// @@deny('all', auth() == null)
@@ -52,10 +47,6 @@ model SpaceUser {
     userId String
     role SpaceUserRole
 
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
     @@unique([userId, spaceId])
 }
 
@@ -79,11 +70,6 @@ model User {
     lists List[]
     todos Todo[]
     accounts Account[]
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 /// @@deny('all', auth() == null)
@@ -103,11 +89,6 @@ model List {
     title String
     private Boolean @default(false)
     todos Todo[]
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 /// @@deny('all', auth() == null)
@@ -125,11 +106,6 @@ model Todo {
     /// @length(1, 100)
     title String
     completedAt DateTime?
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 model Account {
@@ -148,9 +124,5 @@ model Account {
     session_state String?
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
     @@unique([provider, providerAccountId])
 }

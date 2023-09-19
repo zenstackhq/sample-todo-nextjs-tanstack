@@ -1,9 +1,15 @@
 /* eslint-disable */
 import type { Prisma, SpaceUser } from '@prisma/client';
 import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import {
+    query,
+    infiniteQuery,
+    postMutation,
+    putMutation,
+    deleteMutation,
+} from '@zenstackhq/tanstack-query/runtime/react';
 import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateSpaceUser(
@@ -78,6 +84,20 @@ export function useFindManySpaceUser<T extends Prisma.SpaceUserFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<Array<Prisma.SpaceUserGetPayload<T>>>(
+        'SpaceUser',
+        `${endpoint}/spaceUser/findMany`,
+        args,
+        options,
+        fetch,
+    );
+}
+
+export function useInfiniteFindManySpaceUser<T extends Prisma.SpaceUserFindManyArgs>(
+    args?: Prisma.SelectSubset<T, Prisma.SpaceUserFindManyArgs>,
+    options?: UseInfiniteQueryOptions<Array<Prisma.SpaceUserGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return infiniteQuery<Array<Prisma.SpaceUserGetPayload<T>>>(
         'SpaceUser',
         `${endpoint}/spaceUser/findMany`,
         args,

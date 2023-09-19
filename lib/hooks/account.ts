@@ -1,9 +1,15 @@
 /* eslint-disable */
 import type { Prisma, Account } from '@prisma/client';
 import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import {
+    query,
+    infiniteQuery,
+    postMutation,
+    putMutation,
+    deleteMutation,
+} from '@zenstackhq/tanstack-query/runtime/react';
 import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateAccount(
@@ -74,6 +80,20 @@ export function useFindManyAccount<T extends Prisma.AccountFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<Array<Prisma.AccountGetPayload<T>>>('Account', `${endpoint}/account/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManyAccount<T extends Prisma.AccountFindManyArgs>(
+    args?: Prisma.SelectSubset<T, Prisma.AccountFindManyArgs>,
+    options?: UseInfiniteQueryOptions<Array<Prisma.AccountGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return infiniteQuery<Array<Prisma.AccountGetPayload<T>>>(
+        'Account',
+        `${endpoint}/account/findMany`,
+        args,
+        options,
+        fetch,
+    );
 }
 
 export function useFindUniqueAccount<T extends Prisma.AccountFindUniqueArgs>(

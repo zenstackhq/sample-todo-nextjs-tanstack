@@ -1,9 +1,15 @@
 /* eslint-disable */
 import type { Prisma, User } from '@prisma/client';
 import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import {
+    query,
+    infiniteQuery,
+    postMutation,
+    putMutation,
+    deleteMutation,
+} from '@zenstackhq/tanstack-query/runtime/react';
 import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateUser(
@@ -74,6 +80,14 @@ export function useFindManyUser<T extends Prisma.UserFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<Array<Prisma.UserGetPayload<T>>>('User', `${endpoint}/user/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManyUser<T extends Prisma.UserFindManyArgs>(
+    args?: Prisma.SelectSubset<T, Prisma.UserFindManyArgs>,
+    options?: UseInfiniteQueryOptions<Array<Prisma.UserGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return infiniteQuery<Array<Prisma.UserGetPayload<T>>>('User', `${endpoint}/user/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueUser<T extends Prisma.UserFindUniqueArgs>(

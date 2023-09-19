@@ -1,9 +1,15 @@
 /* eslint-disable */
 import type { Prisma, Todo } from '@prisma/client';
 import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import {
+    query,
+    infiniteQuery,
+    postMutation,
+    putMutation,
+    deleteMutation,
+} from '@zenstackhq/tanstack-query/runtime/react';
 import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateTodo(
@@ -74,6 +80,14 @@ export function useFindManyTodo<T extends Prisma.TodoFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<Array<Prisma.TodoGetPayload<T>>>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManyTodo<T extends Prisma.TodoFindManyArgs>(
+    args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>,
+    options?: UseInfiniteQueryOptions<Array<Prisma.TodoGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return infiniteQuery<Array<Prisma.TodoGetPayload<T>>>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(

@@ -1,9 +1,15 @@
 /* eslint-disable */
 import type { Prisma, Space } from '@prisma/client';
 import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
 import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import { query, postMutation, putMutation, deleteMutation } from '@zenstackhq/tanstack-query/runtime/react';
+import {
+    query,
+    infiniteQuery,
+    postMutation,
+    putMutation,
+    deleteMutation,
+} from '@zenstackhq/tanstack-query/runtime/react';
 import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
 
 export function useCreateSpace(
@@ -74,6 +80,14 @@ export function useFindManySpace<T extends Prisma.SpaceFindManyArgs>(
 ) {
     const { endpoint, fetch } = useContext(RequestHandlerContext);
     return query<Array<Prisma.SpaceGetPayload<T>>>('Space', `${endpoint}/space/findMany`, args, options, fetch);
+}
+
+export function useInfiniteFindManySpace<T extends Prisma.SpaceFindManyArgs>(
+    args?: Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs>,
+    options?: UseInfiniteQueryOptions<Array<Prisma.SpaceGetPayload<T>>>,
+) {
+    const { endpoint, fetch } = useContext(RequestHandlerContext);
+    return infiniteQuery<Array<Prisma.SpaceGetPayload<T>>>('Space', `${endpoint}/space/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueSpace<T extends Prisma.SpaceFindUniqueArgs>(

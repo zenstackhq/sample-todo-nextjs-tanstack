@@ -1,25 +1,21 @@
 /* eslint-disable */
 import type { Prisma, Todo } from '@prisma/client';
-import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
-import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import {
-    query,
-    infiniteQuery,
-    postMutation,
-    putMutation,
-    deleteMutation,
-} from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
+import { RequestHandlerContext, getHooksContext } from '@zenstackhq/tanstack-query/runtime-v5/react';
+import { useModelQuery, useInfiniteModelQuery, useModelMutation } from '@zenstackhq/tanstack-query/runtime-v5/react';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime-v5';
+import metadata from './__model_meta';
 
 export function useCreateTodo(
     options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.TodoCreateArgs, Todo, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.TodoCreateArgs, Todo, true>(
         'Todo',
+        'POST',
         `${endpoint}/todo/create`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -50,10 +46,12 @@ export function useCreateManyTodo(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.TodoCreateManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.TodoCreateManyArgs, Prisma.BatchPayload, false>(
         'Todo',
+        'POST',
         `${endpoint}/todo/createMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -76,44 +74,54 @@ export function useCreateManyTodo(
 
 export function useFindManyTodo<T extends Prisma.TodoFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>,
-    options?: UseQueryOptions<Array<Prisma.TodoGetPayload<T>>>,
+    options?: Omit<UseQueryOptions<Array<Prisma.TodoGetPayload<T>>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Array<Prisma.TodoGetPayload<T>>>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }
 
 export function useInfiniteFindManyTodo<T extends Prisma.TodoFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindManyArgs>,
-    options?: UseInfiniteQueryOptions<Array<Prisma.TodoGetPayload<T>>>,
+    options?: Omit<
+        UseInfiniteQueryOptions<
+            Array<Prisma.TodoGetPayload<T>>,
+            unknown,
+            InfiniteData<Array<Prisma.TodoGetPayload<T>>>
+        >,
+        'queryKey'
+    >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return infiniteQuery<Array<Prisma.TodoGetPayload<T>>>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
+    options = options ?? { initialPageParam: undefined, getNextPageParam: () => null };
+    const { endpoint, fetch } = getHooksContext();
+    return useInfiniteModelQuery('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueTodo<T extends Prisma.TodoFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.TodoFindUniqueArgs>,
-    options?: UseQueryOptions<Prisma.TodoGetPayload<T>>,
+    options?: Omit<UseQueryOptions<Prisma.TodoGetPayload<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.TodoGetPayload<T>>('Todo', `${endpoint}/todo/findUnique`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Todo', `${endpoint}/todo/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstTodo<T extends Prisma.TodoFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoFindFirstArgs>,
-    options?: UseQueryOptions<Prisma.TodoGetPayload<T>>,
+    options?: Omit<UseQueryOptions<Prisma.TodoGetPayload<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.TodoGetPayload<T>>('Todo', `${endpoint}/todo/findFirst`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Todo', `${endpoint}/todo/findFirst`, args, options, fetch);
 }
 
 export function useUpdateTodo(
     options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.TodoUpdateArgs, Todo, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.TodoUpdateArgs, Todo, true>(
         'Todo',
+        'PUT',
         `${endpoint}/todo/update`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -144,10 +152,12 @@ export function useUpdateManyTodo(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.TodoUpdateManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.TodoUpdateManyArgs, Prisma.BatchPayload, false>(
         'Todo',
+        'PUT',
         `${endpoint}/todo/updateMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -172,10 +182,12 @@ export function useUpsertTodo(
     options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.TodoUpsertArgs, Todo, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.TodoUpsertArgs, Todo, true>(
         'Todo',
+        'POST',
         `${endpoint}/todo/upsert`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -206,10 +218,12 @@ export function useDeleteTodo(
     options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.TodoDeleteArgs, Todo, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.TodoDeleteArgs, Todo, true>(
         'Todo',
+        'DELETE',
         `${endpoint}/todo/delete`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -240,10 +254,12 @@ export function useDeleteManyTodo(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.TodoDeleteManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.TodoDeleteManyArgs, Prisma.BatchPayload, false>(
         'Todo',
+        'DELETE',
         `${endpoint}/todo/deleteMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -266,10 +282,10 @@ export function useDeleteManyTodo(
 
 export function useAggregateTodo<T extends Prisma.TodoAggregateArgs>(
     args: Prisma.SelectSubset<T, Prisma.TodoAggregateArgs>,
-    options?: UseQueryOptions<Prisma.GetTodoAggregateType<T>>,
+    options?: Omit<UseQueryOptions<Prisma.GetTodoAggregateType<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.GetTodoAggregateType<T>>('Todo', `${endpoint}/todo/aggregate`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Todo', `${endpoint}/todo/aggregate`, args, options, fetch);
 }
 
 export function useGroupByTodo<
@@ -323,52 +339,40 @@ export function useGroupByTodo<
           }[OrderFields],
 >(
     args: Prisma.SelectSubset<T, Prisma.SubsetIntersection<T, Prisma.TodoGroupByArgs, OrderByArg> & InputErrors>,
-    options?: UseQueryOptions<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
+    options?: Omit<
+        UseQueryOptions<
+            {} extends InputErrors
+                ? Array<
+                      PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
+                          [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
+                              ? T[P] extends boolean
+                                  ? number
+                                  : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
+                              : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>;
+                      }
+                  >
+                : InputErrors
+        >,
+        'queryKey'
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.TodoGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.TodoGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.TodoGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('Todo', `${endpoint}/todo/groupBy`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Todo', `${endpoint}/todo/groupBy`, args, options, fetch);
 }
 
 export function useCountTodo<T extends Prisma.TodoCountArgs>(
     args?: Prisma.SelectSubset<T, Prisma.TodoCountArgs>,
-    options?: UseQueryOptions<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
-            : number
+    options?: Omit<
+        UseQueryOptions<
+            T extends { select: any }
+                ? T['select'] extends true
+                    ? number
+                    : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
+                : number
+        >,
+        'queryKey'
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.TodoCountAggregateOutputType>
-            : number
-    >('Todo', `${endpoint}/todo/count`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Todo', `${endpoint}/todo/count`, args, options, fetch);
 }

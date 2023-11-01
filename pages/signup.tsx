@@ -105,8 +105,8 @@ export default function Signup() {
                         </button>
                         <div className="mt-4 text-sm font-medium text-gray-500">
                             Already have an account?{' '}
-                            <Link href="/signin" className="text-primary-700">
-                                <a className="text-primary">Login here</a>
+                            <Link href="/signin" className="text-primary">
+                                Login here
                             </Link>
                         </div>
                     </form>

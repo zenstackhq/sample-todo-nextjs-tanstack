@@ -33,9 +33,7 @@ export default function BreadCrumb({ space, list }: Props) {
             <ul>
                 {items.map((item, i) => (
                     <li key={i}>
-                        <Link href={item.link}>
-                            <a>{item.text}</a>
-                        </Link>
+                        <Link href={item.link}>{item.text}</Link>
                     </li>
                 ))}
             </ul>

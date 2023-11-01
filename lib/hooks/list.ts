@@ -1,25 +1,21 @@
 /* eslint-disable */
 import type { Prisma, List } from '@prisma/client';
-import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
-import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import {
-    query,
-    infiniteQuery,
-    postMutation,
-    putMutation,
-    deleteMutation,
-} from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
+import { RequestHandlerContext, getHooksContext } from '@zenstackhq/tanstack-query/runtime-v5/react';
+import { useModelQuery, useInfiniteModelQuery, useModelMutation } from '@zenstackhq/tanstack-query/runtime-v5/react';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime-v5';
+import metadata from './__model_meta';
 
 export function useCreateList(
     options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.ListCreateArgs, List, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.ListCreateArgs, List, true>(
         'List',
+        'POST',
         `${endpoint}/list/create`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -50,10 +46,12 @@ export function useCreateManyList(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.ListCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.ListCreateManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.ListCreateManyArgs, Prisma.BatchPayload, false>(
         'List',
+        'POST',
         `${endpoint}/list/createMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -76,44 +74,54 @@ export function useCreateManyList(
 
 export function useFindManyList<T extends Prisma.ListFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindManyArgs>,
-    options?: UseQueryOptions<Array<Prisma.ListGetPayload<T>>>,
+    options?: Omit<UseQueryOptions<Array<Prisma.ListGetPayload<T>>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Array<Prisma.ListGetPayload<T>>>('List', `${endpoint}/list/findMany`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('List', `${endpoint}/list/findMany`, args, options, fetch);
 }
 
 export function useInfiniteFindManyList<T extends Prisma.ListFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindManyArgs>,
-    options?: UseInfiniteQueryOptions<Array<Prisma.ListGetPayload<T>>>,
+    options?: Omit<
+        UseInfiniteQueryOptions<
+            Array<Prisma.ListGetPayload<T>>,
+            unknown,
+            InfiniteData<Array<Prisma.ListGetPayload<T>>>
+        >,
+        'queryKey'
+    >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return infiniteQuery<Array<Prisma.ListGetPayload<T>>>('List', `${endpoint}/list/findMany`, args, options, fetch);
+    options = options ?? { initialPageParam: undefined, getNextPageParam: () => null };
+    const { endpoint, fetch } = getHooksContext();
+    return useInfiniteModelQuery('List', `${endpoint}/list/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueList<T extends Prisma.ListFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.ListFindUniqueArgs>,
-    options?: UseQueryOptions<Prisma.ListGetPayload<T>>,
+    options?: Omit<UseQueryOptions<Prisma.ListGetPayload<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.ListGetPayload<T>>('List', `${endpoint}/list/findUnique`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('List', `${endpoint}/list/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstList<T extends Prisma.ListFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListFindFirstArgs>,
-    options?: UseQueryOptions<Prisma.ListGetPayload<T>>,
+    options?: Omit<UseQueryOptions<Prisma.ListGetPayload<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.ListGetPayload<T>>('List', `${endpoint}/list/findFirst`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('List', `${endpoint}/list/findFirst`, args, options, fetch);
 }
 
 export function useUpdateList(
     options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.ListUpdateArgs, List, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.ListUpdateArgs, List, true>(
         'List',
+        'PUT',
         `${endpoint}/list/update`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -144,10 +152,12 @@ export function useUpdateManyList(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.ListUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.ListUpdateManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.ListUpdateManyArgs, Prisma.BatchPayload, false>(
         'List',
+        'PUT',
         `${endpoint}/list/updateMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -172,10 +182,12 @@ export function useUpsertList(
     options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.ListUpsertArgs, List, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.ListUpsertArgs, List, true>(
         'List',
+        'POST',
         `${endpoint}/list/upsert`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -206,10 +218,12 @@ export function useDeleteList(
     options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.ListDeleteArgs, List, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.ListDeleteArgs, List, true>(
         'List',
+        'DELETE',
         `${endpoint}/list/delete`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -240,10 +254,12 @@ export function useDeleteManyList(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.ListDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.ListDeleteManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.ListDeleteManyArgs, Prisma.BatchPayload, false>(
         'List',
+        'DELETE',
         `${endpoint}/list/deleteMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -266,10 +282,10 @@ export function useDeleteManyList(
 
 export function useAggregateList<T extends Prisma.ListAggregateArgs>(
     args: Prisma.SelectSubset<T, Prisma.ListAggregateArgs>,
-    options?: UseQueryOptions<Prisma.GetListAggregateType<T>>,
+    options?: Omit<UseQueryOptions<Prisma.GetListAggregateType<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.GetListAggregateType<T>>('List', `${endpoint}/list/aggregate`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('List', `${endpoint}/list/aggregate`, args, options, fetch);
 }
 
 export function useGroupByList<
@@ -323,52 +339,40 @@ export function useGroupByList<
           }[OrderFields],
 >(
     args: Prisma.SelectSubset<T, Prisma.SubsetIntersection<T, Prisma.ListGroupByArgs, OrderByArg> & InputErrors>,
-    options?: UseQueryOptions<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.ListGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
+    options?: Omit<
+        UseQueryOptions<
+            {} extends InputErrors
+                ? Array<
+                      PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
+                          [P in keyof T & keyof Prisma.ListGroupByOutputType]: P extends '_count'
+                              ? T[P] extends boolean
+                                  ? number
+                                  : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
+                              : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>;
+                      }
+                  >
+                : InputErrors
+        >,
+        'queryKey'
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.ListGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.ListGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.ListGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('List', `${endpoint}/list/groupBy`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('List', `${endpoint}/list/groupBy`, args, options, fetch);
 }
 
 export function useCountList<T extends Prisma.ListCountArgs>(
     args?: Prisma.SelectSubset<T, Prisma.ListCountArgs>,
-    options?: UseQueryOptions<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType>
-            : number
+    options?: Omit<
+        UseQueryOptions<
+            T extends { select: any }
+                ? T['select'] extends true
+                    ? number
+                    : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType>
+                : number
+        >,
+        'queryKey'
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.ListCountAggregateOutputType>
-            : number
-    >('List', `${endpoint}/list/count`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('List', `${endpoint}/list/count`, args, options, fetch);
 }

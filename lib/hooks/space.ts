@@ -1,25 +1,21 @@
 /* eslint-disable */
 import type { Prisma, Space } from '@prisma/client';
-import { useContext } from 'react';
-import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
-import { RequestHandlerContext } from '@zenstackhq/tanstack-query/runtime/react';
-import {
-    query,
-    infiniteQuery,
-    postMutation,
-    putMutation,
-    deleteMutation,
-} from '@zenstackhq/tanstack-query/runtime/react';
-import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime';
+import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
+import { RequestHandlerContext, getHooksContext } from '@zenstackhq/tanstack-query/runtime-v5/react';
+import { useModelQuery, useInfiniteModelQuery, useModelMutation } from '@zenstackhq/tanstack-query/runtime-v5/react';
+import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime-v5';
+import metadata from './__model_meta';
 
 export function useCreateSpace(
     options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.SpaceCreateArgs, Space, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.SpaceCreateArgs, Space, true>(
         'Space',
+        'POST',
         `${endpoint}/space/create`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -50,10 +46,12 @@ export function useCreateManySpace(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.SpaceCreateManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.SpaceCreateManyArgs, Prisma.BatchPayload, false>(
         'Space',
+        'POST',
         `${endpoint}/space/createMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -76,44 +74,54 @@ export function useCreateManySpace(
 
 export function useFindManySpace<T extends Prisma.SpaceFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs>,
-    options?: UseQueryOptions<Array<Prisma.SpaceGetPayload<T>>>,
+    options?: Omit<UseQueryOptions<Array<Prisma.SpaceGetPayload<T>>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Array<Prisma.SpaceGetPayload<T>>>('Space', `${endpoint}/space/findMany`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Space', `${endpoint}/space/findMany`, args, options, fetch);
 }
 
 export function useInfiniteFindManySpace<T extends Prisma.SpaceFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindManyArgs>,
-    options?: UseInfiniteQueryOptions<Array<Prisma.SpaceGetPayload<T>>>,
+    options?: Omit<
+        UseInfiniteQueryOptions<
+            Array<Prisma.SpaceGetPayload<T>>,
+            unknown,
+            InfiniteData<Array<Prisma.SpaceGetPayload<T>>>
+        >,
+        'queryKey'
+    >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return infiniteQuery<Array<Prisma.SpaceGetPayload<T>>>('Space', `${endpoint}/space/findMany`, args, options, fetch);
+    options = options ?? { initialPageParam: undefined, getNextPageParam: () => null };
+    const { endpoint, fetch } = getHooksContext();
+    return useInfiniteModelQuery('Space', `${endpoint}/space/findMany`, args, options, fetch);
 }
 
 export function useFindUniqueSpace<T extends Prisma.SpaceFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.SpaceFindUniqueArgs>,
-    options?: UseQueryOptions<Prisma.SpaceGetPayload<T>>,
+    options?: Omit<UseQueryOptions<Prisma.SpaceGetPayload<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.SpaceGetPayload<T>>('Space', `${endpoint}/space/findUnique`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Space', `${endpoint}/space/findUnique`, args, options, fetch);
 }
 
 export function useFindFirstSpace<T extends Prisma.SpaceFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceFindFirstArgs>,
-    options?: UseQueryOptions<Prisma.SpaceGetPayload<T>>,
+    options?: Omit<UseQueryOptions<Prisma.SpaceGetPayload<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.SpaceGetPayload<T>>('Space', `${endpoint}/space/findFirst`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Space', `${endpoint}/space/findFirst`, args, options, fetch);
 }
 
 export function useUpdateSpace(
     options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.SpaceUpdateArgs, Space, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.SpaceUpdateArgs, Space, true>(
         'Space',
+        'PUT',
         `${endpoint}/space/update`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -144,10 +152,12 @@ export function useUpdateManySpace(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = putMutation<Prisma.SpaceUpdateManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.SpaceUpdateManyArgs, Prisma.BatchPayload, false>(
         'Space',
+        'PUT',
         `${endpoint}/space/updateMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -172,10 +182,12 @@ export function useUpsertSpace(
     options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = postMutation<Prisma.SpaceUpsertArgs, Space, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.SpaceUpsertArgs, Space, true>(
         'Space',
+        'POST',
         `${endpoint}/space/upsert`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -206,10 +218,12 @@ export function useDeleteSpace(
     options?: Omit<UseMutationOptions<Space | undefined, unknown, Prisma.SpaceDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.SpaceDeleteArgs, Space, true>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.SpaceDeleteArgs, Space, true>(
         'Space',
+        'DELETE',
         `${endpoint}/space/delete`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -240,10 +254,12 @@ export function useDeleteManySpace(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    const _mutation = deleteMutation<Prisma.SpaceDeleteManyArgs, Prisma.BatchPayload, false>(
+    const { endpoint, fetch } = getHooksContext();
+    const _mutation = useModelMutation<Prisma.SpaceDeleteManyArgs, Prisma.BatchPayload, false>(
         'Space',
+        'DELETE',
         `${endpoint}/space/deleteMany`,
+        metadata,
         options,
         fetch,
         invalidateQueries,
@@ -266,10 +282,10 @@ export function useDeleteManySpace(
 
 export function useAggregateSpace<T extends Prisma.SpaceAggregateArgs>(
     args: Prisma.SelectSubset<T, Prisma.SpaceAggregateArgs>,
-    options?: UseQueryOptions<Prisma.GetSpaceAggregateType<T>>,
+    options?: Omit<UseQueryOptions<Prisma.GetSpaceAggregateType<T>>, 'queryKey'>,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<Prisma.GetSpaceAggregateType<T>>('Space', `${endpoint}/space/aggregate`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Space', `${endpoint}/space/aggregate`, args, options, fetch);
 }
 
 export function useGroupBySpace<
@@ -323,52 +339,40 @@ export function useGroupBySpace<
           }[OrderFields],
 >(
     args: Prisma.SelectSubset<T, Prisma.SubsetIntersection<T, Prisma.SpaceGroupByArgs, OrderByArg> & InputErrors>,
-    options?: UseQueryOptions<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.SpaceGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
+    options?: Omit<
+        UseQueryOptions<
+            {} extends InputErrors
+                ? Array<
+                      PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
+                          [P in keyof T & keyof Prisma.SpaceGroupByOutputType]: P extends '_count'
+                              ? T[P] extends boolean
+                                  ? number
+                                  : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
+                              : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>;
+                      }
+                  >
+                : InputErrors
+        >,
+        'queryKey'
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<
-        {} extends InputErrors
-            ? Array<
-                  PickEnumerable<Prisma.SpaceGroupByOutputType, T['by']> & {
-                      [P in keyof T & keyof Prisma.SpaceGroupByOutputType]: P extends '_count'
-                          ? T[P] extends boolean
-                              ? number
-                              : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>
-                          : Prisma.GetScalarType<T[P], Prisma.SpaceGroupByOutputType[P]>;
-                  }
-              >
-            : InputErrors
-    >('Space', `${endpoint}/space/groupBy`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Space', `${endpoint}/space/groupBy`, args, options, fetch);
 }
 
 export function useCountSpace<T extends Prisma.SpaceCountArgs>(
     args?: Prisma.SelectSubset<T, Prisma.SpaceCountArgs>,
-    options?: UseQueryOptions<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType>
-            : number
+    options?: Omit<
+        UseQueryOptions<
+            T extends { select: any }
+                ? T['select'] extends true
+                    ? number
+                    : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType>
+                : number
+        >,
+        'queryKey'
     >,
 ) {
-    const { endpoint, fetch } = useContext(RequestHandlerContext);
-    return query<
-        T extends { select: any }
-            ? T['select'] extends true
-                ? number
-                : Prisma.GetScalarType<T['select'], Prisma.SpaceCountAggregateOutputType>
-            : number
-    >('Space', `${endpoint}/space/count`, args, options, fetch);
+    const { endpoint, fetch } = getHooksContext();
+    return useModelQuery('Space', `${endpoint}/space/count`, args, options, fetch);
 }

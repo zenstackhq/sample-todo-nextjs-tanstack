@@ -18,6 +18,7 @@ plugin hooks {
     provider = '@zenstackhq/tanstack-query'
     output = 'lib/hooks'
     target = 'react'
+    version = 'v5'
 }
 
 /*

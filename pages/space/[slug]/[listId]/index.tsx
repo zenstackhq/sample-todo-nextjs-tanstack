@@ -35,6 +35,7 @@ export default function TodoList(props: Props) {
 
     const { data, fetchNextPage, hasNextPage } = useInfiniteFindManyTodo(fetchArgs, {
         enabled: !!props.list,
+        initialPageParam: fetchArgs,
         getNextPageParam: (lastPage, pages) => {
             if (lastPage.length < PAGE_SIZE) {
                 return undefined;

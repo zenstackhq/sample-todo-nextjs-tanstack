@@ -107,8 +107,8 @@ export default function Signup() {
 
                         <div className="mt-4 text-sm font-medium text-gray-500">
                             Not registered?{' '}
-                            <Link href="/signup" className="text-primary-700">
-                                <a className="text-primary">Create account</a>
+                            <Link href="/signup" className="text-primary">
+                                Create account
                             </Link>
                         </div>
                     </form>

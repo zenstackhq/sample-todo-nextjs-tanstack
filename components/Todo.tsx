@@ -7,13 +7,14 @@ import TimeInfo from './TimeInfo';
 
 type Props = {
     value: Todo & { owner: User };
+    optimistic?: boolean;
     updated?: (value: Todo) => any;
     deleted?: (value: Todo) => any;
 };
 
-export default function TodoComponent({ value }: Props) {
-    const update = useUpdateTodo();
-    const del = useDeleteTodo();
+export default function TodoComponent({ value, optimistic }: Props) {
+    const update = useUpdateTodo(undefined, true, true); // optimistic
+    const del = useDeleteTodo(undefined, true, true); // optimistic
 
     const deleteTodo = async () => {
         del.mutate({ where: { id: value.id } });
@@ -33,11 +34,12 @@ export default function TodoComponent({ value }: Props) {
         <div className="border rounded-lg px-8 py-4 shadow-lg flex flex-col items-center w-full lg:w-[480px]">
             <div className="flex justify-between w-full mb-4">
                 <h3
-                    className={`text-xl line-clamp-1 ${
-                        value.completedAt ? 'line-through text-gray-400 italic' : 'text-gray-700'
+                    className={`text-xl line-clamp-1 flex items-center
+                        ${value.completedAt ? 'line-through text-gray-400 italic' : 'text-gray-700'}
                     }`}
                 >
                     {value.title}
+                    {optimistic && <span className="loading loading-spinner loading-sm ml-1"></span>}
                 </h3>
                 <div className="flex">
                     <input

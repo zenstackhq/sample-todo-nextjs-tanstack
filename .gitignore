@@ -3,3 +3,4 @@ logs
 node_modules/
 .env.local
 .next
+.zenstack_repl*

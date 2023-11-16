@@ -9,6 +9,7 @@ import metadata from './__model_meta';
 export function useCreateUser(
     options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
+    optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
     const _mutation = useModelMutation<Prisma.UserCreateArgs, User, true>(
@@ -20,6 +21,7 @@ export function useCreateUser(
         fetch,
         invalidateQueries,
         true,
+        optimisticUpdate,
     );
     const mutation = {
         ..._mutation,
@@ -45,6 +47,7 @@ export function useCreateUser(
 export function useCreateManyUser(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.UserCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
+    optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
     const _mutation = useModelMutation<Prisma.UserCreateManyArgs, Prisma.BatchPayload, false>(
@@ -56,6 +59,7 @@ export function useCreateManyUser(
         fetch,
         invalidateQueries,
         false,
+        optimisticUpdate,
     );
     const mutation = {
         ..._mutation,
@@ -74,10 +78,11 @@ export function useCreateManyUser(
 
 export function useFindManyUser<T extends Prisma.UserFindManyArgs>(
     args?: Prisma.SelectSubset<T, Prisma.UserFindManyArgs>,
-    options?: Omit<UseQueryOptions<Array<Prisma.UserGetPayload<T>>>, 'queryKey'>,
+    options?: Omit<UseQueryOptions<Array<Prisma.UserGetPayload<T> & { $optimistic?: boolean }>>, 'queryKey'>,
+    optimisticUpdate: boolean = true,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    return useModelQuery('User', `${endpoint}/user/findMany`, args, options, fetch);
+    return useModelQuery('User', `${endpoint}/user/findMany`, args, options, fetch, optimisticUpdate);
 }
 
 export function useInfiniteFindManyUser<T extends Prisma.UserFindManyArgs>(
@@ -98,23 +103,26 @@ export function useInfiniteFindManyUser<T extends Prisma.UserFindManyArgs>(
 
 export function useFindUniqueUser<T extends Prisma.UserFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserFindUniqueArgs>,
-    options?: Omit<UseQueryOptions<Prisma.UserGetPayload<T>>, 'queryKey'>,
+    options?: Omit<UseQueryOptions<Prisma.UserGetPayload<T> & { $optimistic?: boolean }>, 'queryKey'>,
+    optimisticUpdate: boolean = true,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    return useModelQuery('User', `${endpoint}/user/findUnique`, args, options, fetch);
+    return useModelQuery('User', `${endpoint}/user/findUnique`, args, options, fetch, optimisticUpdate);
 }
 
 export function useFindFirstUser<T extends Prisma.UserFindFirstArgs>(
     args?: Prisma.SelectSubset<T, Prisma.UserFindFirstArgs>,
-    options?: Omit<UseQueryOptions<Prisma.UserGetPayload<T>>, 'queryKey'>,
+    options?: Omit<UseQueryOptions<Prisma.UserGetPayload<T> & { $optimistic?: boolean }>, 'queryKey'>,
+    optimisticUpdate: boolean = true,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    return useModelQuery('User', `${endpoint}/user/findFirst`, args, options, fetch);
+    return useModelQuery('User', `${endpoint}/user/findFirst`, args, options, fetch, optimisticUpdate);
 }
 
 export function useUpdateUser(
     options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
+    optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
     const _mutation = useModelMutation<Prisma.UserUpdateArgs, User, true>(
@@ -126,6 +134,7 @@ export function useUpdateUser(
         fetch,
         invalidateQueries,
         true,
+        optimisticUpdate,
     );
     const mutation = {
         ..._mutation,
@@ -151,6 +160,7 @@ export function useUpdateUser(
 export function useUpdateManyUser(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.UserUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
+    optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
     const _mutation = useModelMutation<Prisma.UserUpdateManyArgs, Prisma.BatchPayload, false>(
@@ -162,6 +172,7 @@ export function useUpdateManyUser(
         fetch,
         invalidateQueries,
         false,
+        optimisticUpdate,
     );
     const mutation = {
         ..._mutation,
@@ -181,6 +192,7 @@ export function useUpdateManyUser(
 export function useUpsertUser(
     options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
+    optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
     const _mutation = useModelMutation<Prisma.UserUpsertArgs, User, true>(
@@ -192,6 +204,7 @@ export function useUpsertUser(
         fetch,
         invalidateQueries,
         true,
+        optimisticUpdate,
     );
     const mutation = {
         ..._mutation,
@@ -217,6 +230,7 @@ export function useUpsertUser(
 export function useDeleteUser(
     options?: Omit<UseMutationOptions<User | undefined, unknown, Prisma.UserDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
+    optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
     const _mutation = useModelMutation<Prisma.UserDeleteArgs, User, true>(
@@ -228,6 +242,7 @@ export function useDeleteUser(
         fetch,
         invalidateQueries,
         true,
+        optimisticUpdate,
     );
     const mutation = {
         ..._mutation,
@@ -253,6 +268,7 @@ export function useDeleteUser(
 export function useDeleteManyUser(
     options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.UserDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
+    optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
     const _mutation = useModelMutation<Prisma.UserDeleteManyArgs, Prisma.BatchPayload, false>(
@@ -264,6 +280,7 @@ export function useDeleteManyUser(
         fetch,
         invalidateQueries,
         false,
+        optimisticUpdate,
     );
     const mutation = {
         ..._mutation,

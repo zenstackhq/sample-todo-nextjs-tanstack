@@ -7,14 +7,16 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Provider as ZenStackHooksProvider } from '../lib/hooks';
 import '../styles/globals.css';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient();
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
+            {/* <ReactQueryDevtools /> */}
             <SessionProvider session={session}>
-                <ZenStackHooksProvider value={{ endpoint: '/api/model' }}>
+                <ZenStackHooksProvider value={{ endpoint: '/api/model', logging: true }}>
                     <AppContent>
                         <div className="flex-grow h-100">
                             <Component {...pageProps} />

@@ -1,12 +1,12 @@
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useCurrentUser } from '@lib/context';
-import { useCreateTodo, useInfiniteFindManyTodo } from '@lib/hooks';
+import { useCreateTodo, useFindManyTodo } from '@lib/hooks';
 import { List, Space } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
 import TodoComponent from 'components/Todo';
 import WithNavBar from 'components/WithNavBar';
 import { GetServerSideProps } from 'next';
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
@@ -20,32 +20,42 @@ const PAGE_SIZE = 5;
 export default function TodoList(props: Props) {
     const user = useCurrentUser();
     const [title, setTitle] = useState('');
-    const create = useCreateTodo();
+    const create = useCreateTodo(undefined, true, true); // optimistic
 
-    const fetchArgs = {
+    // const fetchArgs = {
+    //     where: { listId: props.list.id },
+    //     include: {
+    //         owner: true,
+    //     },
+    //     orderBy: {
+    //         updatedAt: 'desc' as const,
+    //     },
+    //     take: PAGE_SIZE,
+    // };
+
+    // const { data, fetchNextPage, hasNextPage } = useInfiniteFindManyTodo(fetchArgs, {
+    //     enabled: !!props.list,
+    //     initialPageParam: fetchArgs,
+    //     getNextPageParam: (lastPage, pages) => {
+    //         if (lastPage.length < PAGE_SIZE) {
+    //             return undefined;
+    //         }
+    //         const fetched = pages.flatMap((item) => item).length;
+    //         console.log(`Fetched: ${fetched}`);
+    //         return {
+    //             ...fetchArgs,
+    //             skip: fetched,
+    //         };
+    //     },
+    // });
+
+    const { data } = useFindManyTodo({
         where: { listId: props.list.id },
         include: {
             owner: true,
         },
         orderBy: {
             updatedAt: 'desc' as const,
-        },
-        take: PAGE_SIZE,
-    };
-
-    const { data, fetchNextPage, hasNextPage } = useInfiniteFindManyTodo(fetchArgs, {
-        enabled: !!props.list,
-        initialPageParam: fetchArgs,
-        getNextPageParam: (lastPage, pages) => {
-            if (lastPage.length < PAGE_SIZE) {
-                return undefined;
-            }
-            const fetched = pages.flatMap((item) => item).length;
-            console.log(`Fetched: ${fetched}`);
-            return {
-                ...fetchArgs,
-                skip: fetched,
-            };
         },
     });
 
@@ -96,20 +106,23 @@ export default function TodoList(props: Props) {
                     </button>
                 </div>
                 <ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
-                    {data?.pages.map((group, i) => (
+                    {/* {data?.pages.map((group, i) => (
                         <React.Fragment key={i}>
                             {group.map((todo) => (
                                 <TodoComponent key={todo.id} value={todo} />
                             ))}
                         </React.Fragment>
+                    ))} */}
+
+                    {data?.map((todo) => (
+                        <TodoComponent key={todo.id} value={todo} optimistic={todo.$optimistic} />
                     ))}
-                    {/* {pages && pages.flatMap((item) => <TodoComponent key={item.data.id} value={item.data} />)} */}
                 </ul>
-                {hasNextPage && (
+                {/* {hasNextPage && (
                     <button className="btn btn-sm btn-ghost" onClick={() => fetchNextPage()}>
                         Load more
                     </button>
-                )}
+                )} */}
             </div>
         </WithNavBar>
     );

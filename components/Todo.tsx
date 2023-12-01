@@ -8,8 +8,6 @@ import TimeInfo from './TimeInfo';
 type Props = {
     value: Todo & { owner: User };
     optimistic?: boolean;
-    updated?: (value: Todo) => any;
-    deleted?: (value: Todo) => any;
 };
 
 export default function TodoComponent({ value, optimistic }: Props) {

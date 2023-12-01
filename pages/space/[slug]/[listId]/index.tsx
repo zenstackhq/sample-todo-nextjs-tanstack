@@ -15,39 +15,10 @@ type Props = {
     list: List;
 };
 
-const PAGE_SIZE = 5;
-
 export default function TodoList(props: Props) {
     const user = useCurrentUser();
     const [title, setTitle] = useState('');
-    const create = useCreateTodo(undefined, true, true); // optimistic
-
-    // const fetchArgs = {
-    //     where: { listId: props.list.id },
-    //     include: {
-    //         owner: true,
-    //     },
-    //     orderBy: {
-    //         updatedAt: 'desc' as const,
-    //     },
-    //     take: PAGE_SIZE,
-    // };
-
-    // const { data, fetchNextPage, hasNextPage } = useInfiniteFindManyTodo(fetchArgs, {
-    //     enabled: !!props.list,
-    //     initialPageParam: fetchArgs,
-    //     getNextPageParam: (lastPage, pages) => {
-    //         if (lastPage.length < PAGE_SIZE) {
-    //             return undefined;
-    //         }
-    //         const fetched = pages.flatMap((item) => item).length;
-    //         console.log(`Fetched: ${fetched}`);
-    //         return {
-    //             ...fetchArgs,
-    //             skip: fetched,
-    //         };
-    //     },
-    // });
+    const { mutate: createTodo } = useCreateTodo(undefined, true, true); // optimistic
 
     const { data } = useFindManyTodo({
         where: { listId: props.list.id },
@@ -55,24 +26,22 @@ export default function TodoList(props: Props) {
             owner: true,
         },
         orderBy: {
-            updatedAt: 'desc' as const,
+            createdAt: 'desc' as const,
         },
     });
 
-    const _createTodo = async () => {
-        try {
-            const todo = await create.mutateAsync({
-                data: {
-                    title,
-                    owner: { connect: { id: user!.id } },
-                    list: { connect: { id: props.list.id } },
-                },
-            });
-            console.log(`Todo created: ${todo}`);
-            setTitle('');
-        } catch (err: any) {
-            toast.error(`Failed to create todo: ${err.info?.message || err.message}`);
+    const onCreateTodo = () => {
+        if (!title) {
+            return;
         }
+        setTitle('');
+        createTodo({
+            data: {
+                title,
+                owner: { connect: { id: user!.id } },
+                list: { connect: { id: props.list.id } },
+            },
+        });
     };
 
     if (!props.space || !props.list) {
@@ -94,35 +63,22 @@ export default function TodoList(props: Props) {
                         value={title}
                         onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
                             if (e.key === 'Enter') {
-                                _createTodo();
+                                onCreateTodo();
                             }
                         }}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => {
                             setTitle(e.currentTarget.value);
                         }}
                     />
-                    <button onClick={() => _createTodo()}>
+                    <button onClick={() => onCreateTodo()}>
                         <PlusIcon className="w-6 h-6 text-gray-500" />
                     </button>
                 </div>
                 <ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
-                    {/* {data?.pages.map((group, i) => (
-                        <React.Fragment key={i}>
-                            {group.map((todo) => (
-                                <TodoComponent key={todo.id} value={todo} />
-                            ))}
-                        </React.Fragment>
-                    ))} */}
-
                     {data?.map((todo) => (
                         <TodoComponent key={todo.id} value={todo} optimistic={todo.$optimistic} />
                     ))}
                 </ul>
-                {/* {hasNextPage && (
-                    <button className="btn btn-sm btn-ghost" onClick={() => fetchNextPage()}>
-                        Load more
-                    </button>
-                )} */}
             </div>
         </WithNavBar>
     );

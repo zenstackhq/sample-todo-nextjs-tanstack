@@ -20,8 +20,8 @@ enum SpaceUserRole {
 
 /// @@deny('all', auth() == null)
 /// @@allow('create', true)
-/// @@allow('read', members ? [user == auth()])
-/// @@allow('update,delete', members ? [user == auth() && role == ADMIN])
+/// @@allow('read', members?[user == auth()])
+/// @@allow('update,delete', members?[user == auth() && role == ADMIN])
 model Space {
     id String @id() @default(uuid())
     createdAt DateTime @default(now())
@@ -35,8 +35,8 @@ model Space {
 }
 
 /// @@deny('all', auth() == null)
-/// @@allow('create,update,delete', space.members ? [user == auth() && role == ADMIN])
-/// @@allow('read', space.members ? [user == auth()])
+/// @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
+/// @@allow('read', space.members?[user == auth()])
 model SpaceUser {
     id String @id() @default(uuid())
     createdAt DateTime @default(now())
@@ -51,7 +51,7 @@ model SpaceUser {
 }
 
 /// @@allow('create', true)
-/// @@allow('read', spaces ? [space.members ? [user == auth()]])
+/// @@allow('read', spaces?[space.members?[user == auth()]])
 /// @@allow('all', auth() == this)
 model User {
     id String @id() @default(uuid())
@@ -73,9 +73,9 @@ model User {
 }
 
 /// @@deny('all', auth() == null)
-/// @@allow('read', owner == auth() || (space.members ? [user == auth()] && !private))
-/// @@allow('create', owner == auth() && space.members ? [user == auth()])
-/// @@allow('update', owner == auth() && space.members ? [user == auth()] && future().owner == owner)
+/// @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
+/// @@allow('create', owner == auth() && space.members?[user == auth()])
+/// @@allow('update', owner == auth() && space.members?[user == auth()] && future().owner == owner)
 /// @@allow('delete', owner == auth())
 model List {
     id String @id() @default(uuid())
@@ -93,7 +93,7 @@ model List {
 
 /// @@deny('all', auth() == null)
 /// @@allow('all', list.owner == auth())
-/// @@allow('all', list.space.members ? [user == auth()] && !list.private)
+/// @@allow('all', list.space.members?[user == auth()] && !list.private)
 /// @@deny('update', future().owner != owner)
 model Todo {
     id String @id() @default(uuid())

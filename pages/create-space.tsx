@@ -12,13 +12,13 @@ const CreateSpace: NextPage = () => {
     const [name, setName] = useState('');
     const [slug, setSlug] = useState('');
 
-    const create = useCreateSpace();
+    const { mutateAsync: createAsync } = useCreateSpace();
     const router = useRouter();
 
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
         try {
-            const space = await create.mutateAsync({
+            const space = await createAsync({
                 data: {
                     name,
                     slug,
@@ -33,7 +33,7 @@ const CreateSpace: NextPage = () => {
                 },
             });
             console.log('Space created:', space);
-            toast.success("Space created successfull! You'll be redirected.");
+            toast.success("Space created successfully! You'll be redirected.");
 
             setTimeout(() => {
                 if (space) {

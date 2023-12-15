@@ -7,7 +7,6 @@ import TodoComponent from 'components/Todo';
 import WithNavBar from 'components/WithNavBar';
 import { GetServerSideProps } from 'next';
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
-import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 
 type Props = {

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SpaceContext, UserContext } from '@lib/context';
 import { useCreateList, useFindManyList } from '@lib/hooks';
 import { List, Space, User } from '@prisma/client';
@@ -64,7 +66,7 @@ function CreateDialog() {
             <div className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-xl mb-8">Create a Todo list</h3>
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={(e) => void onSubmit(e)}>
                         <div className="flex flex-col space-y-4">
                             <div className="flex items-center">
                                 <label htmlFor="title" className="text-lg inline-block w-20">

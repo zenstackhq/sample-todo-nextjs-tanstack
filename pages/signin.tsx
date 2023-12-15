@@ -15,7 +15,7 @@ export default function Signup() {
             if (router.query.error === 'OAuthCreateAccount') {
                 toast.error('Unable to signin. The user email may be already in use.');
             } else {
-                toast.error(`Authentication error: ${router.query.error}`);
+                toast.error(`Authentication error: ${router.query.error.toString()}`);
             }
         }
     }, [router]);
@@ -46,7 +46,7 @@ export default function Signup() {
                 <div className="w-full p-6 space-y-8 sm:p-8 lg:p-16">
                     <h2 className="text-2xl font-bold text-gray-900 lg:text-3xl">Sign in to your account</h2>
 
-                    <form className="mt-8" action="#" onSubmit={(e) => onSignin(e)}>
+                    <form className="mt-8" action="#" onSubmit={(e) => void onSignin(e)}>
                         <div className="mb-6">
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
                                 Your email
@@ -99,7 +99,7 @@ export default function Signup() {
 
                             <div
                                 className="btn btn-outline w-full lg:w-fit"
-                                onClick={() => signIn('github', { callbackUrl: '/' })}
+                                onClick={() => void signIn('github', { callbackUrl: '/' })}
                             >
                                 Sign in with GitHub
                             </div>

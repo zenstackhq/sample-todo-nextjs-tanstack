@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useCurrentUser } from '@lib/context';
 import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from '@lib/hooks';
@@ -14,8 +16,8 @@ export default function ManageMembers({ space }: Props) {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<SpaceUserRole>(SpaceUserRole.USER);
     const user = useCurrentUser();
-    const create = useCreateSpaceUser();
-    const del = useDeleteSpaceUser();
+    const { mutateAsync: createMember } = useCreateSpaceUser();
+    const { mutate: deleteMember } = useDeleteSpaceUser();
 
     const { data: members } = useFindManySpaceUser({
         where: {
@@ -31,7 +33,7 @@ export default function ManageMembers({ space }: Props) {
 
     const inviteUser = async () => {
         try {
-            const r = await create.mutateAsync({
+            const r = await createMember({
                 data: {
                     user: {
                         connect: {
@@ -63,9 +65,9 @@ export default function ManageMembers({ space }: Props) {
         }
     };
 
-    const removeMember = async (id: string) => {
+    const removeMember = (id: string) => {
         if (confirm(`Are you sure to remove this member from space?`)) {
-            await del.mutate({ where: { id } });
+            void deleteMember({ where: { id } });
         }
     };
 
@@ -82,7 +84,7 @@ export default function ManageMembers({ space }: Props) {
                     }}
                     onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
                         if (e.key === 'Enter') {
-                            inviteUser();
+                            void inviteUser();
                         }
                     }}
                 />
@@ -98,7 +100,7 @@ export default function ManageMembers({ space }: Props) {
                     <option value={SpaceUserRole.ADMIN}>ADMIN</option>
                 </select>
 
-                <button onClick={() => inviteUser()}>
+                <button onClick={() => void inviteUser()}>
                     <PlusIcon className="w-6 h-6 text-gray-500" />
                 </button>
             </div>

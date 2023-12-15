@@ -25,7 +25,7 @@ export function useCreateTodo(
     );
     const mutation = {
         ..._mutation,
-        async mutateAsync<T extends Prisma.TodoCreateArgs>(
+        mutateAsync: async <T extends Prisma.TodoCreateArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoCreateArgs>,
             options?: Omit<
                 UseMutationOptions<
@@ -35,7 +35,7 @@ export function useCreateTodo(
                 >,
                 'mutationFn'
             >,
-        ) {
+        ) => {
             return (await _mutation.mutateAsync(args, options as any)) as
                 | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
@@ -63,13 +63,13 @@ export function useCreateManyTodo(
     );
     const mutation = {
         ..._mutation,
-        async mutateAsync<T extends Prisma.TodoCreateManyArgs>(
+        mutateAsync: async <T extends Prisma.TodoCreateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>,
             options?: Omit<
                 UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>>,
                 'mutationFn'
             >,
-        ) {
+        ) => {
             return (await _mutation.mutateAsync(args, options as any)) as Prisma.BatchPayload;
         },
     };
@@ -138,7 +138,7 @@ export function useUpdateTodo(
     );
     const mutation = {
         ..._mutation,
-        async mutateAsync<T extends Prisma.TodoUpdateArgs>(
+        mutateAsync: async <T extends Prisma.TodoUpdateArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>,
             options?: Omit<
                 UseMutationOptions<
@@ -148,7 +148,7 @@ export function useUpdateTodo(
                 >,
                 'mutationFn'
             >,
-        ) {
+        ) => {
             return (await _mutation.mutateAsync(args, options as any)) as
                 | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
@@ -176,13 +176,13 @@ export function useUpdateManyTodo(
     );
     const mutation = {
         ..._mutation,
-        async mutateAsync<T extends Prisma.TodoUpdateManyArgs>(
+        mutateAsync: async <T extends Prisma.TodoUpdateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>,
             options?: Omit<
                 UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>>,
                 'mutationFn'
             >,
-        ) {
+        ) => {
             return (await _mutation.mutateAsync(args, options as any)) as Prisma.BatchPayload;
         },
     };
@@ -208,7 +208,7 @@ export function useUpsertTodo(
     );
     const mutation = {
         ..._mutation,
-        async mutateAsync<T extends Prisma.TodoUpsertArgs>(
+        mutateAsync: async <T extends Prisma.TodoUpsertArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>,
             options?: Omit<
                 UseMutationOptions<
@@ -218,7 +218,7 @@ export function useUpsertTodo(
                 >,
                 'mutationFn'
             >,
-        ) {
+        ) => {
             return (await _mutation.mutateAsync(args, options as any)) as
                 | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
@@ -246,7 +246,7 @@ export function useDeleteTodo(
     );
     const mutation = {
         ..._mutation,
-        async mutateAsync<T extends Prisma.TodoDeleteArgs>(
+        mutateAsync: async <T extends Prisma.TodoDeleteArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>,
             options?: Omit<
                 UseMutationOptions<
@@ -256,7 +256,7 @@ export function useDeleteTodo(
                 >,
                 'mutationFn'
             >,
-        ) {
+        ) => {
             return (await _mutation.mutateAsync(args, options as any)) as
                 | CheckSelect<T, Todo, Prisma.TodoGetPayload<T>>
                 | undefined;
@@ -284,13 +284,13 @@ export function useDeleteManyTodo(
     );
     const mutation = {
         ..._mutation,
-        async mutateAsync<T extends Prisma.TodoDeleteManyArgs>(
+        mutateAsync: async <T extends Prisma.TodoDeleteManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>,
             options?: Omit<
                 UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>>,
                 'mutationFn'
             >,
-        ) {
+        ) => {
             return (await _mutation.mutateAsync(args, options as any)) as Prisma.BatchPayload;
         },
     };
@@ -320,40 +320,40 @@ export function useGroupByTodo<
     InputErrors extends ByEmpty extends Prisma.True
         ? `Error: "by" must not be empty.`
         : HavingValid extends Prisma.False
-        ? {
-              [P in HavingFields]: P extends ByFields
-                  ? never
-                  : P extends string
-                  ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                  : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`];
-          }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-        ? 'orderBy' extends Prisma.Keys<T>
-            ? ByValid extends Prisma.True
+          ? {
+                [P in HavingFields]: P extends ByFields
+                    ? never
+                    : P extends string
+                      ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+                      : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`];
+            }[HavingFields]
+          : 'take' extends Prisma.Keys<T>
+            ? 'orderBy' extends Prisma.Keys<T>
+                ? ByValid extends Prisma.True
+                    ? {}
+                    : {
+                          [P in OrderFields]: P extends ByFields
+                              ? never
+                              : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                      }[OrderFields]
+                : 'Error: If you provide "take", you also need to provide "orderBy"'
+            : 'skip' extends Prisma.Keys<T>
+              ? 'orderBy' extends Prisma.Keys<T>
+                  ? ByValid extends Prisma.True
+                      ? {}
+                      : {
+                            [P in OrderFields]: P extends ByFields
+                                ? never
+                                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                        }[OrderFields]
+                  : 'Error: If you provide "skip", you also need to provide "orderBy"'
+              : ByValid extends Prisma.True
                 ? {}
                 : {
                       [P in OrderFields]: P extends ByFields
                           ? never
                           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-                  }[OrderFields]
-            : 'Error: If you provide "take", you also need to provide "orderBy"'
-        : 'skip' extends Prisma.Keys<T>
-        ? 'orderBy' extends Prisma.Keys<T>
-            ? ByValid extends Prisma.True
-                ? {}
-                : {
-                      [P in OrderFields]: P extends ByFields
-                          ? never
-                          : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-                  }[OrderFields]
-            : 'Error: If you provide "skip", you also need to provide "orderBy"'
-        : ByValid extends Prisma.True
-        ? {}
-        : {
-              [P in OrderFields]: P extends ByFields
-                  ? never
-                  : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
-          }[OrderFields],
+                  }[OrderFields],
 >(
     args: Prisma.SelectSubset<T, Prisma.SubsetIntersection<T, Prisma.TodoGroupByArgs, OrderByArg> & InputErrors>,
     options?: Omit<

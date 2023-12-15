@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCreateSpace } from '@lib/hooks';
 import { SpaceUserRole } from '@prisma/client';
 import WithNavBar from 'components/WithNavBar';
@@ -37,7 +39,7 @@ const CreateSpace: NextPage = () => {
 
             setTimeout(() => {
                 if (space) {
-                    router.push(`/space/${space.slug}`);
+                    void router.push(`/space/${space.slug}`);
                 }
             }, 2000);
         } catch (err: any) {
@@ -57,7 +59,7 @@ const CreateSpace: NextPage = () => {
     return (
         <WithNavBar>
             <div className="flex items-center justify-center h-full">
-                <form onSubmit={onSubmit}>
+                <form onSubmit={(e) => void onSubmit(e)}>
                     <h1 className="text-3xl mb-8">Create a space</h1>
                     <div className="flex-col space-y-4">
                         <div>
@@ -96,7 +98,7 @@ const CreateSpace: NextPage = () => {
                             value="Create"
                             className="btn btn-primary px-8"
                         />
-                        <button className="btn btn-outline" onClick={() => router.push('/')}>
+                        <button className="btn btn-outline" onClick={() => void router.push('/')}>
                             Cancel
                         </button>
                     </div>

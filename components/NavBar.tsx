@@ -11,8 +11,8 @@ type Props = {
 };
 
 export default function NavBar({ user, space }: Props) {
-    const onSignout = async () => {
-        await signOut({ callbackUrl: '/signin' });
+    const onSignout = () => {
+        void signOut({ callbackUrl: '/signin' });
     };
 
     return (
@@ -29,7 +29,7 @@ export default function NavBar({ user, space }: Props) {
             <div className="flex-none">
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                        {user && <Avatar user={user!} />}
+                        {user && <Avatar user={user} />}
                     </label>
                     <ul
                         tabIndex={0}

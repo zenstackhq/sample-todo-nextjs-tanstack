@@ -16,7 +16,7 @@ export default function AuthGuard({ children }: Props) {
     if (status === 'loading') {
         return <p>Loading...</p>;
     } else if (status === 'unauthenticated') {
-        router.push('/signin');
+        void router.push('/signin');
         return <></>;
     } else {
         return <>{children}</>;

@@ -11,18 +11,18 @@ type Props = {
 };
 
 export default function TodoComponent({ value, optimistic }: Props) {
-    const update = useUpdateTodo(undefined, true, true); // optimistic
-    const del = useDeleteTodo(undefined, true, true); // optimistic
+    const { mutate: updateTodo } = useUpdateTodo(undefined, true, true); // optimistic
+    const { mutate: deleteTodo } = useDeleteTodo(undefined, true, true); // optimistic
 
-    const deleteTodo = async () => {
-        del.mutate({ where: { id: value.id } });
+    const onDelete = () => {
+        deleteTodo({ where: { id: value.id } });
     };
 
-    const toggleCompleted = async (completed: boolean) => {
+    const onToggleCompleted = (completed: boolean) => {
         if (completed === !!value.completedAt) {
             return;
         }
-        update.mutate({
+        updateTodo({
             where: { id: value.id },
             data: { completedAt: completed ? new Date() : null },
         });
@@ -44,14 +44,9 @@ export default function TodoComponent({ value, optimistic }: Props) {
                         type="checkbox"
                         className="checkbox mr-2"
                         checked={!!value.completedAt}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => toggleCompleted(e.currentTarget.checked)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => onToggleCompleted(e.currentTarget.checked)}
                     />
-                    <TrashIcon
-                        className="w-6 h-6 text-gray-500 cursor-pointer"
-                        onClick={() => {
-                            deleteTodo();
-                        }}
-                    />
+                    <TrashIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={onDelete} />
                 </div>
             </div>
             <div className="flex justify-end w-full space-x-2">

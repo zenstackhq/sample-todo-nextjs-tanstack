@@ -16,11 +16,11 @@ type Props = {
 export default function TodoList({ value }: Props) {
     const router = useRouter();
 
-    const del = useDeleteList();
+    const { mutate: deleteList } = useDeleteList();
 
-    const deleteList = async () => {
+    const onDelete = () => {
         if (confirm('Are you sure to delete this list?')) {
-            del.mutate({ where: { id: value.id } });
+            deleteList({ where: { id: value.id } });
         }
     };
 
@@ -52,12 +52,7 @@ export default function TodoList({ value }: Props) {
                                 <LockClosedIcon className="w-4 h-4 text-gray-500" />
                             </div>
                         )}
-                        <TrashIcon
-                            className="w-4 h-4 text-gray-500 cursor-pointer"
-                            onClick={() => {
-                                deleteList();
-                            }}
-                        />
+                        <TrashIcon className="w-4 h-4 text-gray-500 cursor-pointer" onClick={onDelete} />
                     </div>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCreateUser } from '@lib/hooks';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
@@ -51,7 +53,7 @@ export default function Signup() {
             <div className="items-center justify-center w-full bg-white rounded-lg shadow lg:flex md:mt-0 lg:max-w-screen-md xl:p-0">
                 <div className="w-full p-6 space-y-8 sm:p-8 lg:p-16">
                     <h2 className="text-2xl font-bold text-gray-900 lg:text-3xl">Create a Free Account</h2>
-                    <form className="mt-8" action="#" onSubmit={(e) => onSignup(e)}>
+                    <form className="mt-8" action="#" onSubmit={(e) => void onSignup(e)}>
                         <div className="mb-6">
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
                                 Your email

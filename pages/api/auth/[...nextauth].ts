@@ -34,13 +34,14 @@ export const authOptions: NextAuthOptions = {
         GitHubProvider({
             clientId: process.env.GITHUB_ID!,
             clientSecret: process.env.GITHUB_SECRET!,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             scope: 'read:user,user:email',
         }),
     ],
 
     callbacks: {
-        async session({ session, token }) {
+        session({ session, token }) {
             return {
                 ...session,
                 user: {

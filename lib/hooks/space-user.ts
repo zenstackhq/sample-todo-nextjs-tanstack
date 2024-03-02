@@ -3,19 +3,19 @@ import type { Prisma, SpaceUser } from '@prisma/client';
 import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
 import { getHooksContext } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import { useModelQuery, useInfiniteModelQuery, useModelMutation } from '@zenstackhq/tanstack-query/runtime-v5/react';
-import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime-v5';
+import type { PickEnumerable, CheckSelect, QueryError } from '@zenstackhq/tanstack-query/runtime-v5';
 import metadata from './__model_meta';
-type DefaultError = Error;
+type DefaultError = QueryError;
 import { useSuspenseModelQuery, useSuspenseInfiniteModelQuery } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import type { UseSuspenseQueryOptions, UseSuspenseInfiniteQueryOptions } from '@tanstack/react-query';
 
 export function useCreateSpaceUser(
-    options?: Omit<UseMutationOptions<SpaceUser | undefined, unknown, Prisma.SpaceUserCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<SpaceUser | undefined, DefaultError, Prisma.SpaceUserCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.SpaceUserCreateArgs, SpaceUser, true>(
+    const _mutation = useModelMutation<Prisma.SpaceUserCreateArgs, DefaultError, SpaceUser, true>(
         'SpaceUser',
         'POST',
         `${endpoint}/spaceUser/create`,
@@ -33,7 +33,7 @@ export function useCreateSpaceUser(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.SpaceUserCreateArgs>
                 >,
                 'mutationFn'
@@ -48,12 +48,12 @@ export function useCreateSpaceUser(
 }
 
 export function useCreateManySpaceUser(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUserCreateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.SpaceUserCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.SpaceUserCreateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.SpaceUserCreateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'SpaceUser',
         'POST',
         `${endpoint}/spaceUser/createMany`,
@@ -71,7 +71,7 @@ export function useCreateManySpaceUser(
             options?: Omit<
                 UseMutationOptions<
                     Prisma.BatchPayload,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.SpaceUserCreateManyArgs>
                 >,
                 'mutationFn'
@@ -250,12 +250,12 @@ export function useSuspenseFindFirstSpaceUser<
 }
 
 export function useUpdateSpaceUser(
-    options?: Omit<UseMutationOptions<SpaceUser | undefined, unknown, Prisma.SpaceUserUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<SpaceUser | undefined, DefaultError, Prisma.SpaceUserUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.SpaceUserUpdateArgs, SpaceUser, true>(
+    const _mutation = useModelMutation<Prisma.SpaceUserUpdateArgs, DefaultError, SpaceUser, true>(
         'SpaceUser',
         'PUT',
         `${endpoint}/spaceUser/update`,
@@ -273,7 +273,7 @@ export function useUpdateSpaceUser(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.SpaceUserUpdateArgs>
                 >,
                 'mutationFn'
@@ -288,12 +288,12 @@ export function useUpdateSpaceUser(
 }
 
 export function useUpdateManySpaceUser(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUserUpdateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.SpaceUserUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.SpaceUserUpdateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.SpaceUserUpdateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'SpaceUser',
         'PUT',
         `${endpoint}/spaceUser/updateMany`,
@@ -311,7 +311,7 @@ export function useUpdateManySpaceUser(
             options?: Omit<
                 UseMutationOptions<
                     Prisma.BatchPayload,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.SpaceUserUpdateManyArgs>
                 >,
                 'mutationFn'
@@ -324,12 +324,12 @@ export function useUpdateManySpaceUser(
 }
 
 export function useUpsertSpaceUser(
-    options?: Omit<UseMutationOptions<SpaceUser | undefined, unknown, Prisma.SpaceUserUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<SpaceUser | undefined, DefaultError, Prisma.SpaceUserUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.SpaceUserUpsertArgs, SpaceUser, true>(
+    const _mutation = useModelMutation<Prisma.SpaceUserUpsertArgs, DefaultError, SpaceUser, true>(
         'SpaceUser',
         'POST',
         `${endpoint}/spaceUser/upsert`,
@@ -347,7 +347,7 @@ export function useUpsertSpaceUser(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.SpaceUserUpsertArgs>
                 >,
                 'mutationFn'
@@ -362,12 +362,12 @@ export function useUpsertSpaceUser(
 }
 
 export function useDeleteSpaceUser(
-    options?: Omit<UseMutationOptions<SpaceUser | undefined, unknown, Prisma.SpaceUserDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<SpaceUser | undefined, DefaultError, Prisma.SpaceUserDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.SpaceUserDeleteArgs, SpaceUser, true>(
+    const _mutation = useModelMutation<Prisma.SpaceUserDeleteArgs, DefaultError, SpaceUser, true>(
         'SpaceUser',
         'DELETE',
         `${endpoint}/spaceUser/delete`,
@@ -385,7 +385,7 @@ export function useDeleteSpaceUser(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, SpaceUser, Prisma.SpaceUserGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.SpaceUserDeleteArgs>
                 >,
                 'mutationFn'
@@ -400,12 +400,12 @@ export function useDeleteSpaceUser(
 }
 
 export function useDeleteManySpaceUser(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SpaceUserDeleteManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.SpaceUserDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.SpaceUserDeleteManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.SpaceUserDeleteManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'SpaceUser',
         'DELETE',
         `${endpoint}/spaceUser/deleteMany`,
@@ -423,7 +423,7 @@ export function useDeleteManySpaceUser(
             options?: Omit<
                 UseMutationOptions<
                     Prisma.BatchPayload,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.SpaceUserDeleteManyArgs>
                 >,
                 'mutationFn'

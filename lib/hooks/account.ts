@@ -3,19 +3,19 @@ import type { Prisma, Account } from '@prisma/client';
 import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
 import { getHooksContext } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import { useModelQuery, useInfiniteModelQuery, useModelMutation } from '@zenstackhq/tanstack-query/runtime-v5/react';
-import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime-v5';
+import type { PickEnumerable, CheckSelect, QueryError } from '@zenstackhq/tanstack-query/runtime-v5';
 import metadata from './__model_meta';
-type DefaultError = Error;
+type DefaultError = QueryError;
 import { useSuspenseModelQuery, useSuspenseInfiniteModelQuery } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import type { UseSuspenseQueryOptions, UseSuspenseInfiniteQueryOptions } from '@tanstack/react-query';
 
 export function useCreateAccount(
-    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, DefaultError, Prisma.AccountCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.AccountCreateArgs, Account, true>(
+    const _mutation = useModelMutation<Prisma.AccountCreateArgs, DefaultError, Account, true>(
         'Account',
         'POST',
         `${endpoint}/account/create`,
@@ -33,7 +33,7 @@ export function useCreateAccount(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.AccountCreateArgs>
                 >,
                 'mutationFn'
@@ -48,12 +48,12 @@ export function useCreateAccount(
 }
 
 export function useCreateManyAccount(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountCreateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.AccountCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.AccountCreateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.AccountCreateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'Account',
         'POST',
         `${endpoint}/account/createMany`,
@@ -69,7 +69,11 @@ export function useCreateManyAccount(
         mutateAsync: async <T extends Prisma.AccountCreateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.AccountCreateManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {
@@ -246,12 +250,12 @@ export function useSuspenseFindFirstAccount<
 }
 
 export function useUpdateAccount(
-    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, DefaultError, Prisma.AccountUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.AccountUpdateArgs, Account, true>(
+    const _mutation = useModelMutation<Prisma.AccountUpdateArgs, DefaultError, Account, true>(
         'Account',
         'PUT',
         `${endpoint}/account/update`,
@@ -269,7 +273,7 @@ export function useUpdateAccount(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.AccountUpdateArgs>
                 >,
                 'mutationFn'
@@ -284,12 +288,12 @@ export function useUpdateAccount(
 }
 
 export function useUpdateManyAccount(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountUpdateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.AccountUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.AccountUpdateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.AccountUpdateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'Account',
         'PUT',
         `${endpoint}/account/updateMany`,
@@ -305,7 +309,11 @@ export function useUpdateManyAccount(
         mutateAsync: async <T extends Prisma.AccountUpdateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.AccountUpdateManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.AccountUpdateManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.AccountUpdateManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {
@@ -316,12 +324,12 @@ export function useUpdateManyAccount(
 }
 
 export function useUpsertAccount(
-    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, DefaultError, Prisma.AccountUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.AccountUpsertArgs, Account, true>(
+    const _mutation = useModelMutation<Prisma.AccountUpsertArgs, DefaultError, Account, true>(
         'Account',
         'POST',
         `${endpoint}/account/upsert`,
@@ -339,7 +347,7 @@ export function useUpsertAccount(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.AccountUpsertArgs>
                 >,
                 'mutationFn'
@@ -354,12 +362,12 @@ export function useUpsertAccount(
 }
 
 export function useDeleteAccount(
-    options?: Omit<UseMutationOptions<Account | undefined, unknown, Prisma.AccountDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Account | undefined, DefaultError, Prisma.AccountDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.AccountDeleteArgs, Account, true>(
+    const _mutation = useModelMutation<Prisma.AccountDeleteArgs, DefaultError, Account, true>(
         'Account',
         'DELETE',
         `${endpoint}/account/delete`,
@@ -377,7 +385,7 @@ export function useDeleteAccount(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Account, Prisma.AccountGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.AccountDeleteArgs>
                 >,
                 'mutationFn'
@@ -392,12 +400,12 @@ export function useDeleteAccount(
 }
 
 export function useDeleteManyAccount(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.AccountDeleteManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.AccountDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.AccountDeleteManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.AccountDeleteManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'Account',
         'DELETE',
         `${endpoint}/account/deleteMany`,
@@ -413,7 +421,11 @@ export function useDeleteManyAccount(
         mutateAsync: async <T extends Prisma.AccountDeleteManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.AccountDeleteManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.AccountDeleteManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.AccountDeleteManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {

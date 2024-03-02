@@ -3,19 +3,19 @@ import type { Prisma, List } from '@prisma/client';
 import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
 import { getHooksContext } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import { useModelQuery, useInfiniteModelQuery, useModelMutation } from '@zenstackhq/tanstack-query/runtime-v5/react';
-import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime-v5';
+import type { PickEnumerable, CheckSelect, QueryError } from '@zenstackhq/tanstack-query/runtime-v5';
 import metadata from './__model_meta';
-type DefaultError = Error;
+type DefaultError = QueryError;
 import { useSuspenseModelQuery, useSuspenseInfiniteModelQuery } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import type { UseSuspenseQueryOptions, UseSuspenseInfiniteQueryOptions } from '@tanstack/react-query';
 
 export function useCreateList(
-    options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<List | undefined, DefaultError, Prisma.ListCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.ListCreateArgs, List, true>(
+    const _mutation = useModelMutation<Prisma.ListCreateArgs, DefaultError, List, true>(
         'List',
         'POST',
         `${endpoint}/list/create`,
@@ -33,7 +33,7 @@ export function useCreateList(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.ListCreateArgs>
                 >,
                 'mutationFn'
@@ -48,12 +48,12 @@ export function useCreateList(
 }
 
 export function useCreateManyList(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.ListCreateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.ListCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.ListCreateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.ListCreateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'List',
         'POST',
         `${endpoint}/list/createMany`,
@@ -69,7 +69,11 @@ export function useCreateManyList(
         mutateAsync: async <T extends Prisma.ListCreateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.ListCreateManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {
@@ -246,12 +250,12 @@ export function useSuspenseFindFirstList<
 }
 
 export function useUpdateList(
-    options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<List | undefined, DefaultError, Prisma.ListUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.ListUpdateArgs, List, true>(
+    const _mutation = useModelMutation<Prisma.ListUpdateArgs, DefaultError, List, true>(
         'List',
         'PUT',
         `${endpoint}/list/update`,
@@ -269,7 +273,7 @@ export function useUpdateList(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.ListUpdateArgs>
                 >,
                 'mutationFn'
@@ -284,12 +288,12 @@ export function useUpdateList(
 }
 
 export function useUpdateManyList(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.ListUpdateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.ListUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.ListUpdateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.ListUpdateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'List',
         'PUT',
         `${endpoint}/list/updateMany`,
@@ -305,7 +309,11 @@ export function useUpdateManyList(
         mutateAsync: async <T extends Prisma.ListUpdateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.ListUpdateManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.ListUpdateManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.ListUpdateManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {
@@ -316,12 +324,12 @@ export function useUpdateManyList(
 }
 
 export function useUpsertList(
-    options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<List | undefined, DefaultError, Prisma.ListUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.ListUpsertArgs, List, true>(
+    const _mutation = useModelMutation<Prisma.ListUpsertArgs, DefaultError, List, true>(
         'List',
         'POST',
         `${endpoint}/list/upsert`,
@@ -339,7 +347,7 @@ export function useUpsertList(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.ListUpsertArgs>
                 >,
                 'mutationFn'
@@ -354,12 +362,12 @@ export function useUpsertList(
 }
 
 export function useDeleteList(
-    options?: Omit<UseMutationOptions<List | undefined, unknown, Prisma.ListDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<List | undefined, DefaultError, Prisma.ListDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.ListDeleteArgs, List, true>(
+    const _mutation = useModelMutation<Prisma.ListDeleteArgs, DefaultError, List, true>(
         'List',
         'DELETE',
         `${endpoint}/list/delete`,
@@ -377,7 +385,7 @@ export function useDeleteList(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, List, Prisma.ListGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.ListDeleteArgs>
                 >,
                 'mutationFn'
@@ -392,12 +400,12 @@ export function useDeleteList(
 }
 
 export function useDeleteManyList(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.ListDeleteManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.ListDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.ListDeleteManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.ListDeleteManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'List',
         'DELETE',
         `${endpoint}/list/deleteMany`,
@@ -413,7 +421,11 @@ export function useDeleteManyList(
         mutateAsync: async <T extends Prisma.ListDeleteManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.ListDeleteManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.ListDeleteManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.ListDeleteManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {

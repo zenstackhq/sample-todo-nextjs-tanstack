@@ -3,19 +3,19 @@ import type { Prisma, Todo } from '@prisma/client';
 import type { UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query';
 import { getHooksContext } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import { useModelQuery, useInfiniteModelQuery, useModelMutation } from '@zenstackhq/tanstack-query/runtime-v5/react';
-import type { PickEnumerable, CheckSelect } from '@zenstackhq/tanstack-query/runtime-v5';
+import type { PickEnumerable, CheckSelect, QueryError } from '@zenstackhq/tanstack-query/runtime-v5';
 import metadata from './__model_meta';
-type DefaultError = Error;
+type DefaultError = QueryError;
 import { useSuspenseModelQuery, useSuspenseInfiniteModelQuery } from '@zenstackhq/tanstack-query/runtime-v5/react';
 import type { UseSuspenseQueryOptions, UseSuspenseInfiniteQueryOptions } from '@tanstack/react-query';
 
 export function useCreateTodo(
-    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoCreateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, DefaultError, Prisma.TodoCreateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.TodoCreateArgs, Todo, true>(
+    const _mutation = useModelMutation<Prisma.TodoCreateArgs, DefaultError, Todo, true>(
         'Todo',
         'POST',
         `${endpoint}/todo/create`,
@@ -33,7 +33,7 @@ export function useCreateTodo(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.TodoCreateArgs>
                 >,
                 'mutationFn'
@@ -48,12 +48,12 @@ export function useCreateTodo(
 }
 
 export function useCreateManyTodo(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoCreateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.TodoCreateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.TodoCreateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.TodoCreateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'Todo',
         'POST',
         `${endpoint}/todo/createMany`,
@@ -69,7 +69,11 @@ export function useCreateManyTodo(
         mutateAsync: async <T extends Prisma.TodoCreateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.TodoCreateManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {
@@ -246,12 +250,12 @@ export function useSuspenseFindFirstTodo<
 }
 
 export function useUpdateTodo(
-    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoUpdateArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, DefaultError, Prisma.TodoUpdateArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.TodoUpdateArgs, Todo, true>(
+    const _mutation = useModelMutation<Prisma.TodoUpdateArgs, DefaultError, Todo, true>(
         'Todo',
         'PUT',
         `${endpoint}/todo/update`,
@@ -269,7 +273,7 @@ export function useUpdateTodo(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.TodoUpdateArgs>
                 >,
                 'mutationFn'
@@ -284,12 +288,12 @@ export function useUpdateTodo(
 }
 
 export function useUpdateManyTodo(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoUpdateManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.TodoUpdateManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.TodoUpdateManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.TodoUpdateManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'Todo',
         'PUT',
         `${endpoint}/todo/updateMany`,
@@ -305,7 +309,11 @@ export function useUpdateManyTodo(
         mutateAsync: async <T extends Prisma.TodoUpdateManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.TodoUpdateManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {
@@ -316,12 +324,12 @@ export function useUpdateManyTodo(
 }
 
 export function useUpsertTodo(
-    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoUpsertArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, DefaultError, Prisma.TodoUpsertArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.TodoUpsertArgs, Todo, true>(
+    const _mutation = useModelMutation<Prisma.TodoUpsertArgs, DefaultError, Todo, true>(
         'Todo',
         'POST',
         `${endpoint}/todo/upsert`,
@@ -339,7 +347,7 @@ export function useUpsertTodo(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.TodoUpsertArgs>
                 >,
                 'mutationFn'
@@ -354,12 +362,12 @@ export function useUpsertTodo(
 }
 
 export function useDeleteTodo(
-    options?: Omit<UseMutationOptions<Todo | undefined, unknown, Prisma.TodoDeleteArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Todo | undefined, DefaultError, Prisma.TodoDeleteArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.TodoDeleteArgs, Todo, true>(
+    const _mutation = useModelMutation<Prisma.TodoDeleteArgs, DefaultError, Todo, true>(
         'Todo',
         'DELETE',
         `${endpoint}/todo/delete`,
@@ -377,7 +385,7 @@ export function useDeleteTodo(
             options?: Omit<
                 UseMutationOptions<
                     CheckSelect<T, Todo, Prisma.TodoGetPayload<T>> | undefined,
-                    unknown,
+                    DefaultError,
                     Prisma.SelectSubset<T, Prisma.TodoDeleteArgs>
                 >,
                 'mutationFn'
@@ -392,12 +400,12 @@ export function useDeleteTodo(
 }
 
 export function useDeleteManyTodo(
-    options?: Omit<UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.TodoDeleteManyArgs>, 'mutationFn'>,
+    options?: Omit<UseMutationOptions<Prisma.BatchPayload, DefaultError, Prisma.TodoDeleteManyArgs>, 'mutationFn'>,
     invalidateQueries: boolean = true,
     optimisticUpdate: boolean = false,
 ) {
     const { endpoint, fetch } = getHooksContext();
-    const _mutation = useModelMutation<Prisma.TodoDeleteManyArgs, Prisma.BatchPayload, false>(
+    const _mutation = useModelMutation<Prisma.TodoDeleteManyArgs, DefaultError, Prisma.BatchPayload, false>(
         'Todo',
         'DELETE',
         `${endpoint}/todo/deleteMany`,
@@ -413,7 +421,11 @@ export function useDeleteManyTodo(
         mutateAsync: async <T extends Prisma.TodoDeleteManyArgs>(
             args: Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>,
             options?: Omit<
-                UseMutationOptions<Prisma.BatchPayload, unknown, Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>>,
+                UseMutationOptions<
+                    Prisma.BatchPayload,
+                    DefaultError,
+                    Prisma.SelectSubset<T, Prisma.TodoDeleteManyArgs>
+                >,
                 'mutationFn'
             >,
         ) => {

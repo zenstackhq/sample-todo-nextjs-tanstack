@@ -1,0 +1,32 @@
+name: Update ZenStack
+
+env:
+    DO_NOT_TRACK: '1'
+
+on:
+    workflow_dispatch:
+    repository_dispatch:
+        types: [zenstack-release]
+
+jobs:
+    update:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Update to latest ZenStack
+              run: |
+                  git config --global user.name ymc9
+                  git config --global user.email yiming@whimslab.io
+                  npm ci
+                  npm run up
+
+            - name: Build
+              run: |
+                  npm run build
+
+            - name: Commit and push
+              run: |
+                  git add .
+                  git commit -m "chore: update to latest ZenStack" || true
+                  git push || true

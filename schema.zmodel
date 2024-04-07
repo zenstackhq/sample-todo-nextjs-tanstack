@@ -7,18 +7,19 @@
  */
 datasource db {
     provider = 'postgresql'
-    url = env('DATABASE_URL')
+    url = env('POSTGRES_PRISMA_URL') // uses connection pooling
+    directUrl = env('POSTGRES_URL_NON_POOLING') // uses a direct connection
 }
 
 generator js {
     provider = 'prisma-client-js'
+    previewFeatures = ["driverAdapters"]
 }
 
 plugin hooks {
     provider = '@zenstackhq/tanstack-query'
-    output = 'lib/hooks'
+    output = 'src/lib/hooks'
     target = 'react'
-    version = 'v5'
 }
 
 /*

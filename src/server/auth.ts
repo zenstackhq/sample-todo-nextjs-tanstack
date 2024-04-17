@@ -4,7 +4,8 @@ import { compareSync } from 'bcryptjs';
 import NextAuth, { type DefaultSession, type NextAuthConfig } from 'next-auth';
 import { type Adapter } from 'next-auth/adapters';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { prisma } from './db';
+import { createPrisma } from './db';
+// import { prisma } from './db';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -38,14 +39,14 @@ export const authOptions: NextAuthConfig = {
             return session;
         },
     },
-    adapter: PrismaAdapter(prisma) as Adapter,
+    adapter: PrismaAdapter(createPrisma()) as Adapter,
     providers: [
         CredentialsProvider({
             credentials: {
                 email: { type: 'email' },
                 password: { type: 'password' },
             },
-            authorize: authorize(prisma),
+            authorize: authorize(createPrisma()),
         }),
     ],
 };

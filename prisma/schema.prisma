@@ -4,19 +4,19 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 datasource db {
-    provider = "postgresql"
-    url = env("POSTGRES_PRISMA_URL")
-    directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 generator js {
-    provider = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 enum SpaceUserRole {
-    USER
-    ADMIN
+  USER
+  ADMIN
 }
 
 /// @@deny('all', auth() == null)
@@ -24,53 +24,53 @@ enum SpaceUserRole {
 /// @@allow('read', members?[user == auth()])
 /// @@allow('update,delete', members?[user == auth() && role == ADMIN])
 model Space {
-    id String @id() @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    /// @length(4, 50)
-    name String
-    /// @regex('^[0-9a-zA-Z]{4,16}$')
-    slug String @unique()
-    members SpaceUser[]
-    lists List[]
+  id        String      @id() @default(uuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt()
+  /// @length(4, 50)
+  name      String
+  /// @regex('^[0-9a-zA-Z]{4,16}$')
+  slug      String      @unique()
+  members   SpaceUser[]
+  lists     List[]
 }
 
 /// @@deny('all', auth() == null)
 /// @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
 /// @@allow('read', space.members?[user == auth()])
 model SpaceUser {
-    id String @id() @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId String
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String
-    role SpaceUserRole
+  id        String        @id() @default(uuid())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt()
+  space     Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  spaceId   String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  role      SpaceUserRole
 
-    @@unique([userId, spaceId])
+  @@unique([userId, spaceId])
 }
 
 /// @@allow('create', true)
 /// @@allow('read', spaces?[space.members?[user == auth()]])
 /// @@allow('all', auth() == this)
 model User {
-    id String @id() @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    /// @email
-    email String @unique()
-    emailVerified DateTime?
-    /// @password
-    /// @omit
-    password String?
-    name String?
-    spaces SpaceUser[]
-    /// @url
-    image String?
-    lists List[]
-    todos Todo[]
-    accounts Account[]
+  id            String      @id() @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt()
+  /// @email
+  email         String      @unique()
+  emailVerified DateTime?
+  /// @password
+  /// @omit
+  password      String?
+  name          String?
+  spaces        SpaceUser[]
+  /// @url
+  image         String?
+  lists         List[]
+  todos         Todo[]
+  accounts      Account[]
 }
 
 /// @@deny('all', auth() == null)
@@ -79,17 +79,17 @@ model User {
 /// @@allow('update', owner == auth() && space.members?[user == auth()] && future().owner == owner)
 /// @@allow('delete', owner == auth())
 model List {
-    id String @id() @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId String
-    owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId String
-    /// @length(1, 100)
-    title String
-    private Boolean @default(false)
-    todos Todo[]
+  id        String   @id() @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  spaceId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String
+  /// @length(1, 100)
+  title     String
+  private   Boolean  @default(false)
+  todos     Todo[]
 }
 
 /// @@deny('all', auth() == null)
@@ -97,33 +97,33 @@ model List {
 /// @@allow('all', list.space.members?[user == auth()] && !list.private)
 /// @@deny('update', future().owner != owner)
 model Todo {
-    id String @id() @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId String
-    list List @relation(fields: [listId], references: [id], onDelete: Cascade)
-    listId String
-    /// @length(1, 100)
-    title String
-    completedAt DateTime?
+  id          String    @id() @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt()
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String
+  list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId      String
+  /// @length(1, 100)
+  title       String
+  completedAt DateTime?
 }
 
 model Account {
-    id String @id() @default(uuid())
-    userId String
-    type String
-    provider String
-    providerAccountId String
-    refresh_token String?
-    refresh_token_expires_in Int?
-    access_token String?
-    expires_at Int?
-    token_type String?
-    scope String?
-    id_token String?
-    session_state String?
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                       String  @id() @default(uuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  refresh_token_expires_in Int?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }

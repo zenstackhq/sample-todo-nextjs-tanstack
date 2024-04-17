@@ -1,24 +1,23 @@
-// import { enhance } from '@zenstackhq/runtime';
+import { enhance } from '@zenstackhq/runtime';
 import { NextRequestHandler } from '@zenstackhq/server/next';
-// import { auth } from '~/server/auth';
+import { auth } from '~/server/auth';
 import { createPrisma } from '~/server/db';
 
 // create an enhanced Prisma client with user context
 async function getPrisma() {
     const prisma = createPrisma();
-    return prisma;
-    //     const session = await auth();
-    //     return enhance(
-    //         prisma,
-    //         {
-    //             user: session?.user?.id ? { id: session.user.id } : undefined,
-    //         },
-    //         {
-    //             transactionMaxWait: 10000,
-    //             transactionTimeout: 10000,
-    //             logPrismaQuery: true,
-    //         }
-    //     );
+    const session = await auth();
+    return enhance(
+        prisma,
+        {
+            user: session?.user?.id ? { id: session.user.id } : undefined,
+        },
+        {
+            transactionMaxWait: 10000,
+            transactionTimeout: 10000,
+            logPrismaQuery: true,
+        }
+    );
 }
 
 const handler = NextRequestHandler({ getPrisma, useAppDir: true });

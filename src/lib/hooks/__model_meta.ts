@@ -93,12 +93,12 @@ const metadata = {
                 },
             }
             , uniqueConstraints: {
-                userId_spaceId: {
-                    name: "userId_spaceId",
-                    fields: ["userId", "spaceId"]
-                }, id: {
+                id: {
                     name: "id",
                     fields: ["id"]
+                }, userId_spaceId: {
+                    name: "userId_spaceId",
+                    fields: ["userId", "spaceId"]
                 },
             }
             ,
@@ -359,12 +359,12 @@ const metadata = {
                 },
             }
             , uniqueConstraints: {
-                provider_providerAccountId: {
-                    name: "provider_providerAccountId",
-                    fields: ["provider", "providerAccountId"]
-                }, id: {
+                id: {
                     name: "id",
                     fields: ["id"]
+                }, provider_providerAccountId: {
+                    name: "provider_providerAccountId",
+                    fields: ["provider", "providerAccountId"]
                 },
             }
             ,

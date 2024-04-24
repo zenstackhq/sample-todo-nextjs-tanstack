@@ -1,4 +1,4 @@
-import { enhance } from '@zenstackhq/runtime';
+import { enhance } from '@zenstackhq/runtime/edge';
 import { NextRequestHandler } from '@zenstackhq/server/next';
 import { auth } from '~/server/auth';
 import { createPrisma } from '~/server/db';

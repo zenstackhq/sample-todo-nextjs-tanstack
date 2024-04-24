@@ -11,8 +11,8 @@ type Props = {
 };
 
 export default function TodoComponent({ value, optimistic }: Props) {
-    const { mutate: updateTodo } = useUpdateTodo(undefined, true, true); // optimistic
-    const { mutate: deleteTodo } = useDeleteTodo(undefined, true, true); // optimistic
+    const { mutate: updateTodo } = useUpdateTodo({ optimisticUpdate: true });
+    const { mutate: deleteTodo } = useDeleteTodo({ optimisticUpdate: true });
 
     const onDelete = () => {
         deleteTodo({ where: { id: value.id } });

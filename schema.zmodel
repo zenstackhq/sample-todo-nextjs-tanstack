@@ -33,13 +33,13 @@ enum SpaceUserRole {
  * Model for a space in which users can collaborate on Lists and Todos
  */
 model Space {
-    id String @id @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name String @length(4, 50)
-    slug String @unique @regex('^[0-9a-zA-Z]{4,16}$')
-    members SpaceUser[]
-    lists List[]
+    id        String      @id @default(uuid())
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    name      String      @length(4, 50)
+    slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
+    members   SpaceUser[]
+    lists     List[]
 
     // require login
     @@deny('all', auth() == null)
@@ -58,14 +58,14 @@ model Space {
  * Model representing membership of a user in a space
  */
 model SpaceUser {
-    id String @id @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId String
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String
-    role SpaceUserRole
+    id        String        @id @default(uuid())
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
+    space     Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId   String
+    user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    role      SpaceUserRole
     @@unique([userId, spaceId])
 
     // require login
@@ -82,20 +82,20 @@ model SpaceUser {
  * Model for a user
  */
 model User {
-    id String @id @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    email String @unique @email
+    id            String      @id @default(uuid())
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    email         String      @unique @email
     emailVerified DateTime?
-    password String? @password @omit
-    name String?
-    spaces SpaceUser[]
-    image String? @url
-    lists List[]
-    todos Todo[]
+    password      String?     @password @omit
+    name          String?
+    spaces        SpaceUser[]
+    image         String?     @url
+    lists         List[]
+    todos         Todo[]
 
     // next-auth
-    accounts Account[]
+    accounts      Account[]
 
     // can be created by anyone, even not logged in
     @@allow('create', true)
@@ -111,16 +111,16 @@ model User {
  * Model for a Todo list
  */
 model List {
-    id String @id @default(uuid())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId String
-    owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId String
-    title String @length(1, 100)
-    private Boolean @default(false)
-    todos Todo[]
+    space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId   String
+    owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId   String   @default(auth().id)
+    title     String   @length(1, 100)
+    private   Boolean  @default(false)
+    todos     Todo[]
 
     // require login
     @@deny('all', auth() == null)
@@ -143,14 +143,14 @@ model List {
  * Model for a single Todo
  */
 model Todo {
-    id String @id @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId String
-    list List @relation(fields: [listId], references: [id], onDelete: Cascade)
-    listId String
-    title String @length(1, 100)
+    id          String    @id @default(uuid())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId     String    @default(auth().id)
+    list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
+    listId      String
+    title       String    @length(1, 100)
     completedAt DateTime?
 
     // require login
@@ -166,19 +166,19 @@ model Todo {
 
 // next-auth
 model Account {
-    id String @id @default(uuid())
-    userId String
-    type String
-    provider String
-    providerAccountId String
-    refresh_token String?
+    id                       String  @id @default(uuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String?
     refresh_token_expires_in Int?
-    access_token String?
-    expires_at Int?
-    token_type String?
-    scope String?
-    id_token String?
-    session_state String?
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    access_token             String?
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String?
+    session_state            String?
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     @@unique([provider, providerAccountId])
 }

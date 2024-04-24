@@ -1,5 +1,4 @@
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { useCurrentUser } from '@lib/context';
 import { useCreateTodo, useFindManyTodo } from '@lib/hooks';
 import { List, Space } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
@@ -15,9 +14,8 @@ type Props = {
 };
 
 export default function TodoList(props: Props) {
-    const user = useCurrentUser();
     const [title, setTitle] = useState('');
-    const { mutate: createTodo } = useCreateTodo(undefined, true, true); // optimistic
+    const { mutate: createTodo } = useCreateTodo({ optimisticUpdate: true });
 
     const { data } = useFindManyTodo({
         where: { listId: props.list.id },
@@ -37,7 +35,6 @@ export default function TodoList(props: Props) {
         createTodo({
             data: {
                 title,
-                owner: { connect: { id: user!.id } },
                 list: { connect: { id: props.list.id } },
             },
         });

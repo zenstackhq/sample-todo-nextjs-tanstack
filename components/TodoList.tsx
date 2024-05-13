@@ -1,4 +1,5 @@
 import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useCheckList, useDeleteList } from '@lib/hooks';
 import { List } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
 import { User } from 'next-auth';
@@ -7,7 +8,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Avatar from './Avatar';
 import TimeInfo from './TimeInfo';
-import { useDeleteList } from '@lib/hooks';
 
 type Props = {
     value: List & { owner: User };
@@ -15,6 +15,9 @@ type Props = {
 
 export default function TodoList({ value }: Props) {
     const router = useRouter();
+
+    // check if the current user can delete the list (based on its owner)
+    const { data: canDelete } = useCheckList({ operation: 'delete', where: { ownerId: value.ownerId } });
 
     const { mutate: deleteList } = useDeleteList();
 
@@ -52,7 +55,7 @@ export default function TodoList({ value }: Props) {
                                 <LockClosedIcon className="w-4 h-4 text-gray-500" />
                             </div>
                         )}
-                        <TrashIcon className="w-4 h-4 text-gray-500 cursor-pointer" onClick={onDelete} />
+                        {canDelete && <TrashIcon className="w-4 h-4 text-gray-500 cursor-pointer" onClick={onDelete} />}
                     </div>
                 </div>
             </div>

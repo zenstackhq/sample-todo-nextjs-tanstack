@@ -12,7 +12,6 @@ export type SpaceHomeProps = {
 	space: Space;
 };
 export function SpaceHome(props: SpaceHomeProps) {
-
 	const { data: lists } = useFindManyList(
 		{
 			where: {

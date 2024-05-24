@@ -210,18 +210,20 @@ model Property {
     country     String
     leases      Lease[]
     charges     Charge[]
+    private     Boolean  @default(false)
 
     // require login
     @@deny('all', auth() == null)
 
-    // can be read by owner or space members
-    @@allow('read', owner == auth() || space.members?[user == auth()])
+    // can be read by owner or space members (only if not private) 
+    @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
 
     // can be created by owner or space members
     @@allow('create', owner == auth() || space.members?[user == auth()])
 
-    // can be updated by owner
-    @@allow('update', owner == auth())
+    // when create, owner must be set to current user, and user must be in the space
+    // update is not allowed to change owner
+    @@allow('update', owner == auth() && space.members?[user == auth()] && future().owner == owner)
 
     // can be deleted by owner
     @@allow('delete', owner == auth())

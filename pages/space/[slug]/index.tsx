@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
 
 function CreateListDialog() {
     const space = useContext(SpaceContext);
@@ -117,6 +118,7 @@ function CreatePropertyDialog() {
     const [city, setCity] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [country, setCountry] = useState('');
+    const [_private, setPrivate] = useState(false);
 
     const create = useCreateProperty();
 
@@ -131,6 +133,7 @@ function CreatePropertyDialog() {
                     city,
                     postalCode,
                     country,
+                    private: _private,
                     space: { connect: { id: space!.id } },
                 },
             });
@@ -147,6 +150,7 @@ function CreatePropertyDialog() {
         setCity('');
         setPostalCode('');
         setCountry('');
+        setPrivate(false);
 
         // close modal
         setModalOpen(false);
@@ -238,6 +242,17 @@ function CreatePropertyDialog() {
                                     className="input input-bordered w-full max-w-xs mt-2"
                                     value={country}
                                     onChange={(e: FormEvent<HTMLInputElement>) => setCountry(e.currentTarget.value)}
+                                />
+                            </div>
+                            <div className="flex items-center">
+                                <label htmlFor="private" className="text-lg inline-block w-20">
+                                    Private
+                                </label>
+                                <input
+                                    id="private"
+                                    type="checkbox"
+                                    className="checkbox"
+                                    onChange={(e: FormEvent<HTMLInputElement>) => setPrivate(e.currentTarget.checked)}
                                 />
                             </div>
                         </div>
@@ -351,6 +366,16 @@ export default function SpaceHome(props: Props) {
                                             </li>
                                         ))}
                                     </ul>
+
+                                    <div className="card-actions flex w-full justify-between">
+                                    <div className="flex space-x-2">
+                                        {property.private && (
+                                            <div className="tooltip" data-tip="Private">
+                                                <LockClosedIcon className="w-4 h-4 text-gray-500" />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                                 </div>
                             </div>
                         </li>

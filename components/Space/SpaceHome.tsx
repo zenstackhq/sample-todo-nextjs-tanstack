@@ -64,7 +64,7 @@ export function SpaceHome(props: SpaceHomeProps) {
                         Create a list
 					</label>
 					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button">
-                        Create a property
+                        Create a make test fail
 					</label>
 					<SpaceMembers />
 				</div>

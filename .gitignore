@@ -4,3 +4,6 @@ node_modules/
 .env.local
 .next
 .zenstack_repl*
+lib/hooks
+.env
+prisma/schema.prisma

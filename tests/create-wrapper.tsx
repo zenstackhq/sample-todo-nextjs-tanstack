@@ -6,11 +6,15 @@ import { MemoryRouterProvider } from "next-router-mock/MemoryRouterProvider";
 const createQueryWrapper = (children: React.ReactNode) => {
 	const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
 	return <QueryClientProvider client={queryClient}>
-		{children}
+		<SessionProvider>
+			<MemoryRouterProvider>
+				{children}
+			</MemoryRouterProvider>
+		</SessionProvider>
 	</QueryClientProvider>;
 };
 
 
 export const createWrapper = () => {
-	return ({ children }: { children: React.ReactNode; }) => createQueryWrapper(<MemoryRouterProvider><SessionProvider>{children}</SessionProvider></MemoryRouterProvider>);
+	return ({ children }: { children: React.ReactNode; }) => createQueryWrapper(children);
 };

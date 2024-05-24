@@ -51,6 +51,7 @@ export function CreateListDialog() {
 					setModalOpen(e.currentTarget.checked);
 				}}
 			/>
+			{modalOpen &&
 			<div className="modal">
 				<div className="modal-box">
 					<h3 className="font-bold text-xl mb-8">Create a Todo list</h3>
@@ -91,7 +92,7 @@ export function CreateListDialog() {
 						</div>
 					</form>
 				</div>
-			</div>
+			</div>}
 		</>
 	);
 }

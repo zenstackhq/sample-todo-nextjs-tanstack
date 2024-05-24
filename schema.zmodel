@@ -238,8 +238,8 @@ model Lease {
     updatedAt   DateTime   @updatedAt
     property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
     propertyId  String
-    tenant      User       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-    tenantId    String
+    owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId     String    @default(auth().id)
     startDate   DateTime
     endDate     DateTime?
     rentAmount  Float
@@ -249,17 +249,12 @@ model Lease {
     // require login
     @@deny('all', auth() == null)
 
-    // can be read by owner or tenant
-    @@allow('read', property.owner == auth() || tenant == auth())
+    // owner has full access, also space members have full access (if the parent List is not private)
+    @@allow('all', property.owner == auth())
+    @@allow('all', property.space.members?[user == auth()] && !property.private)
 
-    // can be created by owner
-    @@allow('create', property.owner == auth())
-
-    // can be updated by owner
-    @@allow('update', property.owner == auth())
-
-    // can be deleted by owner
-    @@allow('delete', property.owner == auth())
+    // update cannot change owner
+    @@deny('update', future().owner != owner)
 }
 
 /*
@@ -278,10 +273,10 @@ model Payment {
     @@deny('all', auth() == null)
 
     // can be read by owner or tenant
-    @@allow('read', lease.property.owner == auth() || lease.tenant == auth())
+    @@allow('read', lease.property.owner == auth() || lease.owner == auth())
 
     // can be created by owner or tenant
-    @@allow('create', lease.property.owner == auth() || lease.tenant == auth())
+    @@allow('create', lease.property.owner == auth() || lease.owner == auth())
 
     // can be updated by owner
     @@allow('update', lease.property.owner == auth())
@@ -310,7 +305,7 @@ model Charge {
     @@deny('all', auth() == null)
 
     // can be read by owner or tenant (if associated with a lease)
-    @@allow('read', property.owner == auth() || lease.tenant == auth())
+    @@allow('read', property.owner == auth() || lease.owner == auth())
 
     // can be created by owner
     @@allow('create', property.owner == auth())

@@ -27,6 +27,7 @@
     "babel-plugin-superjson-next": "^0.4.5",
     "bcryptjs": "^2.4.3",
     "daisyui": "^4.11.1",
+    "date-fns": "^3.6.0",
     "decimal.js": "^10.4.3",
     "moment": "^2.30.1",
     "nanoid": "^5.0.7",

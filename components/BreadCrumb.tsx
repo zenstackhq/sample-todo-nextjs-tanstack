@@ -1,13 +1,14 @@
-import { List, Space } from "@prisma/client";
+import { List, Space, Property } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 type Props = {
 	space: Space;
 	list?: List;
+	property?: Property;
 };
 
-export default function BreadCrumb({ space, list }: Props) {
+export default function BreadCrumb({ space, list, property }: Props) {
 	const router = useRouter();
 
 	const parts = router.asPath.split("/").filter((p) => p);
@@ -24,7 +25,14 @@ export default function BreadCrumb({ space, list }: Props) {
 	if (list) {
 		items.push({
 			text: list?.title || "",
-			link: `/space/${space.slug}/${list.id}`
+			link: `/space/${space.slug}/list/${list.id}`
+		});
+	}
+
+	if (property) {
+		items.push({
+			text: property?.address || "",
+			link: `/space/${space.slug}/property/${property.id}`
 		});
 	}
 

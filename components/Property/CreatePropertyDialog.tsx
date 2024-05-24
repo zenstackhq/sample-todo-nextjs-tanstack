@@ -21,6 +21,7 @@ export function CreatePropertyDialog() {
 	const onSubmit = async (event: FormEvent) => {
 		event.preventDefault();
 
+		toast.dismiss();
 		try {
 			await create.mutateAsync({
 				data: {
@@ -63,9 +64,9 @@ export function CreatePropertyDialog() {
 					setModalOpen(e.currentTarget.checked);
 				}}
 			/>
-			<div className="modal">
+			{modalOpen && <div className="modal">
 				<div className="modal-box">
-					<h3 className="font-bold text-xl mb-8">Create a Property</h3>
+					<h3 className="font-bold text-xl mb-8">Property</h3>
 					<form onSubmit={(e) => void onSubmit(e)}>
 						<div className="flex flex-col space-y-4">
 							<div className="flex items-center">
@@ -79,9 +80,9 @@ export function CreatePropertyDialog() {
 									value={type}
 									onChange={(e: ChangeEvent<HTMLSelectElement>) => setType(e.currentTarget.value as PropertyType)}
 								>
-									<option value="APARTMENT">Apartment</option>
-									<option value="HOUSE">House</option>
-									<option value="COMMERCIAL">Commercial</option>
+									<option value="APARTMENT">APARTMENT</option>
+									<option value="HOUSE">HOUSE</option>
+									<option value="COMMERCIAL">COMMERCIAL</option>
 								</select>
 							</div>
 							<div className="flex items-center">
@@ -160,7 +161,7 @@ export function CreatePropertyDialog() {
 						</div>
 					</form>
 				</div>
-			</div>
+			</div>}
 		</>
 	);
 }

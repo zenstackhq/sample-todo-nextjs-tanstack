@@ -12,11 +12,7 @@
         "db:deploy": "prisma migrate deploy",
         "db:reset": "prisma migrate reset",
         "db:browse": "prisma studio",
-        "generate": "zenstack generate",
-        "vercel-build": "npm run build && npm run db:deploy",
-        "package-clean": "npm rm zenstack @zenstackhq/runtime @zenstackhq/server @zenstackhq/tanstack-query",
-        "up": "npm run package-clean && npm install -D zenstack@latest && npm install @zenstackhq/runtime@latest @zenstackhq/server@latest @zenstackhq/tanstack-query@latest",
-        "up-preview": "npm run package-clean && npm install --registry https://preview.registry.zenstack.dev -D zenstack@latest && npm install --registry https://preview.registry.zenstack.dev @zenstackhq/runtime@latest @zenstackhq/server@latest @zenstackhq/tanstack-query@latest"
+        "generate": "zenstack generate"
     },
     "dependencies": {
         "@heroicons/react": "^2.0.12",

@@ -1,5 +1,5 @@
 import { useFindManyList, useFindManyProperty } from '@lib/hooks';
-import { List, Space, User } from '@prisma/client';
+import { Space } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
 import SpaceMembers from 'components/SpaceMembers';
 import TodoList from 'components/TodoList';

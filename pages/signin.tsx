@@ -99,9 +99,9 @@ export default function Signup() {
 
                             <div
                                 className="btn btn-outline w-full lg:w-fit"
-                                onClick={() => void signIn('github', { callbackUrl: '/' })}
+                                onClick={() => void signIn('discord', { callbackUrl: '/' })}
                             >
-                                Sign in with GitHub
+                                Sign in with Discord
                             </div>
                         </div>
 

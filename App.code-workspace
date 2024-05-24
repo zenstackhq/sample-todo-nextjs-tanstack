@@ -1,0 +1,21 @@
+{
+    "folders": [
+        {
+            "name": "App",
+            "path": "."
+        }
+    ],
+    "settings": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit"
+        },
+        "editor.formatOnSave": false,
+        "files.autoSave": "onFocusChange"
+    },
+    "extensions": {
+        "recommendations": [
+            "dbaeumer.vscode-eslint",
+            "yoavbls.pretty-ts-errors"
+        ]
+    }
+}

@@ -1,7 +1,7 @@
-import { getEnhancedPrisma } from 'server/enhanced-db';
-import { NextRequestHandler } from '@zenstackhq/server/next';
+import { getEnhancedPrisma } from "server/enhanced-db";
+import { NextRequestHandler } from "@zenstackhq/server/next";
 
 export default NextRequestHandler({
-    getPrisma: (req, res) => getEnhancedPrisma({ req, res }),
-    zodSchemas: true,
+	getPrisma: (req, res) => getEnhancedPrisma({ req, res }),
+	zodSchemas: true
 });

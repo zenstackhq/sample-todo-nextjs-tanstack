@@ -14,6 +14,7 @@ import { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getEnhancedPrisma } from 'server/enhanced-db';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
+import PropertyList from 'components/Property/PropertyList';
 
 function CreateListDialog() {
     const space = useContext(SpaceContext);
@@ -347,37 +348,8 @@ export default function SpaceHome(props: Props) {
                 <ul className="flex flex-wrap gap-6 mb-8">
                     {properties?.map((property) => (
                         <li key={property.id}>
-                            <div className="card shadow-lg">
-                                <div className="card-body">
-                                    <h3 className="card-title">{property.address}</h3>
-                                    <p>Type: {property.type}</p>
-                                    <p>City: {property.city}</p>
-                                    <p>Postal Code: {property.postalCode}</p>
-                                    <p>Country: {property.country}</p>
+                            <PropertyList value={property}/>
 
-                                    <h4 className="mt-4 font-semibold">Leases</h4>
-                                    <ul className="list-disc list-inside">
-                                        {property.leases.map((lease) => (
-                                            <li key={lease.id}>
-                                                <p>Tenant: {lease.tenantId}</p>
-                                                <p>Rent Amount: {lease.rentAmount}</p>
-                                                <p>Start Date: {new Date(lease.startDate).toLocaleDateString()}</p>
-                                                <p>End Date: {lease.endDate ? new Date(lease.endDate).toLocaleDateString() : 'N/A'}</p>
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                    <div className="card-actions flex w-full justify-between">
-                                    <div className="flex space-x-2">
-                                        {property.private && (
-                                            <div className="tooltip" data-tip="Private">
-                                                <LockClosedIcon className="w-4 h-4 text-gray-500" />
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
                         </li>
                     ))}
                 </ul>

@@ -7,3 +7,4 @@ node_modules/
 lib/hooks
 .env
 prisma/schema.prisma
+.vitest-preview

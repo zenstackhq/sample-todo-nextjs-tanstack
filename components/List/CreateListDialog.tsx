@@ -1,11 +1,9 @@
-import { SpaceContext } from "@lib/context";
 import { useCreateList } from "@lib/hooks";
-import { ChangeEvent, FormEvent, useContext, useRef, useState } from "react";
+import { SpaceHomeProps } from "components/Space/SpaceHome";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-
-export function CreateListDialog() {
-	const space = useContext(SpaceContext);
+export function CreateListDialog(props: SpaceHomeProps) {
 	const [modalOpen, setModalOpen] = useState(false);
 	const [title, setTitle] = useState("");
 	const [_private, setPrivate] = useState(false);
@@ -22,7 +20,7 @@ export function CreateListDialog() {
 				data: {
 					title,
 					private: _private,
-					space: { connect: { id: space!.id } }
+					space: { connect: { id: props.space.id } }
 				}
 			});
 		} catch (err) {

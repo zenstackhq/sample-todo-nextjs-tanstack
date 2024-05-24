@@ -1,3 +1,4 @@
+import "../styles/globals.css";
 import { vi } from "vitest";
 import { ReactNode } from "react";
 

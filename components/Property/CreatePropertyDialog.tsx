@@ -1,12 +1,11 @@
-import { SpaceContext } from "@lib/context";
 import { useCreateProperty } from "@lib/hooks";
 import { PropertyType } from "@zenstackhq/runtime/models";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { SpaceHomeProps } from "components/Space/SpaceHome";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 
-export function CreatePropertyDialog() {
-	const space = useContext(SpaceContext);
+export function CreatePropertyDialog(props: SpaceHomeProps) {
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [type, setType] = useState<PropertyType>("APARTMENT");
@@ -30,7 +29,7 @@ export function CreatePropertyDialog() {
 					postalCode,
 					country,
 					private: _private,
-					space: { connect: { id: space!.id } }
+					space: { connect: { id: props.space.id } }
 				}
 			});
 		} catch (err) {
@@ -65,7 +64,7 @@ export function CreatePropertyDialog() {
 			/>
 			<div className="modal">
 				<div className="modal-box">
-					<h3 className="font-bold text-xl mb-8">Create a Property</h3>
+					<h3 className="font-bold text-xl mb-8">Property Details</h3>
 					<form onSubmit={(e) => void onSubmit(e)}>
 						<div className="flex flex-col space-y-4">
 							<div className="flex items-center">
@@ -153,7 +152,7 @@ export function CreatePropertyDialog() {
 							</div>
 						</div>
 						<div className="modal-action">
-							<input className="btn btn-primary" type="submit" value="Create" />
+							<input className="btn btn-primary" type="submit" value="Create Property" />
 							<label htmlFor="create-property-modal" className="btn btn-outline">
                                 Cancel
 							</label>

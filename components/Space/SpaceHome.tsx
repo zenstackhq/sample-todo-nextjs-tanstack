@@ -87,8 +87,8 @@ export function SpaceHome(props: SpaceHomeProps) {
 					)}
 				</ul>
 
-				<CreateListDialog />
-				<CreatePropertyDialog />
+				<CreateListDialog {...props}/>
+				<CreatePropertyDialog {...props} />
 			</div>
 		</WithNavBar>
 	);

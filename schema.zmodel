@@ -36,6 +36,25 @@ enum SpaceUserRole {
 }
 
 /*
+ * Enum for property types
+ */
+enum PropertyType {
+    APARTMENT
+    HOUSE
+    COMMERCIAL
+}
+
+/*
+ * Enum for charge types
+ */
+enum ChargeType {
+    MAINTENANCE
+    UTILITIES
+    TAXES
+    OTHER
+}
+
+/*
  * Model for a space in which users can collaborate on Lists and Todos
  */
 model Space {
@@ -46,6 +65,7 @@ model Space {
     slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
     members   SpaceUser[]
     lists     List[]
+    properties Property[]
 
     // require login
     @@deny('all', auth() == null)
@@ -99,6 +119,8 @@ model User {
     image         String?     @url
     lists         List[]
     todos         Todo[]
+    properties    Property[]
+    leases        Lease[]
 
     // next-auth
     accounts      Account[]
@@ -168,6 +190,134 @@ model Todo {
 
     // update cannot change owner
     @@deny('update', future().owner != owner)
+}
+
+/*
+ * Model for a property
+ */
+model Property {
+    id          String       @id @default(uuid())
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    space       Space        @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId     String
+    owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId     String       @default(auth().id)
+    type        PropertyType
+    address     String
+    city        String
+    postalCode  String
+    country     String
+    leases      Lease[]
+    charges     Charge[]
+
+    // require login
+    @@deny('all', auth() == null)
+
+    // can be read by owner or space members
+    @@allow('read', owner == auth() || space.members?[user == auth()])
+
+    // can be created by owner or space members
+    @@allow('create', owner == auth() || space.members?[user == auth()])
+
+    // can be updated by owner
+    @@allow('update', owner == auth())
+
+    // can be deleted by owner
+    @@allow('delete', owner == auth())
+}
+
+/*
+ * Model for a lease
+ */
+model Lease {
+    id          String     @id @default(uuid())
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+    propertyId  String
+    tenant      User       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    tenantId    String
+    startDate   DateTime
+    endDate     DateTime?
+    rentAmount  Float
+    payments    Payment[]
+    charges     Charge[]
+
+    // require login
+    @@deny('all', auth() == null)
+
+    // can be read by owner or tenant
+    @@allow('read', property.owner == auth() || tenant == auth())
+
+    // can be created by owner
+    @@allow('create', property.owner == auth())
+
+    // can be updated by owner
+    @@allow('update', property.owner == auth())
+
+    // can be deleted by owner
+    @@allow('delete', property.owner == auth())
+}
+
+/*
+ * Model for a payment
+ */
+model Payment {
+    id          String     @id @default(uuid())
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    lease       Lease      @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+    leaseId     String
+    amount      Float
+    date        DateTime
+
+    // require login
+    @@deny('all', auth() == null)
+
+    // can be read by owner or tenant
+    @@allow('read', lease.property.owner == auth() || lease.tenant == auth())
+
+    // can be created by owner or tenant
+    @@allow('create', lease.property.owner == auth() || lease.tenant == auth())
+
+    // can be updated by owner
+    @@allow('update', lease.property.owner == auth())
+
+    // can be deleted by owner
+    @@allow('delete', lease.property.owner == auth())
+}
+
+/*
+ * Model for a charge
+ */
+model Charge {
+    id          String     @id @default(uuid())
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+    propertyId  String
+    lease       Lease?     @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+    leaseId     String?
+    type        ChargeType
+    amount      Float
+    dueDate     DateTime
+    description String?
+
+    // require login
+    @@deny('all', auth() == null)
+
+    // can be read by owner or tenant (if associated with a lease)
+    @@allow('read', property.owner == auth() || lease.tenant == auth())
+
+    // can be created by owner
+    @@allow('create', property.owner == auth())
+
+    // can be updated by owner
+    @@allow('update', property.owner == auth())
+
+    // can be deleted by owner
+    @@allow('delete', property.owner == auth())
 }
 
 // next-auth

@@ -14,7 +14,6 @@ import { CreatePropertyDialog } from 'components/Property/CreatePropertyDialog';
 
 type Props = {
     space: Space;
-    lists: (List & { owner: User })[];
 };
 
 export default function SpaceHome(props: Props) {
@@ -35,8 +34,7 @@ export default function SpaceHome(props: Props) {
             },
         },
         {
-            enabled: !!router.query.slug,
-            initialData: props.lists,
+            enabled: !!router.query.slug
         }
     );
 
@@ -115,19 +113,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, 
         };
     }
 
-    const lists = await db.list.findMany({
-        where: {
-            space: { slug: params?.slug as string },
-        },
-        include: {
-            owner: true,
-        },
-        orderBy: {
-            updatedAt: 'desc',
-        },
-    });
 
     return {
-        props: { space, lists },
+        props: { space },
     };
 };

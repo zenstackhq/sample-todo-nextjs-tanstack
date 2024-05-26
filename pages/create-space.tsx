@@ -34,11 +34,9 @@ const CreateSpace: NextPage = () => {
 			});
 			toast.success("Space created successfully! You'll be redirected.");
 
-			setTimeout(() => {
-				if (space) {
-					void router.push(`/space/${space.slug}`);
-				}
-			}, 2000);
+			if (space) {
+				void router.push(`/space/${space.slug}`);
+			}
 		} catch (err) {
 			toast.error("Cannot create Space");
 		}

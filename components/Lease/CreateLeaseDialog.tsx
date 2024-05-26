@@ -1,13 +1,14 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import { toast } from "react-toastify";
 import { useCreateLease } from "@lib/hooks";
+import NumericInput from "react-numeric-input";
 
 export function CreateLeaseDialog({ propertyId }: {propertyId: string;}) {
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
-	const [rentAmount, setRentAmount] = useState("");
+	const [rentAmount, setRentAmount] = useState(0);
 
 	const create = useCreateLease();
 
@@ -21,7 +22,7 @@ export function CreateLeaseDialog({ propertyId }: {propertyId: string;}) {
 					propertyId,
 					startDate: new Date(startDate),
 					endDate: endDate ? new Date(endDate) : null,
-					rentAmount: parseFloat(rentAmount)
+					rentAmount
 				}
 			});
 		} catch (err) {
@@ -32,7 +33,7 @@ export function CreateLeaseDialog({ propertyId }: {propertyId: string;}) {
 		toast.success("Lease created successfully!");
 		setStartDate("");
 		setEndDate("");
-		setRentAmount("");
+		setRentAmount(0);
 		setModalOpen(false);
 	};
 
@@ -80,14 +81,14 @@ End Date
 					<label htmlFor="rentAmount" className="text-lg inline-block w-20">
 Rent Amount
 					</label>
-					<input
+					<NumericInput
 						id="rentAmount"
 						type="number"
 						required
 						placeholder="Rent Amount"
 						className="input input-bordered w-full max-w-xs mt-2"
 						value={rentAmount}
-						onChange={(e: FormEvent<HTMLInputElement>) => setRentAmount(e.currentTarget.value)}
+						onChange={(e) => e === null ? null : setRentAmount(e)}
 					/>
 				</div>
 			</div>

@@ -1,22 +1,17 @@
-import { Space } from "@prisma/client";
-import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { createContext } from "react";
-import { useFindManySpace } from "./hooks";
+import { useFindUniqueSpace } from "./hooks";
 
-export const UserContext = createContext<User | undefined>(void 0);
 
 export function useCurrentUser() {
 	const { data: session } = useSession();
 	return session?.user;
 }
 
-export const SpaceContext = createContext<Space | undefined>(void 0);
 
 export function useCurrentSpace() {
 	const router = useRouter();
-	const { data: spaces } = useFindManySpace(
+	const { data: space } = useFindUniqueSpace(
 		{
 			where: {
 				slug: router.query.slug as string
@@ -27,5 +22,7 @@ export function useCurrentSpace() {
 		}
 	);
 
-	return spaces?.[0];
+	return space;
 }
+
+

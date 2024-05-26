@@ -1,4 +1,3 @@
-import { SpaceContext, useCurrentSpace, useCurrentUser, UserContext } from "@lib/context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthGuard from "components/AuthGuard";
 import { SessionProvider } from "next-auth/react";
@@ -31,16 +30,9 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 }
 
 function AppContent(props: { children: ReactElement | ReactElement[]; }) {
-	const user = useCurrentUser();
-	const space = useCurrentSpace();
-
 	return (
 		<AuthGuard>
-			<UserContext.Provider value={user}>
-				<SpaceContext.Provider value={space}>
-					<div className="h-screen flex flex-col">{props.children}</div>
-				</SpaceContext.Provider>
-			</UserContext.Provider>
+			<div className="h-screen flex flex-col">{props.children}</div>
 		</AuthGuard>
 	);
 }

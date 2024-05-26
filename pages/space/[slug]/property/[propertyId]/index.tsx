@@ -1,5 +1,5 @@
 import { useFindManyLease  } from "@lib/hooks";
-import { Property, Space } from "@prisma/client";
+import { Property, Space, Charge } from "@prisma/client";
 import BreadCrumb from "components/BreadCrumb";
 import { CreateLeaseDialog } from "components/Lease/CreateLeaseDialog";
 import LeaseDetail from "components/Lease/LeaseList";
@@ -31,7 +31,7 @@ export default function PropertyDetails(props: Props) {
 	return (
 		<WithNavBar>
 			<div className="px-8 py-2">
-				<BreadCrumb space={props.space} property={props.property} />
+				<BreadCrumb property={props.property} />
 			</div>
 			<div className="container w-full flex flex-col items-center py-12 mx-auto">
 				<h1 className="text-2xl font-semibold mb-4">{props.property?.address}</h1>

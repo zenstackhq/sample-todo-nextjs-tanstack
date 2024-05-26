@@ -99,7 +99,6 @@ module.exports = {
 		"key-spacing": 1,
 		"line-comment-position": 0,
 		"max-depth": 1,
-		"linebreak-style": ["warn", "windows"],
 		"max-len": 0,
 		"max-params": ["off", 5],
 		"max-statements": 0,

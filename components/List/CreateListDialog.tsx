@@ -1,11 +1,11 @@
-import { SpaceContext } from "@lib/context";
+import { useCurrentSpace } from "@lib/context";
 import { useCreateList } from "@lib/hooks";
-import { ChangeEvent, FormEvent, useContext, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 
 export function CreateListDialog() {
-	const space = useContext(SpaceContext);
+	const space = useCurrentSpace();
 	const [modalOpen, setModalOpen] = useState(false);
 	const [title, setTitle] = useState("");
 	const [_private, setPrivate] = useState(false);

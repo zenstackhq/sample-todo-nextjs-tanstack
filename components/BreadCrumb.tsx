@@ -1,19 +1,16 @@
-import { List, Space, Property } from "@prisma/client";
+import { useCurrentSpace } from "@lib/context";
+import { List, Property, Dashboard } from "@prisma/client";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 type Props = {
-	space: Space;
 	list?: List;
 	property?: Property;
+	dashboard?: Dashboard;
 };
 
-export default function BreadCrumb({ space, list, property }: Props) {
-	const router = useRouter();
-
-	const parts = router.asPath.split("/").filter((p) => p);
-	const [base] = parts;
-	if (base !== "space") {
+export default function BreadCrumb({ list, property, dashboard }: Props) {
+	const space = useCurrentSpace();
+	if (!space) {
 		return <></>;
 	}
 
@@ -22,17 +19,25 @@ export default function BreadCrumb({ space, list, property }: Props) {
 	items.push({ text: "Home", link: "/" });
 	items.push({ text: space.name || "", link: `/space/${space.slug}` });
 
+	const baseLink = `/space/${space.slug}/`;
 	if (list) {
 		items.push({
-			text: list?.title || "",
-			link: `/space/${space.slug}/list/${list.id}`
+			text: list.title,
+			link: `${baseLink}list/${list.id}`
 		});
 	}
 
 	if (property) {
 		items.push({
-			text: property?.address || "",
-			link: `/space/${space.slug}/property/${property.id}`
+			text: property.address,
+			link: `${baseLink}property/${property.id}`
+		});
+	}
+
+	if (dashboard) {
+		items.push({
+			text: dashboard.title,
+			link: `${baseLink}dashboard/${dashboard.id}`
 		});
 	}
 

@@ -53,22 +53,26 @@ enum ChargeType {
     TAXES
     OTHER
 }
-
-/*
- * Model for a space in which users can collaborate on Lists and Todos
- */
-model Space {
+abstract model IdCreatedUpdated
+{
     id        String      @id @default(uuid())
     createdAt DateTime    @default(now())
     updatedAt DateTime    @updatedAt
+}
+abstract model IdCreatedUpdatedAuth extends IdCreatedUpdated
+{
+    @@deny('all', auth() == null)
+}
+/*
+ * Model for a space in which users can collaborate on Lists and Todos
+ */
+model Space extends IdCreatedUpdatedAuth {
     name      String      @length(4, 50)
     slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
     members   SpaceUser[]
     lists     List[]
     properties Property[]
-
-    // require login
-    @@deny('all', auth() == null)
+    dashboards Dashboard[]
 
     // everyone can create a space
     @@allow('create', true)
@@ -80,37 +84,23 @@ model Space {
     @@allow('update,delete', members?[user == auth() && role == ADMIN])
 }
 
-/*
- * Model representing membership of a user in a space
- */
-model SpaceUser {
-    id        String        @id @default(uuid())
-    createdAt DateTime      @default(now())
-    updatedAt DateTime      @updatedAt
+abstract model IdCreatedUpdatedSpace extends IdCreatedUpdatedAuth {
     space     Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
     spaceId   String
+
+    @@allow('read', space.members?[user == auth()])
+}
+model SpaceUser extends IdCreatedUpdatedSpace {
     user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
     role      SpaceUserRole
     @@unique([userId, spaceId])
 
-    // require login
-    @@deny('all', auth() == null)
-
     // space admin can create/update/delete
     @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
-
-    // user can read entries for spaces which he's a member of
-    @@allow('read', space.members?[user == auth()])
 }
 
-/*
- * Model for a user
- */
-model User {
-    id            String      @id @default(uuid())
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
+model User extends IdCreatedUpdated {
     email         String      @unique @email
     emailVerified DateTime?
     password      String?     @password @omit
@@ -121,6 +111,7 @@ model User {
     todos         Todo[]
     properties    Property[]
     leases        Lease[]
+    dashboards        Dashboard[]
 
     // next-auth
     accounts      Account[]
@@ -135,23 +126,11 @@ model User {
     @@allow('all', auth() == this)
 }
 
-/*
- * Model for a Todo list
- */
-model List {
-    id        String   @id @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId   String
+
+abstract model IdCreatedUpdatedSpaceOwnerPrivate extends IdCreatedUpdatedSpace {
     owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     ownerId   String   @default(auth().id)
-    title     String   @length(1, 100)
     private   Boolean  @default(false)
-    todos     Todo[]
-
-    // require login
-    @@deny('all', auth() == null)
 
     // can be read by owner or space members (only if not private) 
     @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
@@ -165,6 +144,13 @@ model List {
 
     // can be deleted by owner
     @@allow('delete', owner == auth())
+}
+/*
+ * Model for a Todo list
+ */
+model List extends IdCreatedUpdatedSpaceOwnerPrivate {
+    title     String   @length(1, 100)
+    todos     Todo[]
 }
 
 /*
@@ -195,14 +181,7 @@ model Todo {
 /*
  * Model for a property
  */
-model Property {
-    id          String       @id @default(uuid())
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    space       Space        @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId     String
-    owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId     String       @default(auth().id)
+model Property extends IdCreatedUpdatedSpaceOwnerPrivate {
     type        PropertyType
     address     String
     city        String
@@ -210,23 +189,6 @@ model Property {
     country     String
     leases      Lease[]
     charges     Charge[]
-    private     Boolean  @default(false)
-
-    // require login
-    @@deny('all', auth() == null)
-
-    // can be read by owner or space members (only if not private) 
-    @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
-
-    // can be created by owner or space members
-    @@allow('create', owner == auth() || space.members?[user == auth()])
-
-    // when create, owner must be set to current user, and user must be in the space
-    // update is not allowed to change owner
-    @@allow('update', owner == auth() && space.members?[user == auth()] && future().owner == owner)
-
-    // can be deleted by owner
-    @@allow('delete', owner == auth())
 }
 
 /*
@@ -242,7 +204,7 @@ model Lease {
     ownerId     String    @default(auth().id)
     startDate   DateTime
     endDate     DateTime?
-    rentAmount  Float
+    rentAmount  BigInt
     payments    Payment[]
     charges     Charge[]
 
@@ -266,7 +228,7 @@ model Payment {
     updatedAt   DateTime   @updatedAt
     lease       Lease      @relation(fields: [leaseId], references: [id], onDelete: Cascade)
     leaseId     String
-    amount      Float
+    amount      BigInt
     date        DateTime
 
     // require login
@@ -297,7 +259,7 @@ model Charge {
     lease       Lease?     @relation(fields: [leaseId], references: [id], onDelete: Cascade)
     leaseId     String?
     type        ChargeType
-    amount      Float
+    amount      BigInt
     dueDate     DateTime
     description String?
 
@@ -334,4 +296,72 @@ model Account {
     session_state            String?
     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     @@unique([provider, providerAccountId])
+}
+
+
+
+
+model Dashboard extends IdCreatedUpdatedSpaceOwnerPrivate {
+    title     String   @length(1, 100)
+    panelRows     PanelRow[]
+}
+
+
+
+
+model PanelRow {
+    id          String    @id @default(uuid())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    dashboard        Dashboard      @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+    dashboardId      String
+    title       String    @length(1, 100)
+    panels     Panel[]
+
+    @@deny('all', auth() == null)
+
+    @@allow('all', dashboard.owner == auth())
+    @@allow('all', dashboard.space.members?[user == auth()] && !dashboard.private)
+}
+
+
+
+model Panel {
+    id          String    @id @default(uuid())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    panelRow        PanelRow      @relation(fields: [panelRowId], references: [id], onDelete: Cascade)
+    panelRowId      String
+    title       String    @length(1, 100)
+    panelComponents     PanelComponent[]
+
+    @@deny('all', auth() == null)
+
+    @@allow('all', panelRow.dashboard.owner == auth())
+    @@allow('all', panelRow.dashboard.space.members?[user == auth()] && !panelRow.dashboard.private)
+}
+
+
+enum PanelComponentType {
+    COUNTER
+    REPORT
+    VIEW
+    CONVERSATION
+}
+
+
+model PanelComponent
+{
+    id          String    @id @default(uuid())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    panel        Panel      @relation(fields: [panelId], references: [id], onDelete: Cascade)
+    panelId      String
+    title       String    @length(1, 100)
+    type        PanelComponentType
+
+    @@deny('all', auth() == null)
+
+    @@allow('all', panel.panelRow.dashboard.owner == auth())
+    @@allow('all', panel.panelRow.dashboard.space.members?[user == auth()] && !panel.panelRow.dashboard.private)
 }

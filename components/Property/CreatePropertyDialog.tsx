@@ -1,12 +1,12 @@
-import { SpaceContext } from "@lib/context";
+import { useCurrentSpace } from "@lib/context";
 import { useCreateProperty } from "@lib/hooks";
 import { PropertyType } from "@zenstackhq/runtime/models";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 
 export function CreatePropertyDialog() {
-	const space = useContext(SpaceContext);
+	const space = useCurrentSpace();
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [type, setType] = useState<PropertyType>("APARTMENT");

@@ -33,7 +33,7 @@ test("should navigate to the about page", async ({ page }) => {
 
 		const startDate = "2030-01-01";
 		const endDate = "2050-12-31";
-		const rentAmount = faker.number.float();
+		const rentAmount = faker.number.bigInt();
 		await page.getByLabel("Start Date").fill(startDate);
 		await page.getByLabel("End Date").fill(endDate);
 		await page.getByLabel("Rent amount").fill(rentAmount.toString());

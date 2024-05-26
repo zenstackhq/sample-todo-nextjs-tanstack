@@ -7,10 +7,9 @@ import TimeInfo from "./TimeInfo";
 
 type Props = {
 	value: Todo & { owner: User; };
-	optimistic?: boolean;
 };
 
-export default function TodoComponent({ value, optimistic }: Props) {
+export default function TodoComponent({ value }: Props) {
 	const { mutate: updateTodo } = useUpdateTodo({ optimisticUpdate: true });
 	const { mutate: deleteTodo } = useDeleteTodo({ optimisticUpdate: true });
 
@@ -37,7 +36,6 @@ export default function TodoComponent({ value, optimistic }: Props) {
                     }`}
 				>
 					{value.title}
-					{optimistic && <span className="loading loading-spinner loading-sm ml-1"></span>}
 				</h3>
 				<div className="flex">
 					<input

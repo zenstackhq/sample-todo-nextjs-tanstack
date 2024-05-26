@@ -1,5 +1,5 @@
 import { useFindManyLease  } from "@lib/hooks";
-import { Property, Space, Charge } from "@prisma/client";
+import { Property, Space } from "@prisma/client";
 import BreadCrumb from "components/BreadCrumb";
 import { CreateLeaseDialog } from "components/Lease/CreateLeaseDialog";
 import LeaseDetail from "components/Lease/LeaseList";

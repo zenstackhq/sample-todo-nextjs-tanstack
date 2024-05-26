@@ -112,6 +112,8 @@ model User extends IdCreatedUpdated {
     properties    Property[]
     leases        Lease[]
     dashboards        Dashboard[]
+    payments      Payment[]
+    charges         Charge[]
 
     // next-auth
     accounts      Account[]
@@ -126,10 +128,13 @@ model User extends IdCreatedUpdated {
     @@allow('all', auth() == this)
 }
 
-
-abstract model IdCreatedUpdatedSpaceOwnerPrivate extends IdCreatedUpdatedSpace {
+abstract model Owner {
     owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     ownerId   String   @default(auth().id)
+    @@deny('update', future().owner != owner)
+}
+
+abstract model IdCreatedUpdatedSpaceOwnerPrivate extends IdCreatedUpdatedSpace, Owner {
     private   Boolean  @default(false)
 
     // can be read by owner or space members (only if not private) 
@@ -139,43 +144,28 @@ abstract model IdCreatedUpdatedSpaceOwnerPrivate extends IdCreatedUpdatedSpace {
     @@allow('create', owner == auth() && space.members?[user == auth()])
 
     // when create, owner must be set to current user, and user must be in the space
-    // update is not allowed to change owner
-    @@allow('update', owner == auth() && space.members?[user == auth()] && future().owner == owner)
+    @@allow('update', owner == auth() && space.members?[user == auth()])
 
     // can be deleted by owner
     @@allow('delete', owner == auth())
 }
-/*
- * Model for a Todo list
- */
+
 model List extends IdCreatedUpdatedSpaceOwnerPrivate {
     title     String   @length(1, 100)
     todos     Todo[]
 }
 
-/*
- * Model for a single Todo
- */
-model Todo {
-    id          String    @id @default(uuid())
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId     String    @default(auth().id)
+abstract model IdCreatedUpdatedAuthOwner extends IdCreatedUpdatedAuth, Owner {
+}
+model Todo extends IdCreatedUpdatedAuthOwner {
     list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
     listId      String
     title       String    @length(1, 100)
     completedAt DateTime?
 
-    // require login
-    @@deny('all', auth() == null)
-
     // owner has full access, also space members have full access (if the parent List is not private)
     @@allow('all', list.owner == auth())
     @@allow('all', list.space.members?[user == auth()] && !list.private)
-
-    // update cannot change owner
-    @@deny('update', future().owner != owner)
 }
 
 /*
@@ -191,92 +181,38 @@ model Property extends IdCreatedUpdatedSpaceOwnerPrivate {
     charges     Charge[]
 }
 
-/*
- * Model for a lease
- */
-model Lease {
-    id          String     @id @default(uuid())
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
+abstract model IdCreatedUpdatedAuthOwnerProperty extends IdCreatedUpdatedAuthOwner {
+
     property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
     propertyId  String
-    owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId     String    @default(auth().id)
+    @@allow('all', property.owner == auth())
+    @@allow('all', property.space.members?[user == auth()] && !property.private)
+}
+model Lease extends IdCreatedUpdatedAuthOwnerProperty {
     startDate   DateTime
     endDate     DateTime?
     rentAmount  BigInt
     payments    Payment[]
     charges     Charge[]
-
-    // require login
-    @@deny('all', auth() == null)
-
-    // owner has full access, also space members have full access (if the parent List is not private)
-    @@allow('all', property.owner == auth())
-    @@allow('all', property.space.members?[user == auth()] && !property.private)
-
-    // update cannot change owner
-    @@deny('update', future().owner != owner)
 }
 
-/*
- * Model for a payment
- */
-model Payment {
-    id          String     @id @default(uuid())
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
+model Payment extends IdCreatedUpdatedAuthOwner {
     lease       Lease      @relation(fields: [leaseId], references: [id], onDelete: Cascade)
     leaseId     String
     amount      BigInt
     date        DateTime
 
-    // require login
-    @@deny('all', auth() == null)
-
-    // can be read by owner or tenant
-    @@allow('read', lease.property.owner == auth() || lease.owner == auth())
-
-    // can be created by owner or tenant
-    @@allow('create', lease.property.owner == auth() || lease.owner == auth())
-
-    // can be updated by owner
-    @@allow('update', lease.property.owner == auth())
-
-    // can be deleted by owner
-    @@allow('delete', lease.property.owner == auth())
+    @@allow('all', lease.property.owner == auth())
+    @@allow('all', lease.property.space.members?[user == auth()] && !lease.property.private)
 }
 
-/*
- * Model for a charge
- */
-model Charge {
-    id          String     @id @default(uuid())
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
-    property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-    propertyId  String
+model Charge  extends IdCreatedUpdatedAuthOwnerProperty {
     lease       Lease?     @relation(fields: [leaseId], references: [id], onDelete: Cascade)
     leaseId     String?
     type        ChargeType
     amount      BigInt
     dueDate     DateTime
     description String?
-
-    // require login
-    @@deny('all', auth() == null)
-
-    // can be read by owner or tenant (if associated with a lease)
-    @@allow('read', property.owner == auth() || lease.owner == auth())
-
-    // can be created by owner
-    @@allow('create', property.owner == auth())
-
-    // can be updated by owner
-    @@allow('update', property.owner == auth())
-
-    // can be deleted by owner
-    @@allow('delete', property.owner == auth())
 }
 
 // next-auth

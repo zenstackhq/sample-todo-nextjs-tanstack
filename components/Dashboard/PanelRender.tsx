@@ -15,16 +15,12 @@ export const PanelRender = ({ panel, children }: {panel: Panel; children: ReactN
 				{panel.title}
 			</h3>
 			<div className="flex">
-				<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => createPanelComponent.mutate({ data: {
-					panelComponentType: "COUNTER",
-					title: "new counter",
-					panelId: panel.id
-				} })}/>
-				<CubeIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => createPanelComponent.mutate({ data: {
-					panelComponentType: "REPORT",
-					title: "new report",
-					panelId: panel.id
-				} })}/>
+				<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={
+					() => createPanelComponent.mutateAsync({ data: { title: "new counter", panelId: panel.id, panelComponentCounter: { create: {} } } })}/>
+
+				<CubeIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={
+					() => createPanelComponent.mutateAsync({ data: { title: "new report", panelId: panel.id, panelComponentReport: { create: {} } } })}/>
+
 				<TrashIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => deletePanel.mutate({ where: { id: panel.id } })}/>
 			</div>
 		</div>

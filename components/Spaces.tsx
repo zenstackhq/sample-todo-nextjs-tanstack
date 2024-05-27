@@ -1,4 +1,4 @@
-import { useCountList, useCountProperty } from "@lib/hooks";
+import { useCountSpaceComponent } from "@lib/hooks";
 import { Space } from "@prisma/client";
 import Link from "next/link";
 
@@ -7,17 +7,14 @@ type Props = {
 };
 
 function SpaceItem({ space }: { space: Space; }) {
-	const { data: listCount } = useCountList({
-		where: { spaceId: space.id }
-	});
-	const { data: propertyCount } = useCountProperty({
+	const { data: spaceComponentCount } = useCountSpaceComponent({
 		where: { spaceId: space.id }
 	});
 	return (
 		<div className="w-full h-full flex relative justify-center items-center">
-			<div className="badge badge-outline badge-accent badge-sm absolute top-4 right-4">{(listCount ?? 0) + (propertyCount ?? 0)}</div>
+			<div className="badge badge-outline badge-accent badge-sm absolute top-4 right-4">{spaceComponentCount}</div>
 			<Link href={`/space/${space.slug}`}>
-				<div className="card-body" title={`${space.name} ${listCount ? ": " + listCount + " lists" : ""} ${propertyCount ? ": " + propertyCount + " properties" : ""}`}>
+				<div className="card-body" title={`${space.name} ${spaceComponentCount ? ": " + spaceComponentCount + " space component" : ""}`}>
 					<h2 className="card-title line-clamp-1">{space.name}</h2>
 				</div>
 			</Link>

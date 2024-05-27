@@ -1,5 +1,5 @@
 import { useCurrentSpace } from "@lib/context";
-import { BaseSyntheticEvent, ReactElement } from "react";
+import { BaseSyntheticEvent, FormEvent, ReactElement, useState } from "react";
 import { FieldValues, FieldPath, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -12,15 +12,17 @@ export type FormField<T extends FieldValues> = {
 	values: Record<string, string>;
 });
 
-export function CreateForm<T extends FieldValues>({ children, onSubmitData, onClose, fields }: {
+export function CreateForm<T extends FieldValues>({ children, onSubmitData, onClose, fields, showPrivate }: {
 	children: ReactElement;
-	onSubmitData: (data: T) => Promise<void>;
+	onSubmitData: (props: { data: T; _private: boolean; }) => Promise<void>;
 	onClose: () => void;
 	fields: FormField<T>[];
+	showPrivate: boolean;
 }) {
 	const space = useCurrentSpace();
 
 	const { handleSubmit, register } = useForm<T>();
+	const [_private, setPrivate] = useState(false);
 
 	if (!space) {
 		return <></>;
@@ -29,7 +31,7 @@ export function CreateForm<T extends FieldValues>({ children, onSubmitData, onCl
 		e?.preventDefault();
 		toast.dismiss();
 		try {
-			await onSubmitData(data);
+			await onSubmitData({ data, _private });
 			toast.success("Created successfully!");
 			onClose();
 		} catch (err) {
@@ -95,6 +97,17 @@ export function CreateForm<T extends FieldValues>({ children, onSubmitData, onCl
 						return <div key={field.id} className="flex items-center">{label}{buildInput()}</div>;
 
 					})}
+					{showPrivate && <div className="flex items-center">
+						<label htmlFor="private" className="text-lg inline-block w-20">
+                                    Private
+						</label>
+						<input
+							id="private"
+							type="checkbox"
+							className="checkbox"
+							onChange={(e: FormEvent<HTMLInputElement>) => setPrivate(e.currentTarget.checked)}
+						/>
+					</div>}
 				</div>
 				{children}
 			</form>

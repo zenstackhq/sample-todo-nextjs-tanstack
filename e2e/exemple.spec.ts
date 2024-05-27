@@ -1,12 +1,48 @@
 import { test, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { FieldPath, FieldValues } from "react-hook-form";
-import { Lease, Property } from "@zenstackhq/runtime/models";
+import { List, Dashboard, Property, Lease } from "@zenstackhq/runtime/models";
 
 test("should navigate to the about page", async ({ page }) => {
 
 	function getByLabel <T extends FieldValues>(label: FieldPath<T>) {
 		return page.getByLabel(label);
+	}
+
+	async function createList() {
+		await page.getByText("Create a list").click();
+
+		const title = faker.lorem.words(3);
+
+		await getByLabel<List>("title").fill(title);
+		await page.getByText("Create", { exact: true }).click();
+
+		page.getByText("List created successfully!");
+		page.getByText(title);
+		return title;
+	}
+
+	async function createTodo() {
+
+		const title = faker.lorem.words(5);
+
+		await page.getByPlaceholder("Type a title and press enter").fill(title);
+		await page.keyboard.down("Enter");
+
+		page.getByText(title);
+	}
+
+	async function createDashboard() {
+		await page.getByText("Create a dashboard").click();
+
+		const title = faker.lorem.words(3);
+
+		await getByLabel<Dashboard>("title").fill(title);
+		await page.getByText("Create", { exact: true }).click();
+
+		page.getByText("Dashboard created successfully!");
+		page.getByText(title);
+		return title;
 	}
 
 	async function createProperty() {
@@ -23,7 +59,7 @@ test("should navigate to the about page", async ({ page }) => {
 		await getByLabel<Property>("city").fill(city);
 		await getByLabel<Property>("postalCode").fill(postalCode);
 		await getByLabel<Property>("country").fill(country);
-		await getByLabel<Property>("private").check();
+		await getByLabel("private").check();
 		await page.getByText("Create", { exact: true }).click();
 
 		page.getByText("Property created successfully!");
@@ -67,7 +103,8 @@ test("should navigate to the about page", async ({ page }) => {
 	await page.getByLabel("I accept the Terms and Conditions").check();
 
 	await page.getByText("Create account").click();
-	await page.getByText(`${email}'s space`).click();
+	const defaultSpaceName = `${email}'s space`;
+	await page.getByText(defaultSpaceName).click();
 	await createProperty();
 	await createProperty();
 	const address = await createProperty();
@@ -76,4 +113,20 @@ test("should navigate to the about page", async ({ page }) => {
 	await createLease();
 	await createLease();
 	await createLease();
+	await page.getByText(defaultSpaceName).click();
+
+
+	await createList();
+	await createList();
+	const listTitle = await createList();
+	await page.getByText(listTitle).click();
+	await createTodo();
+	await createTodo();
+
+	await page.getByText(defaultSpaceName).click();
+
+	const dashboardTitle = await createDashboard();
+	await page.getByText(dashboardTitle).click();
+	page.getByText(dashboardTitle);
 });
+

@@ -22,7 +22,12 @@ export default function DashboardDetails() {
 					include: {
 						panels: {
 							include: {
-								panelComponents: true
+								panelComponents: {
+									include: {
+										panelComponentCounter: true,
+										panelComponentReport: true
+									}
+								}
 							}
 						}
 					}

@@ -70,9 +70,7 @@ model Space extends IdCreatedUpdatedAuth {
     name      String      @length(4, 50)
     slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
     members   SpaceUser[]
-    lists     List[]
-    properties Property[]
-    dashboards Dashboard[]
+    spaceComponents SpaceComponent[]
 
     // everyone can create a space
     @@allow('create', true)
@@ -109,7 +107,7 @@ model User extends IdCreatedUpdated {
     image         String?     @url
     lists         List[]
     todos         Todo[]
-    properties    Property[]
+    idCreatedUpdatedSpaceOwnerPrivates    SpaceComponent[]
     leases        Lease[]
     dashboards        Dashboard[]
     payments      Payment[]
@@ -117,6 +115,9 @@ model User extends IdCreatedUpdated {
     panelRows         PanelRow[]
     panels           Panel[]
     panelComponents     PanelComponent[]
+    panelComponentsCounter     PanelComponentCounter[]
+    panelComponentsReport     PanelComponentReport[]
+    properties Property[]
     
     // next-auth
     accounts      Account[]
@@ -137,15 +138,13 @@ abstract model Owner {
     @@deny('update', future().owner != owner)
 }
 
-enum SpaceElementType {
-    List
-    Property
-    Dashboard
-}
-
-abstract model IdCreatedUpdatedSpaceOwnerPrivate extends IdCreatedUpdatedSpace, Owner {
+model SpaceComponent extends IdCreatedUpdatedSpace, Owner {
     private   Boolean  @default(false)
-    spaceElementType SpaceElementType 
+
+
+    dashboard Dashboard?
+    list List?
+    property Property?
 
     // can be read by owner or space members (only if not private) 
     @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
@@ -160,7 +159,7 @@ abstract model IdCreatedUpdatedSpaceOwnerPrivate extends IdCreatedUpdatedSpace, 
     @@allow('delete', owner == auth())
 }
 
-model List extends IdCreatedUpdatedSpaceOwnerPrivate {
+model List extends SpaceComponentRelation {
     title     String   @length(1, 100)
     todos     Todo[]
 }
@@ -175,13 +174,13 @@ model Todo extends IdCreatedUpdatedAuthOwner {
 
     // owner has full access, also space members have full access (if the parent List is not private)
     @@allow('all', list.owner == auth())
-    @@allow('all', list.space.members?[user == auth()] && !list.private)
+    @@allow('all', list.spaceComponent.space.members?[user == auth()] && !list.spaceComponent.private)
 }
 
 /*
  * Model for a property
  */
-model Property extends IdCreatedUpdatedSpaceOwnerPrivate {
+model Property extends SpaceComponentRelation {
     type        PropertyType
     address     String
     city        String
@@ -196,11 +195,10 @@ enum PropertyElementType {
 }
 
 abstract model IdCreatedUpdatedAuthOwnerProperty extends IdCreatedUpdatedAuthOwner {
-
     property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
     propertyId  String
     @@allow('all', property.owner == auth())
-    @@allow('all', property.space.members?[user == auth()] && !property.private)
+    @@allow('all', property.spaceComponent.space.members?[user == auth()] && !property.spaceComponent.private)
 }
 
 model Lease extends IdCreatedUpdatedAuthOwnerProperty {
@@ -219,7 +217,7 @@ model Payment extends IdCreatedUpdatedAuthOwner {
     date        DateTime
 
     @@allow('all', lease.property.owner == auth())
-    @@allow('all', lease.property.space.members?[user == auth()] && !lease.property.private)
+    @@allow('all', lease.property.spaceComponent.space.members?[user == auth()] && !lease.property.spaceComponent.private)
 }
 
 model Charge  extends IdCreatedUpdatedAuthOwnerProperty {
@@ -250,10 +248,16 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
+abstract model SpaceComponentRelation extends IdCreatedUpdatedAuthOwner {
+    spaceComponent   SpaceComponent @relation(fields: [spaceComponentId], references: [id], onDelete: Cascade)
+    spaceComponentId String   @unique
+
+    @@allow('all', spaceComponent.owner == auth())
+    @@allow('all', spaceComponent.space.members?[user == auth()] && !spaceComponent.private)
+}
 
 
-
-model Dashboard extends IdCreatedUpdatedSpaceOwnerPrivate {
+model Dashboard extends SpaceComponentRelation {
     title     String   @length(1, 100)
     panelRows     PanelRow[]
 }
@@ -267,7 +271,7 @@ model PanelRow extends IdCreatedUpdatedAuthOwner {
     panels     Panel[]
 
     @@allow('all', dashboard.owner == auth())
-    @@allow('all', dashboard.space.members?[user == auth()] && !dashboard.private)
+    @@allow('all', dashboard.spaceComponent.space.members?[user == auth()] && !dashboard.spaceComponent.private)
 }
 
 
@@ -278,23 +282,34 @@ model Panel extends IdCreatedUpdatedAuthOwner {
     panelComponents     PanelComponent[]
 
     @@allow('all', panelRow.dashboard.owner == auth())
-    @@allow('all', panelRow.dashboard.space.members?[user == auth()] && !panelRow.dashboard.private)
+    @@allow('all', panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelRow.dashboard.spaceComponent.private)
 }
 
-enum PanelComponentType {
-    COUNTER
-    REPORT
-    VIEW
-    CONVERSATION
-}
 
 model PanelComponent extends IdCreatedUpdatedAuthOwner {
     panel        Panel      @relation(fields: [panelId], references: [id], onDelete: Cascade)
     panelId      String
     title       String    @length(1, 100)
-    panelComponentType PanelComponentType
+
+
+    panelComponentCounter PanelComponentCounter?
+    panelComponentReport PanelComponentReport?
 
     @@allow('all', panel.panelRow.dashboard.owner == auth())
-    @@allow('all', panel.panelRow.dashboard.space.members?[user == auth()] && !panel.panelRow.dashboard.private)
+    @@allow('all', panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panel.panelRow.dashboard.spaceComponent.private)
 }
 
+abstract model PanelComponentRelation extends IdCreatedUpdatedAuthOwner {
+    panelComponent   PanelComponent @relation(fields: [panelComponentId], references: [id], onDelete: Cascade)
+    panelComponentId String   @unique
+
+    @@allow('all', panelComponent.panel.panelRow.dashboard.owner == auth())
+    @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelComponent.panel.panelRow.dashboard.spaceComponent.private)
+}
+
+
+model PanelComponentCounter extends PanelComponentRelation {
+}
+
+model PanelComponentReport extends PanelComponentRelation {
+}

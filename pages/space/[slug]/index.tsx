@@ -1,4 +1,4 @@
-import { useFindUniqueSpace } from "@lib/hooks";
+import { useCreateSpaceComponent, useFindUniqueSpace } from "@lib/hooks";
 import BreadCrumb from "components/BreadCrumb";
 import SpaceMembers from "components/SpaceMembers";
 import TodoList from "components/TodoList";
@@ -6,18 +6,31 @@ import WithNavBar from "components/WithNavBar";
 import PropertyCard from "components/Property/PropertyCard";
 import { GenerateDemonstration } from "components/Demonstration/GenerateDemonstration";
 import DashboardCard from "components/Dashboard/DashboardCard";
-import { Dashboard, List, Property, Space, SpaceElementType, User } from "@zenstackhq/runtime/models";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { Modal } from "components/Form/Modal";
 import { useRouter } from "next/router";
+import { CreateForm } from "components/Form/CreateForm";
+import { Property, PropertyType, List, Dashboard, Space, User } from "@prisma/client";
+import { SpaceComponent } from "@zenstackhq/runtime/models";
 
-export function SpaceHomeComponent({ space }: {space: Space & {
-	lists: (List & { owner: User; })[];
-	dashboards: (Dashboard & { owner: User; })[];
-	properties: (Property & { owner: User; })[];
-};}) {
+export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: (SpaceComponent & {
+	owner: User;
+	dashboard?: Dashboard | null;
+	list?: List | null;
+	property?: Property | null;
+})[];};}) {
 
-	const [spaceElementType, setSpaceElementType] = useState<SpaceElementType>();
+	const [modalForm, setModalForm] = useState<ReactElement | undefined>();
+
+	const onClose = () => setModalForm(void 0);
+	const children = <div className="modal-action">
+		<input className="btn btn-primary" type="submit" value="Create" />
+		<label htmlFor="create-property-modal" className="btn btn-outline" onClick={onClose}>
+		Cancel
+		</label>
+	</div>;
+
+	const createSpaceComponent = useCreateSpaceComponent();
 
 	return (
 		<WithNavBar>
@@ -26,46 +39,94 @@ export function SpaceHomeComponent({ space }: {space: Space & {
 			</div>
 			<div className="p-8">
 				<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setSpaceElementType("List")}>
+					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<List> fields={[
+						{
+							id: "title",
+							type: "text"
+						}
+					]} onSubmitData={async ({ data, _private }) => {
+						await createSpaceComponent.mutateAsync({
+							data: {
+								spaceId: space.id,
+								private: _private,
+								list: { create: { ...data } }
+							}
+						});
+					}} onClose={onClose} showPrivate={true}>
+						{children}
+					</CreateForm>)}>
                         Create a list
 					</label>
-					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setSpaceElementType("Property")}>
+					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Property> fields={[
+						{
+							id: "type",
+							type: "select",
+							values: PropertyType
+						},
+						{
+							id: "address",
+							type: "text"
+						},
+						{
+							id: "city",
+							type: "text"
+						},
+						{
+							id: "postalCode",
+							type: "text"
+						},
+						{
+							id: "country",
+							type: "text"
+						}
+					]} onSubmitData={async ({ data, _private }) => {
+						await createSpaceComponent.mutateAsync({
+							data: {
+								spaceId: space.id,
+								private: _private,
+								property: { create: {
+									...data
+								} }
+							}
+						});
+					}} onClose={onClose} showPrivate={true}>
+						{children}
+					</CreateForm>)}>
                         Create a property
 					</label>
-					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setSpaceElementType("Dashboard")}>
+					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Dashboard> fields={[
+						{
+							id: "title",
+							type: "text"
+						}
+					]} onSubmitData={async ({ data, _private }) => {
+						await createSpaceComponent.mutateAsync({
+							data: {
+								spaceId: space.id,
+								private: _private,
+								dashboard: { create: { ...data } }
+							}
+						});
+					}} onClose={onClose} showPrivate={true}>
+						{children}
+					</CreateForm>)}>
                         Create a dashboard
 					</label>
 					<GenerateDemonstration/>
 					<SpaceMembers />
 				</div>
 
-				<h2 className="text-xl font-semibold mb-4">Lists</h2>
+				<h2 className="text-xl font-semibold mb-4">Components</h2>
 				<ul className="flex flex-wrap gap-6 mb-8">
-					{space?.lists?.map((list) =>
-						<li key={list.id}>
-							<TodoList value={list} />
+					{space?.spaceComponents?.map((spaceComponent) =>
+						<li key={spaceComponent.id}>
+							{spaceComponent.list && <TodoList list={spaceComponent.list} owner={spaceComponent.owner} spaceComponent={spaceComponent} />}
+							{spaceComponent.dashboard && <DashboardCard dashboard={spaceComponent.dashboard} spaceComponent={spaceComponent}/>}
+							{spaceComponent.property && <PropertyCard property={spaceComponent.property} spaceComponent={spaceComponent}/>}
 						</li>
 					)}
 				</ul>
-
-				<h2 className="text-xl font-semibold mb-4">Properties</h2>
-				<ul className="flex flex-wrap gap-6 mb-8">
-					{space?.properties?.map((property) =>
-						<li key={property.id}>
-							<PropertyCard value={property}/>
-						</li>
-					)}
-				</ul>
-
-				<h2 className="text-xl font-semibold mb-4">Dashboards</h2>
-				<ul className="flex flex-wrap gap-6 mb-8">
-					{space?.dashboards?.map((dashboard) =>
-						<li key={dashboard.id}>
-							<DashboardCard dashboard={dashboard}/>
-						</li>
-					)}
-				</ul>
-				{spaceElementType && <Modal spaceElementType={spaceElementType} onClose={() => setSpaceElementType(void 0)}/>}
+				{modalForm && <Modal>{modalForm}</Modal>}
 			</div>
 		</WithNavBar>
 	);
@@ -78,25 +139,12 @@ export default function SpaceHome() {
 				slug: router.query.slug as string
 			},
 			include: {
-				lists: {
+				spaceComponents: {
 					include: {
-						owner: true
-					},
-					orderBy: {
-						updatedAt: "desc"
-					}
-				},
-				dashboards: {
-					include: {
-						owner: true
-					},
-					orderBy: {
-						updatedAt: "desc"
-					}
-				},
-				properties: {
-					include: {
-						owner: true
+						owner: true,
+						dashboard: true,
+						list: true,
+						property: true
 					},
 					orderBy: {
 						updatedAt: "desc"

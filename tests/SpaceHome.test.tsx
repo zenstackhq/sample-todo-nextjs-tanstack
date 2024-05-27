@@ -10,9 +10,7 @@ test("Page", () => {
 		name: "mySpace",
 		slug: "space",
 		updatedAt: new Date(),
-		dashboards: [],
-		lists: [],
-		properties: []
+		spaceComponents: []
 	}}/>, { wrapper: createWrapper() });
 	screen.getByText("Create a property");
 });

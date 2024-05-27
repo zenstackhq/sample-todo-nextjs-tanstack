@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { PropertyElementType } from "@prisma/client";
 import { useCreateLease } from "@lib/hooks";
 import { CreateForm } from "./CreateForm";
-import { Lease, Property } from "@zenstackhq/runtime/models";
+import { Property } from "@zenstackhq/runtime/models";
 
 
 export function PropertyModal({ propertyElementType, onClose, property }: {propertyElementType: PropertyElementType; onClose: () => void; property: Property;}) {
@@ -30,14 +30,14 @@ export function PropertyModal({ propertyElementType, onClose, property }: {prope
 						id: "rentAmount",
 						type: "number"
 					}
-				]} onSubmitData={async (data: Lease) => {
+				]} onSubmitData={async ({ data }) => {
 					await createLease.mutateAsync({
 						data: {
 							...data,
 							propertyId: property.id
 						}
 					});
-				}} onClose={onClose}>
+				}} onClose={onClose} showPrivate={false}>
 					{children}
 				</CreateForm>;
 			}

@@ -114,7 +114,10 @@ model User extends IdCreatedUpdated {
     dashboards        Dashboard[]
     payments      Payment[]
     charges         Charge[]
-
+    panelRows         PanelRow[]
+    panels           Panel[]
+    panelComponents     PanelComponent[]
+    
     // next-auth
     accounts      Account[]
 
@@ -134,8 +137,15 @@ abstract model Owner {
     @@deny('update', future().owner != owner)
 }
 
+enum SpaceElementType {
+    List
+    Property
+    Dashboard
+}
+
 abstract model IdCreatedUpdatedSpaceOwnerPrivate extends IdCreatedUpdatedSpace, Owner {
     private   Boolean  @default(false)
+    spaceElementType SpaceElementType 
 
     // can be read by owner or space members (only if not private) 
     @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
@@ -181,6 +191,10 @@ model Property extends IdCreatedUpdatedSpaceOwnerPrivate {
     charges     Charge[]
 }
 
+enum PropertyElementType {
+    Lease
+}
+
 abstract model IdCreatedUpdatedAuthOwnerProperty extends IdCreatedUpdatedAuthOwner {
 
     property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
@@ -188,12 +202,14 @@ abstract model IdCreatedUpdatedAuthOwnerProperty extends IdCreatedUpdatedAuthOwn
     @@allow('all', property.owner == auth())
     @@allow('all', property.space.members?[user == auth()] && !property.private)
 }
+
 model Lease extends IdCreatedUpdatedAuthOwnerProperty {
     startDate   DateTime
     endDate     DateTime?
     rentAmount  BigInt
     payments    Payment[]
     charges     Charge[]
+    propertyElementType PropertyElementType @default(Lease)
 }
 
 model Payment extends IdCreatedUpdatedAuthOwner {
@@ -244,39 +260,26 @@ model Dashboard extends IdCreatedUpdatedSpaceOwnerPrivate {
 
 
 
-
-model PanelRow {
-    id          String    @id @default(uuid())
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+model PanelRow extends IdCreatedUpdatedAuthOwner {
     dashboard        Dashboard      @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
     dashboardId      String
     title       String    @length(1, 100)
     panels     Panel[]
-
-    @@deny('all', auth() == null)
 
     @@allow('all', dashboard.owner == auth())
     @@allow('all', dashboard.space.members?[user == auth()] && !dashboard.private)
 }
 
 
-
-model Panel {
-    id          String    @id @default(uuid())
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+model Panel extends IdCreatedUpdatedAuthOwner {
     panelRow        PanelRow      @relation(fields: [panelRowId], references: [id], onDelete: Cascade)
     panelRowId      String
     title       String    @length(1, 100)
     panelComponents     PanelComponent[]
 
-    @@deny('all', auth() == null)
-
     @@allow('all', panelRow.dashboard.owner == auth())
     @@allow('all', panelRow.dashboard.space.members?[user == auth()] && !panelRow.dashboard.private)
 }
-
 
 enum PanelComponentType {
     COUNTER
@@ -285,19 +288,13 @@ enum PanelComponentType {
     CONVERSATION
 }
 
-
-model PanelComponent
-{
-    id          String    @id @default(uuid())
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+model PanelComponent extends IdCreatedUpdatedAuthOwner {
     panel        Panel      @relation(fields: [panelId], references: [id], onDelete: Cascade)
     panelId      String
     title       String    @length(1, 100)
-    type        PanelComponentType
-
-    @@deny('all', auth() == null)
+    panelComponentType PanelComponentType
 
     @@allow('all', panel.panelRow.dashboard.owner == auth())
     @@allow('all', panel.panelRow.dashboard.space.members?[user == auth()] && !panel.panelRow.dashboard.private)
 }
+

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { useCurrentSpace } from "@lib/context";
 import { useCreateLease, useCreateManyCharge, useCreateManyLease, useCreateManyPayment, useCreateManyProperty, useCreateProperty } from "@lib/hooks";
-import { ChargeType, Lease, Property, PropertyType, Space } from "@zenstackhq/runtime/models";
+import { Property, PropertyType, SpaceElementType, Space, Lease, ChargeType } from "@prisma/client";
 
 
 const fakeProperty = (space?: Space)  => {
@@ -11,11 +11,12 @@ const fakeProperty = (space?: Space)  => {
 	return {
 		address: faker.location.streetAddress(),
 		city: faker.location.city(),
-		type: "COMMERCIAL" as PropertyType,
+		type: PropertyType.COMMERCIAL,
 		postalCode: faker.location.zipCode(),
 		country: faker.location.country(),
 		spaceId: space.id,
-		createdAt: faker.date.past()
+		createdAt: faker.date.past(),
+		spaceElementType: SpaceElementType.Property
 	};
 };
 
@@ -41,7 +42,7 @@ const fakeCharge = ({ property, lease }: {property: Property; lease: Lease;}) =>
 	return {
 		propertyId: property.id,
 		leaseId: lease.id,
-		type: "UTILITIES" as ChargeType,
+		type: ChargeType.UTILITIES,
 		amount: faker.number.bigInt({ min: 100, max: 1000 }),
 		dueDate: faker.date.future(),
 		description: faker.lorem.sentence(),

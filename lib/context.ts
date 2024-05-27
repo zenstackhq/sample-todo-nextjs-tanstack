@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useFindUniqueSpace } from "./hooks";
+import { useFindUniqueProperty, useFindUniqueSpace } from "./hooks";
 
 
 export function useCurrentUser() {
@@ -11,7 +11,7 @@ export function useCurrentUser() {
 
 export function useCurrentSpace() {
 	const router = useRouter();
-	const { data: space } = useFindUniqueSpace(
+	const { data } = useFindUniqueSpace(
 		{
 			where: {
 				slug: router.query.slug as string
@@ -22,7 +22,24 @@ export function useCurrentSpace() {
 		}
 	);
 
-	return space;
+	return data;
+}
+
+
+export function useCurrentProperty() {
+	const router = useRouter();
+	const { data } = useFindUniqueProperty(
+		{
+			where: {
+				id: router.query.propertyId as string
+			}
+		},
+		{
+			enabled: !!router.query.propertyId
+		}
+	);
+
+	return data;
 }
 
 

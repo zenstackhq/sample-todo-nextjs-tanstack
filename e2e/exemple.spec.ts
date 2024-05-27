@@ -1,7 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker";
+import { FieldPath, FieldValues } from "react-hook-form";
+import { Lease, Property } from "@zenstackhq/runtime/models";
 
 test("should navigate to the about page", async ({ page }) => {
+
+	function getByLabel <T extends FieldValues>(label: FieldPath<T>) {
+		return page.getByLabel(label);
+	}
 
 	async function createProperty() {
 		await page.getByText("Create a property").click();
@@ -11,12 +17,13 @@ test("should navigate to the about page", async ({ page }) => {
 		const type = "COMMERCIAL";
 		const postalCode = faker.location.zipCode();
 		const country = faker.location.country();
-		await page.getByLabel("Type").selectOption({ label: type });
-		await page.getByLabel("Address").fill(address);
-		await page.getByLabel("City").fill(city);
-		await page.getByLabel("Postal Code").fill(postalCode);
-		await page.getByLabel("Country").fill(country);
-		await page.getByLabel("Private").check();
+
+		await getByLabel<Property>("type").selectOption({ label: type });
+		await getByLabel<Property>("address").fill(address);
+		await getByLabel<Property>("city").fill(city);
+		await getByLabel<Property>("postalCode").fill(postalCode);
+		await getByLabel<Property>("country").fill(country);
+		await getByLabel<Property>("private").check();
 		await page.getByText("Create", { exact: true }).click();
 
 		page.getByText("Property created successfully!");
@@ -34,9 +41,9 @@ test("should navigate to the about page", async ({ page }) => {
 		const startDate = "2030-01-01";
 		const endDate = "2050-12-31";
 		const rentAmount = faker.number.bigInt();
-		await page.getByLabel("Start Date").fill(startDate);
-		await page.getByLabel("End Date").fill(endDate);
-		await page.getByLabel("Rent amount").fill(rentAmount.toString());
+		await getByLabel<Lease>("startDate").fill(startDate);
+		await getByLabel<Lease>("endDate").fill(endDate);
+		await getByLabel<Lease>("rentAmount").fill(rentAmount.toString());
 		await page.getByText("Create", { exact: true }).click();
 
 		page.getByText("Lease created successfully!");

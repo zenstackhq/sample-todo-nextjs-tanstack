@@ -1,10 +1,12 @@
 import { useFindManyLease  } from "@lib/hooks";
 import { Property, Space } from "@prisma/client";
+import { PropertyElementType } from "@zenstackhq/runtime/models";
 import BreadCrumb from "components/BreadCrumb";
-import { CreateLeaseDialog } from "components/Lease/CreateLeaseDialog";
+import { PropertyModal } from "components/Form/PropertyModal";
 import LeaseDetail from "components/Lease/LeaseList";
 import WithNavBar from "components/WithNavBar";
 import { GetServerSideProps } from "next";
+import { useState } from "react";
 import { getEnhancedPrisma } from "server/enhanced-db";
 
 type Props = {
@@ -23,6 +25,7 @@ export default function PropertyDetails(props: Props) {
 			createdAt: "desc" as const
 		}
 	});
+	const [propertyElementType, setPropertyElementType] = useState<PropertyElementType>();
 
 	if (!props.space || !props.property) {
 		return <></>;
@@ -37,7 +40,7 @@ export default function PropertyDetails(props: Props) {
 				<h1 className="text-2xl font-semibold mb-4">{props.property?.address}</h1>
 				<div className="flex space-x-2">
 					<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-						<label htmlFor="create-lease-modal" className="btn btn-primary btn-wide modal-button">
+						<label htmlFor="create-lease-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setPropertyElementType("Lease")}>
                         Create a lease
 						</label>
 					</div>
@@ -48,7 +51,7 @@ export default function PropertyDetails(props: Props) {
 					)}
 				</ul>
 			</div>
-			<CreateLeaseDialog propertyId={props.property.id}/>
+			{propertyElementType && <PropertyModal propertyElementType={propertyElementType} onClose={() => setPropertyElementType(void 0)} property={props.property}/>}
 		</WithNavBar>
 	);
 }

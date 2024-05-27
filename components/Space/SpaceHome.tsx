@@ -5,14 +5,13 @@ import SpaceMembers from "components/SpaceMembers";
 import TodoList from "components/TodoList";
 import WithNavBar from "components/WithNavBar";
 import PropertyCard from "components/Property/PropertyCard";
-import { CreateListDialog } from "components/List/CreateListDialog";
-import { CreatePropertyDialog } from "components/Property/CreatePropertyDialog";
 import { GenerateDemonstration } from "components/Demonstration/GenerateDemonstration";
 import DashboardCard from "components/Dashboard/DashboardCard";
+import { SpaceElementType } from "@zenstackhq/runtime/models";
+import { useState } from "react";
+import { Modal } from "components/Form/Modal";
 
-export type SpaceHomeProps = {
-	space: Space;
-};
+export type SpaceHomeProps = {space: Space;};
 export function SpaceHome(props: SpaceHomeProps) {
 	const { data: lists } = useFindManyList(
 		{
@@ -75,6 +74,7 @@ export function SpaceHome(props: SpaceHomeProps) {
 		}
 	);
 
+	const [spaceElementType, setSpaceElementType] = useState<SpaceElementType>();
 
 	return (
 		<WithNavBar>
@@ -83,11 +83,14 @@ export function SpaceHome(props: SpaceHomeProps) {
 			</div>
 			<div className="p-8">
 				<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button">
+					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setSpaceElementType("List")}>
                         Create a list
 					</label>
-					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button">
+					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setSpaceElementType("Property")}>
                         Create a property
+					</label>
+					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setSpaceElementType("Dashboard")}>
+                        Create a dashboard
 					</label>
 					<GenerateDemonstration/>
 					<SpaceMembers />
@@ -119,9 +122,7 @@ export function SpaceHome(props: SpaceHomeProps) {
 						</li>
 					)}
 				</ul>
-
-				<CreateListDialog />
-				<CreatePropertyDialog />
+				{spaceElementType && <Modal spaceElementType={spaceElementType} onClose={() => setSpaceElementType(void 0)}/>}
 			</div>
 		</WithNavBar>
 	);

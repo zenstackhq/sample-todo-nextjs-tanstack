@@ -46,69 +46,57 @@ export function CreateForm<T extends FieldValues>({ children, onSubmitData, onCl
 						const label = <label htmlFor={field.id} className="text-lg inline-block w-20">
 							{field.id}
 						</label>;
-						switch (field.type) {
-							case "select":
-								return <div key={field.id} className="flex items-center">
-									{label}
-									<select
+						const buildInput = () => {
+							switch (field.type) {
+								case "select":
+									return <select
 										required
 										className="select select-bordered w-full max-w-xs mt-2"
 										id={field.id}
 										{...register(field.id)}
 									>
 										{Object.entries(field.values).map(([option, value]) => <option key={option} value={option}>{value}</option>)}
-									</select>
-								</div>;
-							case "text":
-								return <div key={field.id} className="flex items-center">
-									{label}
-									<input
+									</select>;
+								case "text":
+									return <input
 										required
 										id={field.id}
 										placeholder={`placeholder_${field.id}`}
 										className="input input-bordered w-full max-w-xs mt-2"
 										{...register(field.id)}
-									/>
-								</div>;
-							case "checkbox":
-								return <div key={field.id} className="flex items-center">
-									{label}
-									<input
+									/>;
+								case "checkbox":
+									return <input
 										type="checkbox"
 										id={field.id}
 										className="checkbox"
 										{...register(field.id)}
-									/>
-								</div>;
-							case "date":
-								return <div className="flex items-center">
-									{label}
-									<input
+									/>;
+								case "date":
+									return <input
 										type="date"
 										id={field.id}
 										required
 										className="input input-bordered w-full max-w-xs mt-2"
 										{...register(field.id, { valueAsDate: true })}
-									/>
-								</div>;
-							case "number":
-								return <div className="flex items-center">
-									{label}
-									<input
+									/>;
+								case "number":
+									return <input
 										type="number"
 										id={field.id}
 										required
 										className="input input-bordered w-full max-w-xs mt-2"
 										{...register(field.id, { valueAsNumber: true })}
-									/>
-								</div>;
-							default:
-								throw "unsupported type";
-						}
+									/>;
+								default:
+									throw "unsupported type";
+							}
+						};
+						return <div key={field.id} className="flex items-center">{label}{buildInput()}</div>;
+
 					})}
 				</div>
 				{children}
-
 			</form>
 		</>
 	);

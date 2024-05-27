@@ -1,6 +1,6 @@
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useCurrentSpace } from "@lib/context";
-import { useCreatePanel, useFindUniqueDashboard } from "@lib/hooks";
+import { useCreatePanel, useCreatePanelRow, useDeletePanelRow, useFindUniqueDashboard } from "@lib/hooks";
 import Avatar from "components/Avatar";
 import BreadCrumb from "components/BreadCrumb";
 import { PanelComponentRender } from "components/Dashboard/PanelComponentRender";
@@ -35,6 +35,8 @@ export default function DashboardDetails() {
 	);
 
 	const createPanel = useCreatePanel();
+	const createPanelRow = useCreatePanelRow();
+	const deletePanelRow = useDeletePanelRow();
 
 	if (!space || !dashboard) {
 		return <></>;
@@ -57,8 +59,10 @@ export default function DashboardDetails() {
 								)}
 							</PanelRender>)}
 							<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => createPanel.mutate({ data: { title: "new panel", panelRowId: panelRow.id } })}/>
+							<TrashIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => deletePanelRow.mutate({ where: { id: panelRow.id } })}/>
 						</div>
 					)}
+					<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => createPanelRow.mutate({ data: { title: "new panel row", dashboardId: dashboard.id } })}/>
 				</ul>
 			</div>
 		</WithNavBar>

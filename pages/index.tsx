@@ -1,18 +1,15 @@
 import { useCurrentUser } from "@lib/context";
-import { Space } from "@prisma/client";
+import { useFindManySpace } from "@lib/hooks";
 import Spaces from "components/Spaces";
 import WithNavBar from "components/WithNavBar";
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import Link from "next/link";
-import { getEnhancedPrisma } from "server/enhanced-db";
 
-type Props = {
-	spaces: Space[];
-};
 
-const Home: NextPage<Props> = ({ spaces }) => {
+const Home: NextPage = () => {
 	const user = useCurrentUser();
 
+	const { data: spaces } = useFindManySpace();
 	return (
 		<WithNavBar>
 			{user &&
@@ -26,7 +23,7 @@ const Home: NextPage<Props> = ({ spaces }) => {
 				create a new one.
 							</Link>
 						</h2>
-						<Spaces spaces={spaces} />
+						{spaces && <Spaces spaces={spaces} />}
 					</div>
 				</div>
 			}
@@ -34,12 +31,5 @@ const Home: NextPage<Props> = ({ spaces }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-	const db = await getEnhancedPrisma(ctx);
-	const spaces = await db.space.findMany();
-	return {
-		props: { spaces }
-	};
-};
 
 export default Home;

@@ -68,40 +68,58 @@ export const GenerateDemonstration = () => {
 		const prefix = `demo_${Date.now()}_`;
 
 		await createManySpaceComponent.mutateAsync({
-			data: Array.from({ length: 3000 }).map((_, index) => ({
+			data: Array.from({ length: 1000 }).map((_, index) => ({
 				spaceId: space.id,
-				id: `${prefix}spaceComponent${index}`
+				id: `${prefix}Dashboard${index}`,
+				type: "Dashboard"
 			}))
 		});
 
 		await createManyDashboard.mutateAsync({
 			data: Array.from({ length: 1000 }).map((_, index) => ({
 				title: faker.company.buzzAdjective(),
-				spaceComponentId: `${prefix}spaceComponent${index + 1000}`
+				spaceComponentId: `${prefix}Dashboard${index}`
+			}))
+		});
+
+		await createManySpaceComponent.mutateAsync({
+			data: Array.from({ length: 1000 }).map((_, index) => ({
+				spaceId: space.id,
+				id: `${prefix}List${index}`,
+				type: "List"
 			}))
 		});
 
 		await createManyList.mutateAsync({
 			data: Array.from({ length: 1000 }).map((_, index) => ({
 				title: faker.company.buzzAdjective(),
-				spaceComponentId: `${prefix}spaceComponent${index + 1000}`
+				spaceComponentId: `${prefix}List${index}`
+			}))
+		});
+
+
+		await createManySpaceComponent.mutateAsync({
+			data: Array.from({ length: 1000 }).map((_, index) => ({
+				spaceId: space.id,
+				id: `${prefix}Property${index}`,
+				type: "Property"
 			}))
 		});
 
 		await createManyProperty.mutateAsync({
 			data: Array.from({ length: 1000 }).map((_, index) => ({
 				...fakeProperty(),
-				spaceComponentId: `${prefix}spaceComponent${index}`,
-				id: `${prefix}property${index}`
+				spaceComponentId: `${prefix}Property${index}`,
+				id: `${prefix}Property${index}`
 			}))
 		});
 
-		const propertyId = `${prefix}property${0}`;
+		const propertyId = `${prefix}Property${0}`;
 		await createManyLease.mutateAsync({ data: Array.from({ length: 1000 }).map((_, index) => (
-			{ ...fakeLease(propertyId), id: `${prefix}lease${index}` }
+			{ ...fakeLease(propertyId), id: `${prefix}Lease${index}` }
 		)) });
 
-		const leaseId = `${prefix}lease${0}`;
+		const leaseId = `${prefix}Lease${0}`;
 		await createManyPayment.mutateAsync({ data: Array.from({ length: 1000 }, () => fakePayment(leaseId)) });
 		await createManyCharge.mutateAsync({ data: Array.from({ length: 1000 }, () => fakeCharge({ propertyId, leaseId })) });
 	};

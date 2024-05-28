@@ -1,5 +1,5 @@
 import { LockClosedIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useCheckList, useDeleteList } from "@lib/hooks";
+import { useDeleteList } from "@lib/hooks";
 import { List } from "@prisma/client";
 import { customAlphabet } from "nanoid";
 import { User } from "next-auth";
@@ -12,9 +12,6 @@ import { SpaceComponent } from "@zenstackhq/runtime/models";
 
 export default function TodoList({ list, owner, spaceComponent }: {list: List;owner: User;  spaceComponent: SpaceComponent;}) {
 	const router = useRouter();
-
-	// check if the current user can delete the list (based on its owner)
-	const { data: canDelete } = useCheckList({ operation: "delete", where: { ownerId: list.ownerId } });
 
 	const { mutate: deleteList } = useDeleteList();
 
@@ -51,7 +48,7 @@ export default function TodoList({ list, owner, spaceComponent }: {list: List;ow
 						{spaceComponent.private &&
                             <div className="tooltip" data-tip="Private"><LockClosedIcon className="w-4 h-4 text-gray-500" /></div>
 						}
-						{canDelete && <TrashIcon className="w-4 h-4 text-gray-500 cursor-pointer" onClick={onDelete} />}
+						<TrashIcon className="w-4 h-4 text-gray-500 cursor-pointer" onClick={onDelete} />
 					</div>
 				</div>
 			</div>

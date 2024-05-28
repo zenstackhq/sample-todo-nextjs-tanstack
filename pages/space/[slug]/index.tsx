@@ -7,7 +7,6 @@ import PropertyCard from "components/Property/PropertyCard";
 import { GenerateDemonstration } from "components/Demonstration/GenerateDemonstration";
 import DashboardCard from "components/Dashboard/DashboardCard";
 import { ReactElement, useState } from "react";
-import { Modal } from "components/Form/Modal";
 import { useRouter } from "next/router";
 import { CreateForm } from "components/Form/CreateForm";
 import { Property, PropertyType, List, Dashboard, Space, User } from "@prisma/client";
@@ -21,15 +20,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 })[];};}) {
 
 	const [modalForm, setModalForm] = useState<ReactElement | undefined>();
-
 	const onClose = () => setModalForm(void 0);
-	const children = <div className="modal-action">
-		<input className="btn btn-primary" type="submit" value="Create" />
-		<label htmlFor="create-property-modal" className="btn btn-outline" onClick={onClose}>
-		Cancel
-		</label>
-	</div>;
-
 	const createSpaceComponent = useCreateSpaceComponent();
 
 	return (
@@ -49,15 +40,14 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 							data: {
 								spaceId: space.id,
 								private: _private,
+								type: "List",
 								list: { create: { ...data } }
 							}
 						});
-					}} onClose={onClose} showPrivate={true}>
-						{children}
-					</CreateForm>)}>
+					}} onClose={onClose} showPrivate={true} title={"List"}/>)}>
                         Create a list
 					</label>
-					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Property> fields={[
+					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Property> fields={[
 						{
 							id: "type",
 							type: "select",
@@ -84,17 +74,16 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 							data: {
 								spaceId: space.id,
 								private: _private,
+								type: "Property",
 								property: { create: {
 									...data
 								} }
 							}
 						});
-					}} onClose={onClose} showPrivate={true}>
-						{children}
-					</CreateForm>)}>
+					}} onClose={onClose} showPrivate={true} title={"Property"}/>)}>
                         Create a property
 					</label>
-					<label htmlFor="create-property-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Dashboard> fields={[
+					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Dashboard> fields={[
 						{
 							id: "title",
 							type: "text"
@@ -104,12 +93,11 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 							data: {
 								spaceId: space.id,
 								private: _private,
+								type: "Dashboard",
 								dashboard: { create: { ...data } }
 							}
 						});
-					}} onClose={onClose} showPrivate={true}>
-						{children}
-					</CreateForm>)}>
+					}} onClose={onClose} showPrivate={true} title={"Dashboard"}/>)}>
                         Create a dashboard
 					</label>
 					<GenerateDemonstration/>
@@ -126,7 +114,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 						</li>
 					)}
 				</ul>
-				{modalForm && <Modal>{modalForm}</Modal>}
+				{modalForm && modalForm}
 			</div>
 		</WithNavBar>
 	);

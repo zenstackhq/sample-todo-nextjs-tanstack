@@ -17,15 +17,19 @@ export default function DashboardDetails() {
 				id: router.query.dashboardId as string
 			},
 			include: {
-				owner: true,
+				spaceComponent: {
+					include: {
+						owner: true
+					}
+				},
 				panelRows: {
 					include: {
 						panels: {
 							include: {
 								panelComponents: {
 									include: {
-										panelComponentCounter: true,
-										panelComponentReport: true
+										panelComponentReport: true,
+										panelComponentCounter: true
 									}
 								}
 							}
@@ -53,7 +57,7 @@ export default function DashboardDetails() {
 			</div>
 			<div className="container w-full flex flex-col items-center py-12 mx-auto">
 				<h1 className="text-2xl font-semibold mb-4">{dashboard?.title}</h1>
-				<Avatar user={dashboard.owner} size={18} />
+				<Avatar user={dashboard.spaceComponent.owner} size={18} />
 				<ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
 					{dashboard.panelRows.map(panelRow =>
 						<div key={panelRow.id}>

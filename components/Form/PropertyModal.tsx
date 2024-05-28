@@ -2,22 +2,16 @@ import { useMemo } from "react";
 import { PropertyElementType } from "@prisma/client";
 import { useCreateLease } from "@lib/hooks";
 import { CreateForm } from "./CreateForm";
-import { Property } from "@zenstackhq/runtime/models";
+import { Lease, Property } from "@zenstackhq/runtime/models";
 
 
-export function PropertyModal({ propertyElementType, onClose, property }: {propertyElementType: PropertyElementType; onClose: () => void; property: Property;}) {
+export function PropertyModal({ type, onClose, property }: {type: PropertyElementType; onClose: () => void; property: Property;}) {
 	const createLease = useCreateLease();
 	const formContent = useMemo(() => {
-		const children = <div className="modal-action">
-			<input className="btn btn-primary" type="submit" value="Create" />
-			<label htmlFor="create-property-modal" className="btn btn-outline" onClick={onClose}>
-				Cancel
-			</label>
-		</div>;
-		switch (propertyElementType) {
+		switch (type) {
 			case "Lease":
 			{
-				return <CreateForm fields={[
+				return <CreateForm<Lease> fields={[
 					{
 						id: "startDate",
 						type: "date"
@@ -37,19 +31,11 @@ export function PropertyModal({ propertyElementType, onClose, property }: {prope
 							propertyId: property.id
 						}
 					});
-				}} onClose={onClose} showPrivate={false}>
-					{children}
-				</CreateForm>;
+				}} onClose={onClose} showPrivate={false} title={"Lease"}/>;
 			}
 			default:
 				throw "unsupported propertyElementType";
 		}
-	}, [createLease, onClose, propertyElementType, property.id]);
-	return (
-		<div className="modal modal-open">
-			<div className="modal-box">
-				{formContent}
-			</div>
-		</div>
-	);
+	}, [createLease, onClose, type, property.id]);
+	return formContent;
 }

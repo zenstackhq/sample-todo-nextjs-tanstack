@@ -58,7 +58,7 @@ export default function PropertyDetails() {
 					)}
 				</ul>
 			</div>
-			{propertyElementType && <PropertyModal propertyElementType={propertyElementType} onClose={() => setPropertyElementType(void 0)} property={property}/>}
+			{propertyElementType && <PropertyModal type={propertyElementType} onClose={() => setPropertyElementType(void 0)} property={property}/>}
 		</WithNavBar>
 	);
 }

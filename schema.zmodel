@@ -27,32 +27,6 @@ plugin hooks {
     version = 'v5'
 }
 
-/*
- * Enum for user's role in a space
- */
-enum SpaceUserRole {
-    USER
-    ADMIN
-}
-
-/*
- * Enum for property types
- */
-enum PropertyType {
-    APARTMENT
-    HOUSE
-    COMMERCIAL
-}
-
-/*
- * Enum for charge types
- */
-enum ChargeType {
-    MAINTENANCE
-    UTILITIES
-    TAXES
-    OTHER
-}
 abstract model IdCreatedUpdated
 {
     id        String      @id @default(uuid())
@@ -88,6 +62,11 @@ abstract model IdCreatedUpdatedSpace extends IdCreatedUpdatedAuth {
 
     @@allow('read', space.members?[user == auth()])
 }
+enum SpaceUserRole {
+    USER
+    ADMIN
+}
+
 model SpaceUser extends IdCreatedUpdatedSpace {
     user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
@@ -105,11 +84,9 @@ model User extends IdCreatedUpdated {
     name          String?
     spaces        SpaceUser[]
     image         String?     @url
-    lists         List[]
     todos         Todo[]
     spaceComponents    SpaceComponent[]
     leases        Lease[]
-    dashboards        Dashboard[]
     payments      Payment[]
     charges         Charge[]
     panelRows         PanelRow[]
@@ -117,7 +94,6 @@ model User extends IdCreatedUpdated {
     panelComponents     PanelComponent[]
     panelComponentsCounter     PanelComponentCounter[]
     panelComponentsReport     PanelComponentReport[]
-    properties Property[]
     
     // next-auth
     accounts      Account[]
@@ -138,9 +114,16 @@ abstract model Owner {
     @@deny('update', future().owner != owner)
 }
 
+enum SpaceComponentType {
+  Dashboard
+  Property
+  List
+}
+
 model SpaceComponent extends IdCreatedUpdatedSpace, Owner {
     private   Boolean  @default(false)
 
+    type SpaceComponentType
 
     dashboard Dashboard?
     list List?
@@ -174,13 +157,15 @@ model Todo extends Component {
     completedAt DateTime?
 
     // owner has full access, also space members have full access (if the parent List is not private)
-    @@allow('all', list.owner == auth())
+    @@allow('all', list.spaceComponent.owner == auth())
     @@allow('all', list.spaceComponent.space.members?[user == auth()] && !list.spaceComponent.private)
 }
+enum PropertyType {
+    APARTMENT
+    HOUSE
+    COMMERCIAL
+}
 
-/*
- * Model for a property
- */
 model Property extends SpaceComponentRelation {
     type        PropertyType
     address     String
@@ -198,7 +183,7 @@ enum PropertyElementType {
 abstract model IdCreatedUpdatedAuthOwnerProperty extends Component {
     property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
     propertyId  String
-    @@allow('all', property.owner == auth())
+    @@allow('all', property.spaceComponent.owner == auth())
     @@allow('all', property.spaceComponent.space.members?[user == auth()] && !property.spaceComponent.private)
 }
 
@@ -217,10 +202,15 @@ model Payment extends Component {
     amount      BigInt
     date        DateTime
 
-    @@allow('all', lease.property.owner == auth())
+    @@allow('all', lease.property.spaceComponent.owner == auth())
     @@allow('all', lease.property.spaceComponent.space.members?[user == auth()] && !lease.property.spaceComponent.private)
 }
-
+enum ChargeType {
+    MAINTENANCE
+    UTILITIES
+    TAXES
+    OTHER
+}
 model Charge  extends IdCreatedUpdatedAuthOwnerProperty {
     lease       Lease?     @relation(fields: [leaseId], references: [id], onDelete: Cascade)
     leaseId     String?
@@ -249,7 +239,7 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
-abstract model SpaceComponentRelation extends Component {
+abstract model SpaceComponentRelation extends IdCreatedUpdatedAuth {
     spaceComponent   SpaceComponent @relation(fields: [spaceComponentId], references: [id], onDelete: Cascade)
     spaceComponentId String   @unique
 
@@ -271,7 +261,7 @@ model PanelRow extends Component {
     title       String    @length(1, 100)
     panels     Panel[]
 
-    @@allow('all', dashboard.owner == auth())
+    @@allow('all', dashboard.spaceComponent.owner == auth())
     @@allow('all', dashboard.spaceComponent.space.members?[user == auth()] && !dashboard.spaceComponent.private)
 }
 
@@ -282,21 +272,25 @@ model Panel extends Component {
     title       String    @length(1, 100)
     panelComponents     PanelComponent[]
 
-    @@allow('all', panelRow.dashboard.owner == auth())
+    @@allow('all', panelRow.dashboard.spaceComponent.owner == auth())
     @@allow('all', panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelRow.dashboard.spaceComponent.private)
 }
 
-
+enum PanelComponentType {
+    Counter
+    Report
+}
 model PanelComponent extends Component {
     panel        Panel      @relation(fields: [panelId], references: [id], onDelete: Cascade)
     panelId      String
     title       String    @length(1, 100)
+    type PanelComponentType
 
 
     panelComponentCounter PanelComponentCounter?
     panelComponentReport PanelComponentReport?
 
-    @@allow('all', panel.panelRow.dashboard.owner == auth())
+    @@allow('all', panel.panelRow.dashboard.spaceComponent.owner == auth())
     @@allow('all', panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panel.panelRow.dashboard.spaceComponent.private)
 }
 
@@ -304,13 +298,25 @@ abstract model PanelComponentRelation extends Component {
     panelComponent   PanelComponent @relation(fields: [panelComponentId], references: [id], onDelete: Cascade)
     panelComponentId String   @unique
 
-    @@allow('all', panelComponent.panel.panelRow.dashboard.owner == auth())
+    @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.owner == auth())
     @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelComponent.panel.panelRow.dashboard.spaceComponent.private)
+    spaceComponentType SpaceComponentType
 }
 
 
-model PanelComponentCounter extends PanelComponentRelation {   
+enum PanelComponentCounterType
+{
+    Sum
+    Count
+}
+model PanelComponentCounter extends PanelComponentRelation {
+    type PanelComponentCounterType
 }
 
+enum PanelComponentReportType {
+    Histogram
+    Funel
+}
 model PanelComponentReport extends PanelComponentRelation {
+    type PanelComponentReportType
 }

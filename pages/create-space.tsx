@@ -32,7 +32,7 @@ const CreateSpace: NextPage = () => {
 					}
 				}
 			});
-			toast.success("Space created successfully! You'll be redirected.");
+			toast.success("Space created successfully!");
 
 			if (space) {
 				void router.push(`/space/${space.slug}`);

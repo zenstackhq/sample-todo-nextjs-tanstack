@@ -1,7 +1,8 @@
 import { useCurrentSpace } from "@lib/context";
 import { useAggregateSpaceComponent } from "@lib/hooks";
+import { PanelComponentCounter } from "@zenstackhq/runtime/models";
 
-export const Counter = ({ where }: {where: Parameters<typeof useAggregateSpaceComponent>[0]["where"];}) => {
+export const Counter = ({ counter }: {counter: PanelComponentCounter;}) => {
 
 	const space = useCurrentSpace();
 	if (!space) {
@@ -10,7 +11,7 @@ export const Counter = ({ where }: {where: Parameters<typeof useAggregateSpaceCo
 	const aggregatePanelComponentCounter = useAggregateSpaceComponent(
 		{
 			where: {
-				...where,
+				type: counter.spaceComponentType,
 				spaceId: space.id
 			},
 			_count: true

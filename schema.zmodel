@@ -107,7 +107,7 @@ model User extends IdCreatedUpdated {
     image         String?     @url
     lists         List[]
     todos         Todo[]
-    idCreatedUpdatedSpaceOwnerPrivates    SpaceComponent[]
+    spaceComponents    SpaceComponent[]
     leases        Lease[]
     dashboards        Dashboard[]
     payments      Payment[]
@@ -164,9 +164,10 @@ model List extends SpaceComponentRelation {
     todos     Todo[]
 }
 
-abstract model IdCreatedUpdatedAuthOwner extends IdCreatedUpdatedAuth, Owner {
+abstract model Component extends IdCreatedUpdatedAuth, Owner {
+
 }
-model Todo extends IdCreatedUpdatedAuthOwner {
+model Todo extends Component {
     list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
     listId      String
     title       String    @length(1, 100)
@@ -194,7 +195,7 @@ enum PropertyElementType {
     Lease
 }
 
-abstract model IdCreatedUpdatedAuthOwnerProperty extends IdCreatedUpdatedAuthOwner {
+abstract model IdCreatedUpdatedAuthOwnerProperty extends Component {
     property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
     propertyId  String
     @@allow('all', property.owner == auth())
@@ -210,7 +211,7 @@ model Lease extends IdCreatedUpdatedAuthOwnerProperty {
     propertyElementType PropertyElementType @default(Lease)
 }
 
-model Payment extends IdCreatedUpdatedAuthOwner {
+model Payment extends Component {
     lease       Lease      @relation(fields: [leaseId], references: [id], onDelete: Cascade)
     leaseId     String
     amount      BigInt
@@ -248,7 +249,7 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
-abstract model SpaceComponentRelation extends IdCreatedUpdatedAuthOwner {
+abstract model SpaceComponentRelation extends Component {
     spaceComponent   SpaceComponent @relation(fields: [spaceComponentId], references: [id], onDelete: Cascade)
     spaceComponentId String   @unique
 
@@ -264,7 +265,7 @@ model Dashboard extends SpaceComponentRelation {
 
 
 
-model PanelRow extends IdCreatedUpdatedAuthOwner {
+model PanelRow extends Component {
     dashboard        Dashboard      @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
     dashboardId      String
     title       String    @length(1, 100)
@@ -275,7 +276,7 @@ model PanelRow extends IdCreatedUpdatedAuthOwner {
 }
 
 
-model Panel extends IdCreatedUpdatedAuthOwner {
+model Panel extends Component {
     panelRow        PanelRow      @relation(fields: [panelRowId], references: [id], onDelete: Cascade)
     panelRowId      String
     title       String    @length(1, 100)
@@ -286,7 +287,7 @@ model Panel extends IdCreatedUpdatedAuthOwner {
 }
 
 
-model PanelComponent extends IdCreatedUpdatedAuthOwner {
+model PanelComponent extends Component {
     panel        Panel      @relation(fields: [panelId], references: [id], onDelete: Cascade)
     panelId      String
     title       String    @length(1, 100)
@@ -299,7 +300,7 @@ model PanelComponent extends IdCreatedUpdatedAuthOwner {
     @@allow('all', panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panel.panelRow.dashboard.spaceComponent.private)
 }
 
-abstract model PanelComponentRelation extends IdCreatedUpdatedAuthOwner {
+abstract model PanelComponentRelation extends Component {
     panelComponent   PanelComponent @relation(fields: [panelComponentId], references: [id], onDelete: Cascade)
     panelComponentId String   @unique
 
@@ -308,7 +309,7 @@ abstract model PanelComponentRelation extends IdCreatedUpdatedAuthOwner {
 }
 
 
-model PanelComponentCounter extends PanelComponentRelation {
+model PanelComponentCounter extends PanelComponentRelation {   
 }
 
 model PanelComponentReport extends PanelComponentRelation {

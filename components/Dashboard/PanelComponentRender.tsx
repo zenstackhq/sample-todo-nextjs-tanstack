@@ -10,11 +10,17 @@ export const PanelComponentRender = ({ panelComponent }: {
 		panelComponenentReport?: PanelComponentReport | null;
 	};
 }) => {
+
+	const where = {
+		property: {
+			address: "simon"
+		}
+	};
 	const deletePanelComponent = useDeletePanelComponent();
 	return <div key={panelComponent.id} className="flex justify-between w-full mb-4">
 		<div className="border rounded-lg px-8 py-4 shadow-lg flex flex-col items-center">
 			<h2>{panelComponent.title}</h2>
-			{panelComponent.panelComponentCounter && <Counter panelComponentCounter={panelComponent.panelComponentCounter}/>}
+			{panelComponent.panelComponentCounter && <Counter where={where}/>}
 			{panelComponent.panelComponenentReport && <Report panelComponentReport={panelComponent.panelComponenentReport}/>}
 			<TrashIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => deletePanelComponent.mutate({ where: { id: panelComponent.id } })}/>
 		</div>

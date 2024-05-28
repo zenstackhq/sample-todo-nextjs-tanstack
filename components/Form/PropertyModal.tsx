@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { PropertyElementType } from "@prisma/client";
 import { useCreateLease } from "@lib/hooks";
 import { CreateForm } from "./CreateForm";
-import { Lease, Property } from "@zenstackhq/runtime/models";
+import { Property } from "@zenstackhq/runtime/models";
 
 
 export function PropertyModal({ type, onClose, property }: {type: PropertyElementType; onClose: () => void; property: Property;}) {
@@ -11,7 +11,7 @@ export function PropertyModal({ type, onClose, property }: {type: PropertyElemen
 		switch (type) {
 			case "Lease":
 			{
-				return <CreateForm<Lease> fields={[
+				return <CreateForm fields={[
 					{
 						id: "startDate",
 						type: "date"

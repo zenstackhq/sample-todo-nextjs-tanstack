@@ -287,8 +287,8 @@ model PanelComponent extends Component {
     type PanelComponentType
 
 
-    panelComponentCounter PanelComponentCounter?
-    panelComponentReport PanelComponentReport?
+    counter PanelComponentCounter?
+    report PanelComponentReport?
 
     @@allow('all', panel.panelRow.dashboard.spaceComponent.owner == auth())
     @@allow('all', panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panel.panelRow.dashboard.spaceComponent.private)

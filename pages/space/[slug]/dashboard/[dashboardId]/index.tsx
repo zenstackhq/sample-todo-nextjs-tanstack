@@ -28,8 +28,8 @@ export default function DashboardDetails() {
 							include: {
 								panelComponents: {
 									include: {
-										panelComponentReport: true,
-										panelComponentCounter: true
+										report: true,
+										counter: true
 									}
 								}
 							}

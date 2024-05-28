@@ -1,5 +1,5 @@
 import { CubeIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useCreatePanelComponent, useDeletePanel } from "@lib/hooks";
+import { useDeletePanel } from "@lib/hooks";
 import { Panel, PanelComponentType } from "@zenstackhq/runtime/models";
 import { ReactNode, useState } from "react";
 import { ComponentModal } from "./ComponentModal";

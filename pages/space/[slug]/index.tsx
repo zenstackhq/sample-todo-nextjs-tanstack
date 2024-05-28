@@ -30,7 +30,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 			</div>
 			<div className="p-8">
 				<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<List> fields={[
+					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm fields={[
 						{
 							id: "title",
 							type: "text"
@@ -47,7 +47,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 					}} onClose={onClose} showPrivate={true} title={"List"}/>)}>
                         Create a list
 					</label>
-					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Property> fields={[
+					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm fields={[
 						{
 							id: "type",
 							type: "select",
@@ -83,7 +83,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 					}} onClose={onClose} showPrivate={true} title={"Property"}/>)}>
                         Create a property
 					</label>
-					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm<Dashboard> fields={[
+					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm fields={[
 						{
 							id: "title",
 							type: "text"

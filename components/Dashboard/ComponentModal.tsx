@@ -1,9 +1,7 @@
 import { useMemo } from "react";
 import { useCreatePanelComponent } from "@lib/hooks";
-import { PanelComponentCounter, PanelComponentType, SpaceComponentType, Panel } from "@prisma/client";
+import { PanelComponentType, PanelComponentReportType, PanelComponentCounterType, SpaceComponentType, Panel } from "@prisma/client";
 import { CreateForm } from "components/Form/CreateForm";
-import { PanelComponentReport } from "@zenstackhq/runtime/models";
-
 
 export function ComponentModal({ type, onClose, panel }: {type: PanelComponentType; onClose: () => void; panel: Panel;}) {
 	const create = useCreatePanelComponent();
@@ -11,11 +9,16 @@ export function ComponentModal({ type, onClose, panel }: {type: PanelComponentTy
 		switch (type) {
 			case "Counter":
 			{
-				return <CreateForm<PanelComponentCounter> fields={[
+				return <CreateForm fields={[
 					{
 						id: "spaceComponentType",
 						type: "select",
 						values: SpaceComponentType
+					},
+					{
+						id: "type",
+						type: "select",
+						values: PanelComponentCounterType
 					}
 				]} onSubmitData={async ({ data }) => {
 					await create.mutateAsync({
@@ -23,7 +26,7 @@ export function ComponentModal({ type, onClose, panel }: {type: PanelComponentTy
 							title: "New counter",
 							panelId: panel.id,
 							type,
-							panelComponentCounter: {
+							counter: {
 								create: {
 									...data
 								}
@@ -35,19 +38,24 @@ export function ComponentModal({ type, onClose, panel }: {type: PanelComponentTy
 			}
 			case "Report":
 			{
-				return <CreateForm<PanelComponentReport> fields={[
+				return <CreateForm fields={[
 					{
 						id: "spaceComponentType",
 						type: "select",
 						values: SpaceComponentType
+					},
+					{
+						id: "type",
+						type: "select",
+						values: PanelComponentReportType
 					}
 				]} onSubmitData={async ({ data }) => {
 					await create.mutateAsync({
 						data: {
 							title: "New report",
 							panelId: panel.id,
-							type,
-							panelComponentReport: {
+							type: "Report",
+							report: {
 								create: {
 									...data
 								}
@@ -60,6 +68,6 @@ export function ComponentModal({ type, onClose, panel }: {type: PanelComponentTy
 			default:
 				throw "unsupported propertyElementType";
 		}
-	}, [onClose]);
+	}, [create, onClose, panel.id, type]);
 	return formContent;
 }

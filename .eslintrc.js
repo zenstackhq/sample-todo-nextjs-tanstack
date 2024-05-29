@@ -56,8 +56,8 @@ module.exports = {
 			"warn",
 			{
 				allowShortCircuit: true,
-				allowTernary: true,
-			},
+				allowTernary: true
+			}
 		],
 		"no-useless-escape": 1,
 		"no-useless-return": 1,
@@ -92,8 +92,8 @@ module.exports = {
 			"warn",
 			"tab",
 			{
-				SwitchCase: 1,
-			},
+				SwitchCase: 1
+			}
 		],
 		"keyword-spacing": 1,
 		"key-spacing": 1,
@@ -116,8 +116,8 @@ module.exports = {
 		"object-curly-newline": [
 			"warn",
 			{
-				consistent: true,
-			},
+				consistent: true
+			}
 		],
 		"object-curly-spacing": ["error", "always"],
 		"object-property-newline": 0,
@@ -127,8 +127,8 @@ module.exports = {
 			"error",
 			{
 				before: false,
-				after: true,
-			},
+				after: true
+			}
 		],
 		"space-in-parens": ["warn", "never"],
 		"space-infix-ops": 1,
@@ -142,19 +142,19 @@ module.exports = {
 			{
 				multiline: {
 					delimiter: "semi",
-					requireLast: true,
+					requireLast: true
 				},
 				singleline: {
 					delimiter: "semi",
-					requireLast: true,
-				},
-			},
+					requireLast: true
+				}
+			}
 		],
 		"@typescript-eslint/no-empty-function": [
 			"error",
 			{
-				allow: ["constructors"],
-			},
+				allow: ["constructors"]
+			}
 		],
 		"@typescript-eslint/quotes": ["error", "double"],
 		"@typescript-eslint/no-extra-parens": [
@@ -162,16 +162,16 @@ module.exports = {
 			"all",
 			{
 				nestedBinaryExpressions: false,
-				returnAssign: false,
-			},
+				returnAssign: false
+			}
 		],
 		"@typescript-eslint/no-unused-vars": [
 			"warn",
 			{
 				argsIgnorePattern: "^_",
 				varsIgnorePattern: "^_",
-				ignoreRestSiblings: true,
-			},
+				ignoreRestSiblings: true
+			}
 		],
 		"react-hooks/rules-of-hooks": "error",
 		"react-hooks/exhaustive-deps": "warn",
@@ -181,28 +181,28 @@ module.exports = {
 			{
 				selector: ["classMethod", "typeMethod"],
 				format: ["PascalCase", "camelCase"],
-				modifiers: ["public"],
+				modifiers: ["public"]
 			},
 			{
 				selector: ["classMethod", "typeMethod"],
 				format: ["camelCase"],
-				modifiers: ["protected", "private"],
-			},
+				modifiers: ["protected", "private"]
+			}
 		],
 		"@typescript-eslint/no-misused-promises": [
 			"error",
 			{
 				checksVoidReturn: {
-					attributes: false,
-				},
-			},
+					attributes: false
+				}
+			}
 		],
 		"@typescript-eslint/unbound-method": [
 			"error",
 			{
-				ignoreStatic: true,
-			},
-		],
+				ignoreStatic: true
+			}
+		]
 	},
 	extends: [
 		"next/core-web-vitals",
@@ -214,13 +214,13 @@ module.exports = {
 	env: {
 		browser: true,
 		jest: true,
-		node: true,
+		node: true
 	},
 	parser: "@typescript-eslint/parser",
 	plugins: ["@typescript-eslint", "testing-library"],
 	parserOptions: {
 		project: "./tsconfig.json",
-		tsconfigRootDir: __dirname,
+		tsconfigRootDir: __dirname
 	},
-	ignorePatterns: ["lib/hooks/**/*.ts"]
+	ignorePatterns: ["lib/hooks/**/*.ts", "@/components/ui", "types/next.d.ts", "tailwind.config.js", "postcss.config.js", "next.config.js"]
 };

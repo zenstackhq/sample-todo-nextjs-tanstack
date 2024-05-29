@@ -3,6 +3,7 @@ import { PropertyElementType } from "@prisma/client";
 import { useCreateLease } from "@lib/hooks";
 import { CreateForm } from "./CreateForm";
 import { Property } from "@zenstackhq/runtime/models";
+import { LeaseCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
 
 
 export function PropertyModal({ type, onClose, property }: {type: PropertyElementType; onClose: () => void; property: Property;}) {
@@ -11,27 +12,14 @@ export function PropertyModal({ type, onClose, property }: {type: PropertyElemen
 		switch (type) {
 			case "Lease":
 			{
-				return <CreateForm fields={[
-					{
-						id: "startDate",
-						type: "date"
-					},
-					{
-						id: "endDate",
-						type: "date"
-					},
-					{
-						id: "rentAmount",
-						type: "number"
-					}
-				]} onSubmitData={async ({ data }) => {
+				return <CreateForm formSchema={LeaseCreateScalarSchema.omit({ type: true })} onSubmitData={async (data) => {
 					await createLease.mutateAsync({
 						data: {
 							...data,
 							propertyId: property.id
 						}
 					});
-				}} onClose={onClose} showPrivate={false} title={"Lease"}/>;
+				}} onClose={onClose} title={"Lease"}/>;
 			}
 			default:
 				throw "unsupported propertyElementType";

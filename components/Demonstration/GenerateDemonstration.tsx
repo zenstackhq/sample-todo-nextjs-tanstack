@@ -20,7 +20,7 @@ const fakeLease = (propertyId: string) => {
 		propertyId,
 		startDate: faker.date.past(),
 		endDate: faker.date.future(),
-		rentAmount: faker.number.bigInt({ min: 1000, max: 10000 }),
+		rentAmount: faker.number.float({ min: 1000, max: 10000 }),
 		createdAt: faker.date.past()
 	};
 };

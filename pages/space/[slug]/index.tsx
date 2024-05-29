@@ -9,8 +9,10 @@ import DashboardCard from "components/Dashboard/DashboardCard";
 import { ReactElement, useState } from "react";
 import { useRouter } from "next/router";
 import { CreateForm } from "components/Form/CreateForm";
-import { Property, PropertyType, List, Dashboard, Space, User } from "@prisma/client";
+import { Property, List, Dashboard, Space, User } from "@prisma/client";
 import { SpaceComponent } from "@zenstackhq/runtime/models";
+import { PropertyCreateScalarSchema, ListCreateScalarSchema, DashboardCreateScalarSchema, SpaceComponentCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
+import { z } from "zod";
 
 export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: (SpaceComponent & {
 	owner: User;
@@ -30,74 +32,48 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 			</div>
 			<div className="p-8">
 				<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm fields={[
-						{
-							id: "title",
-							type: "text"
-						}
-					]} onSubmitData={async ({ data, _private }) => {
-						await createSpaceComponent.mutateAsync({
-							data: {
-								spaceId: space.id,
-								private: _private,
-								type: "List",
-								list: { create: { ...data } }
-							}
-						});
-					}} onClose={onClose} showPrivate={true} title={"List"}/>)}>
+					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm
+						formSchema={z.object({ list: ListCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
+						onSubmitData={async (data) => {
+							await createSpaceComponent.mutateAsync({
+								data: {
+									...data.spaceComponent,
+									type: "List",
+									spaceId: space.id,
+									list: { create: { ...data.list } }
+								}
+							});
+						}} onClose={onClose} title={"List"}/>)}>
                         Create a list
 					</label>
-					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm fields={[
-						{
-							id: "type",
-							type: "select",
-							values: PropertyType
-						},
-						{
-							id: "address",
-							type: "text"
-						},
-						{
-							id: "city",
-							type: "text"
-						},
-						{
-							id: "postalCode",
-							type: "text"
-						},
-						{
-							id: "country",
-							type: "text"
-						}
-					]} onSubmitData={async ({ data, _private }) => {
-						await createSpaceComponent.mutateAsync({
-							data: {
-								spaceId: space.id,
-								private: _private,
-								type: "Property",
-								property: { create: {
-									...data
-								} }
-							}
-						});
-					}} onClose={onClose} showPrivate={true} title={"Property"}/>)}>
+					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm
+						formSchema={z.object({ property: PropertyCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
+						onSubmitData={async (data) => {
+							await createSpaceComponent.mutateAsync({
+								data: {
+									...data.spaceComponent,
+									type: "Property",
+									spaceId: space.id,
+									property: { create: {
+										...data.property
+									} }
+								}
+							});
+						}} onClose={onClose} title={"Property"}/>)}>
                         Create a property
 					</label>
-					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm fields={[
-						{
-							id: "title",
-							type: "text"
-						}
-					]} onSubmitData={async ({ data, _private }) => {
-						await createSpaceComponent.mutateAsync({
-							data: {
-								spaceId: space.id,
-								private: _private,
-								type: "Dashboard",
-								dashboard: { create: { ...data } }
-							}
-						});
-					}} onClose={onClose} showPrivate={true} title={"Dashboard"}/>)}>
+					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm
+						formSchema={z.object({ dashboard: DashboardCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
+						onSubmitData={async (data) => {
+							await createSpaceComponent.mutateAsync({
+								data: {
+									...data.spaceComponent,
+									spaceId: space.id,
+									type: "Dashboard",
+									dashboard: { create: { ...data.dashboard } }
+								}
+							});
+						}} onClose={onClose} title={"Dashboard"}/>)}>
                         Create a dashboard
 					</label>
 					<GenerateDemonstration/>

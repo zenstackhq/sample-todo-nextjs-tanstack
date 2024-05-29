@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { useCreatePanelComponent } from "@lib/hooks";
-import { PanelComponentType, PanelComponentReportType, PanelComponentCounterType, SpaceComponentType, Panel } from "@prisma/client";
+import { PanelComponentType, Panel } from "@prisma/client";
 import { CreateForm } from "components/Form/CreateForm";
+import { PanelComponentReportCreateScalarSchema, PanelComponentCounterCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
 
 export function ComponentModal({ type, onClose, panel }: {type: PanelComponentType; onClose: () => void; panel: Panel;}) {
 	const create = useCreatePanelComponent();
@@ -9,18 +10,7 @@ export function ComponentModal({ type, onClose, panel }: {type: PanelComponentTy
 		switch (type) {
 			case "Counter":
 			{
-				return <CreateForm fields={[
-					{
-						id: "spaceComponentType",
-						type: "select",
-						values: SpaceComponentType
-					},
-					{
-						id: "type",
-						type: "select",
-						values: PanelComponentCounterType
-					}
-				]} onSubmitData={async ({ data }) => {
+				return <CreateForm formSchema={PanelComponentCounterCreateScalarSchema} onSubmitData={async (data) => {
 					await create.mutateAsync({
 						data: {
 							title: "New counter",
@@ -34,22 +24,11 @@ export function ComponentModal({ type, onClose, panel }: {type: PanelComponentTy
 
 						}
 					});
-				}} onClose={onClose} showPrivate={false} title={type}/>;
+				}} onClose={onClose} title={type}/>;
 			}
 			case "Report":
 			{
-				return <CreateForm fields={[
-					{
-						id: "spaceComponentType",
-						type: "select",
-						values: SpaceComponentType
-					},
-					{
-						id: "type",
-						type: "select",
-						values: PanelComponentReportType
-					}
-				]} onSubmitData={async ({ data }) => {
+				return <CreateForm formSchema={PanelComponentReportCreateScalarSchema} onSubmitData={async (data) => {
 					await create.mutateAsync({
 						data: {
 							title: "New report",
@@ -63,7 +42,7 @@ export function ComponentModal({ type, onClose, panel }: {type: PanelComponentTy
 
 						}
 					});
-				}} onClose={onClose} showPrivate={false} title={type}/>;
+				}} onClose={onClose} title={type}/>;
 			}
 			default:
 				throw "unsupported propertyElementType";

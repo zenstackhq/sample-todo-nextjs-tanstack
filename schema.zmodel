@@ -20,6 +20,10 @@ plugin enhancer {
     generatePermissionChecker = true
 }
 
+plugin zod {
+  provider = '@core/zod'
+}
+
 plugin hooks {
     provider = '@zenstackhq/tanstack-query'
     output = 'lib/hooks'
@@ -37,9 +41,6 @@ abstract model IdCreatedUpdatedAuth extends IdCreatedUpdated
 {
     @@deny('all', auth() == null)
 }
-/*
- * Model for a space in which users can collaborate on Lists and Todos
- */
 model Space extends IdCreatedUpdatedAuth {
     name      String      @length(4, 50)
     slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
@@ -120,9 +121,9 @@ enum SpaceComponentType {
   List
 }
 
+
 model SpaceComponent extends IdCreatedUpdatedSpace, Owner {
     private   Boolean  @default(false)
-
     type SpaceComponentType
 
     dashboard Dashboard?
@@ -190,10 +191,10 @@ abstract model IdCreatedUpdatedAuthOwnerProperty extends Component {
 model Lease extends IdCreatedUpdatedAuthOwnerProperty {
     startDate   DateTime
     endDate     DateTime?
-    rentAmount  BigInt
+    rentAmount  Int
     payments    Payment[]
     charges     Charge[]
-    propertyElementType PropertyElementType @default(Lease)
+    type PropertyElementType @default(Lease)
 }
 
 model Payment extends Component {
@@ -298,9 +299,10 @@ abstract model PanelComponentRelation extends Component {
     panelComponent   PanelComponent @relation(fields: [panelComponentId], references: [id], onDelete: Cascade)
     panelComponentId String   @unique
 
+    spaceComponentType SpaceComponentType
+
     @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.owner == auth())
     @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelComponent.panel.panelRow.dashboard.spaceComponent.private)
-    spaceComponentType SpaceComponentType
 }
 
 

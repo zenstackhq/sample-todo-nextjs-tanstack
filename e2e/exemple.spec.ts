@@ -2,11 +2,11 @@ import { test, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { FieldPath, FieldValues } from "react-hook-form";
 import { List, Dashboard, Property, Lease } from "@zenstackhq/runtime/models";
+import { beautifyObjectName } from "@/components/ui/auto-form/utils";
 
 test("should navigate to the about page", async ({ page }) => {
-
 	function getByLabel <T extends FieldValues>(label: FieldPath<T>) {
-		return page.getByLabel(label);
+		return page.getByLabel(beautifyObjectName(label));
 	}
 
 	async function createList() {
@@ -15,7 +15,7 @@ test("should navigate to the about page", async ({ page }) => {
 		const title = faker.lorem.words(3);
 
 		await getByLabel<List>("title").fill(title);
-		await page.getByText("Create", { exact: true }).click();
+		await page.getByText("Submit", { exact: true }).click();
 
 		page.getByText("List created successfully!");
 		page.getByText(title);
@@ -38,7 +38,7 @@ test("should navigate to the about page", async ({ page }) => {
 		const title = faker.lorem.words(3);
 
 		await getByLabel<Dashboard>("title").fill(title);
-		await page.getByText("Create", { exact: true }).click();
+		await page.getByText("Submit", { exact: true }).click();
 
 		page.getByText("Dashboard created successfully!");
 		page.getByText(title);
@@ -60,7 +60,7 @@ test("should navigate to the about page", async ({ page }) => {
 		await getByLabel<Property>("postalCode").fill(postalCode);
 		await getByLabel<Property>("country").fill(country);
 		await getByLabel("private").check();
-		await page.getByText("Create", { exact: true }).click();
+		await page.getByText("Submit", { exact: true }).click();
 
 		page.getByText("Property created successfully!");
 		page.getByText(address);
@@ -76,11 +76,11 @@ test("should navigate to the about page", async ({ page }) => {
 
 		const startDate = "2030-01-01";
 		const endDate = "2050-12-31";
-		const rentAmount = faker.number.bigInt();
-		await getByLabel<Lease>("startDate").fill(startDate);
+		const rentAmount = faker.number.bigInt({ max: 50000 });
 		await getByLabel<Lease>("endDate").fill(endDate);
+		await getByLabel<Lease>("startDate").fill(startDate);
 		await getByLabel<Lease>("rentAmount").fill(rentAmount.toString());
-		await page.getByText("Create", { exact: true }).click();
+		await page.getByText("Submit", { exact: true }).click();
 
 		page.getByText("Lease created successfully!");
 		page.getByText(address);

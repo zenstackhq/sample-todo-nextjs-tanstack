@@ -41,14 +41,24 @@ export default function AutoFormEnum({
 				isRequired={isRequired}
 			/>
 			<FormControl>
-				<select
-
+				<Select
 					onValueChange={field.onChange}
 					defaultValue={field.value}
 					{...fieldProps}
 				>
-					{values.map(([option, value]) => <option key={option} value={option}>{value}</option>)}
-				</select>
+					<SelectTrigger className={fieldProps.className}>
+						<SelectValue placeholder={fieldConfigItem.inputProps?.placeholder}>
+							{field.value ? findItem(field.value)?.[1] : "Select an option"}
+						</SelectValue>
+					</SelectTrigger>
+					<SelectContent>
+						{values.map(([value, label]) =>
+							<SelectItem value={label} key={value}>
+								{label}
+							</SelectItem>
+						)}
+					</SelectContent>
+				</Select>
 			</FormControl>
 			<AutoFormTooltip fieldConfigItem={fieldConfigItem} />
 			<FormMessage />

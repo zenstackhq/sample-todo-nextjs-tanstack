@@ -24,7 +24,7 @@ export default function TodoList({ list, owner, spaceComponent }: {list: List;ow
 
 	return (
 		<div className="card w-80 bg-base-100 shadow-xl cursor-pointer hover:bg-gray-50">
-			<Link href={`${router.asPath}/list/${list.id}`}>
+			<Link href={`${router.asPath}/component/${spaceComponent.id}`}>
 				<figure>
 					<Image
 						src={`https://picsum.photos/300/200?r=${customAlphabet("0123456789")(4)}`}
@@ -36,8 +36,8 @@ export default function TodoList({ list, owner, spaceComponent }: {list: List;ow
 				</figure>
 			</Link>
 			<div className="card-body">
-				<Link href={`${router.asPath}/list/${list.id}`}>
-					<h2 className="card-title line-clamp-1">{list.title || "Missing Title"}</h2>
+				<Link href={`${router.asPath}/component/${spaceComponent.id}`}>
+					<h2 className="card-title line-clamp-1">{spaceComponent.name || "Missing Title"}</h2>
 				</Link>
 				<div className="card-actions flex w-full justify-between">
 					<div>

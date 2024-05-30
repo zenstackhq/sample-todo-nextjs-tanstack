@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useFindUniqueSpace } from "./hooks";
+import { useFindUniqueSpace, useFindUniqueSpaceComponent } from "./hooks";
 
 
 export function useCurrentUser() {
@@ -19,6 +19,23 @@ export function useCurrentSpace() {
 		},
 		{
 			enabled: !!router.query.slug
+		}
+	);
+
+	return data;
+}
+
+
+export function useCurrentSpaceComponent() {
+	const router = useRouter();
+	const { data } = useFindUniqueSpaceComponent(
+		{
+			where: {
+				id: router.query.componentId as string
+			}
+		},
+		{
+			enabled: !!router.query.componentId
 		}
 	);
 

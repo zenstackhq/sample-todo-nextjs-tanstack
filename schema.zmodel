@@ -125,6 +125,7 @@ enum SpaceComponentType {
 model SpaceComponent extends IdCreatedUpdatedSpace, Owner {
     private   Boolean  @default(false)
     type SpaceComponentType
+    name     String   @length(1, 100)
 
     dashboard Dashboard?
     list List?
@@ -144,7 +145,6 @@ model SpaceComponent extends IdCreatedUpdatedSpace, Owner {
 }
 
 model List extends SpaceComponentRelation {
-    title     String   @length(1, 100)
     todos     Todo[]
 }
 
@@ -250,7 +250,6 @@ abstract model SpaceComponentRelation extends IdCreatedUpdatedAuth {
 
 
 model Dashboard extends SpaceComponentRelation {
-    title     String   @length(1, 100)
     panelRows     PanelRow[]
 }
 

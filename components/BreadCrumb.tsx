@@ -1,17 +1,11 @@
-import { useCurrentSpace } from "@/lib/context";
+import { useCurrentSpace, useCurrentSpaceComponent } from "@/lib/context";
 import { cn } from "@/lib/utils";
-import { List, Property, Dashboard } from "@prisma/client";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-type Props = {
-	list?: List;
-	property?: Property;
-	dashboard?: Dashboard;
-};
-
-export default function BreadCrumb({ list, property, dashboard }: Props) {
+export default function BreadCrumb() {
 	const space = useCurrentSpace();
+	const spaceComponent = useCurrentSpaceComponent();
 	if (!space) {
 		return <></>;
 	}
@@ -22,28 +16,14 @@ export default function BreadCrumb({ list, property, dashboard }: Props) {
 	items.push({ text: space.name || "", link: `/space/${space.slug}` });
 
 	const baseLink = `/space/${space.slug}/`;
-	if (list) {
+	if (spaceComponent) {
 		items.push({
-			text: list.title,
-			link: `${baseLink}list/${list.id}`
+			text: spaceComponent.name,
+			link: `${baseLink}${spaceComponent.type}/${spaceComponent.id}`
 		});
 	}
 
-	if (property) {
-		items.push({
-			text: property.address,
-			link: `${baseLink}property/${property.id}`
-		});
-	}
-
-	if (dashboard) {
-		items.push({
-			text: dashboard.title,
-			link: `${baseLink}dashboard/${dashboard.id}`
-		});
-	}
-
-	return items.map((item, index) =>
+	return <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">{items.map((item, index) =>
 		<>
 			{index !== 0 && <ChevronRightIcon className="h-4 w-4" />}
 			<Link
@@ -57,5 +37,6 @@ export default function BreadCrumb({ list, property, dashboard }: Props) {
 			>
 				{item.text}
 			</Link>
-		</>);
+		</>)}
+	</div>;
 }

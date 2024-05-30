@@ -1,21 +1,40 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useCurrentSpace } from "@/lib/context";
+import { useCurrentSpace, useCurrentSpaceComponent } from "@/lib/context";
 import { PanelComponentRender } from "components/Dashboard/PanelComponentRender";
 import { PanelRender } from "components/Dashboard/PanelRender";
-import { useRouter } from "next/router";
 import BreadCrumb from "@/components/BreadCrumb";
 import { useFindUniqueDashboard, useCreatePanel, useCreatePanelRow, useDeletePanelRow } from "@/lib/hooks";
 import WithNavBar from "@/components/WithNavBar";
 import UserAvatar from "@/components/Avatar";
+import ListDetails from "@/components/List/ListDetails";
+import PropertyDetails from "@/components/Property/PropertyDetails";
 
+export default function SpaceComponentDetails() {
 
-export default function DashboardDetails() {
+	const spaceComponent = useCurrentSpaceComponent();
+	if (!spaceComponent) {
+		return <></>;
+	}
+	switch (spaceComponent.type) {
+		case "Dashboard":
+			return <DashboardDetails/>;
+		case "List":
+			return <ListDetails/>;
+		case "Property":
+			return <PropertyDetails/>;
+		default:
+			return <div>Space component not handled</div>;
+	}
+}
+
+export function DashboardDetails() {
 	const space = useCurrentSpace();
-	const router = useRouter();
+	const spaceComponent = useCurrentSpaceComponent();
+
 	const { data: dashboard } = useFindUniqueDashboard(
 		{
 			where: {
-				id: router.query.dashboardId as string
+				spaceComponentId: spaceComponent?.id
 			},
 			include: {
 				spaceComponent: {
@@ -40,7 +59,7 @@ export default function DashboardDetails() {
 			}
 		},
 		{
-			enabled: !!router.query.slug
+			enabled: !!spaceComponent?.id
 		}
 	);
 
@@ -53,9 +72,9 @@ export default function DashboardDetails() {
 	}
 	return <WithNavBar>
 		<div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
-			<BreadCrumb dashboard={dashboard} />
+			<BreadCrumb />
 			<div className="container w-full flex flex-col items-center py-12 mx-auto">
-				<h1 className="text-2xl font-semibold mb-4">{dashboard?.title}</h1>
+				<h1 className="text-2xl font-semibold mb-4">{spaceComponent?.name}</h1>
 				<UserAvatar user={dashboard.spaceComponent.owner} size={18} />
 				<ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
 					{dashboard.panelRows.map(panelRow =>

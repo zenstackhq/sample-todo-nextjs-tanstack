@@ -1,7 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { clickButton, createAccount, getByLabel } from "./utils";
-import { Lease, Property } from "@zenstackhq/runtime/models";
+import { Lease, Property, SpaceComponent } from "@zenstackhq/runtime/models";
 
 test("Should create property", async ({ page }) => {
 	async function createProperty() {
@@ -12,12 +12,15 @@ test("Should create property", async ({ page }) => {
 		const type = "COMMERCIAL";
 		const postalCode = faker.location.zipCode();
 		const country = faker.location.country();
+		const name = faker.lorem.words(3);
 
-		await getByLabel<Property>(page, "type").selectOption({ label: type });
+		await page.locator("button[role=\"combobox\"]").click();
+		await page.locator(`span:has-text("${type}")`).click();
 		await getByLabel<Property>(page, "address").fill(address);
 		await getByLabel<Property>(page, "city").fill(city);
 		await getByLabel<Property>(page, "postalCode").fill(postalCode);
 		await getByLabel<Property>(page, "country").fill(country);
+		await getByLabel<SpaceComponent>(page, "name").fill(name);
 		await getByLabel(page, "private").check();
 		await page.getByText("Save changes", { exact: true }).click();
 

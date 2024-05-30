@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 export default function PropertyCard({ property, spaceComponent }: {property: Property; spaceComponent: SpaceComponent;}) {
 	const router = useRouter();
 	return (
-		<Link href={`${router.asPath}/property/${property.id}`}>
+		<Link href={`${router.asPath}/component/${spaceComponent.id}`}>
 			<div className="card shadow-lg">
 				<div className="card-body">
 					<h3 className="card-title">{property.address}</h3>

@@ -6,11 +6,7 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { useSidebar } from "@/hooks/useSidebar";
 
-type SidebarProps = {
-	className?: string;
-};
-
-export default function Sidebar({ className }: SidebarProps) {
+export default function Sidebar({ className }: {className?: string;}) {
 	const { isMinimized, toggle } = useSidebar();
 	const [status, setStatus] = useState(false);
 

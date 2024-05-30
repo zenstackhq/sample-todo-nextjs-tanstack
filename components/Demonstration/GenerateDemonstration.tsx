@@ -20,7 +20,7 @@ const fakeLease = (propertyId: string) => {
 		propertyId,
 		startDate: faker.date.past(),
 		endDate: faker.date.future(),
-		rentAmount: faker.number.float({ min: 1000, max: 10000 }),
+		rentAmount: faker.number.float({ min: 5, max: 50 }),
 		createdAt: faker.date.past()
 	};
 };
@@ -38,7 +38,7 @@ const fakeCharge = ({ propertyId, leaseId }: {propertyId: string; leaseId: strin
 		propertyId,
 		leaseId,
 		type: ChargeType.UTILITIES,
-		amount: faker.number.bigInt({ min: 100, max: 1000 }),
+		amount: faker.number.bigInt({ min: 5, max: 100 }),
 		dueDate: faker.date.future(),
 		description: faker.lorem.sentence(),
 		createdAt: faker.date.past()
@@ -64,50 +64,51 @@ export const GenerateDemonstration = () => {
 		if (!space) {
 			throw "not space";
 		}
-
 		const prefix = `demo_${Date.now()}_`;
 
+
 		await createManySpaceComponent.mutateAsync({
-			data: Array.from({ length: 1000 }).map((_, index) => ({
+			data: Array.from({ length: 5 }).map((_, index) => ({
 				spaceId: space.id,
 				id: `${prefix}Dashboard${index}`,
-				type: "Dashboard"
+				type: "Dashboard",
+				name: `${prefix}Dashboard${index}`
 			}))
 		});
 
 		await createManyDashboard.mutateAsync({
-			data: Array.from({ length: 1000 }).map((_, index) => ({
-				title: faker.company.buzzAdjective(),
+			data: Array.from({ length: 5 }).map((_, index) => ({
 				spaceComponentId: `${prefix}Dashboard${index}`
 			}))
 		});
 
 		await createManySpaceComponent.mutateAsync({
-			data: Array.from({ length: 1000 }).map((_, index) => ({
+			data: Array.from({ length: 5 }).map((_, index) => ({
 				spaceId: space.id,
 				id: `${prefix}List${index}`,
-				type: "List"
+				type: "List",
+				name: `${prefix}List${index}`
 			}))
 		});
 
 		await createManyList.mutateAsync({
-			data: Array.from({ length: 1000 }).map((_, index) => ({
-				title: faker.company.buzzAdjective(),
+			data: Array.from({ length: 5 }).map((_, index) => ({
 				spaceComponentId: `${prefix}List${index}`
 			}))
 		});
 
 
 		await createManySpaceComponent.mutateAsync({
-			data: Array.from({ length: 1000 }).map((_, index) => ({
+			data: Array.from({ length: 5 }).map((_, index) => ({
 				spaceId: space.id,
 				id: `${prefix}Property${index}`,
-				type: "Property"
+				type: "Property",
+				name: `${prefix}Property${index}`
 			}))
 		});
 
 		await createManyProperty.mutateAsync({
-			data: Array.from({ length: 1000 }).map((_, index) => ({
+			data: Array.from({ length: 5 }).map((_, index) => ({
 				...fakeProperty(),
 				spaceComponentId: `${prefix}Property${index}`,
 				id: `${prefix}Property${index}`
@@ -115,13 +116,13 @@ export const GenerateDemonstration = () => {
 		});
 
 		const propertyId = `${prefix}Property${0}`;
-		await createManyLease.mutateAsync({ data: Array.from({ length: 1000 }).map((_, index) => (
+		await createManyLease.mutateAsync({ data: Array.from({ length: 5 }).map((_, index) => (
 			{ ...fakeLease(propertyId), id: `${prefix}Lease${index}` }
 		)) });
 
 		const leaseId = `${prefix}Lease${0}`;
-		await createManyPayment.mutateAsync({ data: Array.from({ length: 1000 }, () => fakePayment(leaseId)) });
-		await createManyCharge.mutateAsync({ data: Array.from({ length: 1000 }, () => fakeCharge({ propertyId, leaseId })) });
+		await createManyPayment.mutateAsync({ data: Array.from({ length: 5 }, () => fakePayment(leaseId)) });
+		await createManyCharge.mutateAsync({ data: Array.from({ length: 5 }, () => fakeCharge({ propertyId, leaseId })) });
 	};
 
 	return <button onClick={generateDemonstration}>Generate Demonstration</button>;

@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { CreateForm } from "components/Form/CreateForm";
 import { Property, List, Dashboard, Space, User } from "@prisma/client";
 import { SpaceComponent } from "@zenstackhq/runtime/models";
-import { PropertyCreateScalarSchema, ListCreateScalarSchema, DashboardCreateScalarSchema, SpaceComponentCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
+import { PropertyCreateScalarSchema, SpaceComponentCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
 import { z } from "zod";
 
 export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: (SpaceComponent & {
@@ -30,14 +30,14 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 			<div className="p-8">
 				<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
 					<CreateForm
-						formSchema={z.object({ list: ListCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
+						formSchema={z.object({ spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
 						onSubmitData={async (data) => {
 							await createSpaceComponent.mutateAsync({
 								data: {
 									...data.spaceComponent,
 									type: "List",
 									spaceId: space.id,
-									list: { create: { ...data.list } }
+									list: { create: {  } }
 								}
 							});
 						}} title={"Create List"}/>
@@ -56,14 +56,14 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 							});
 						}} title={"Create Property"}/>
 					<CreateForm
-						formSchema={z.object({ dashboard: DashboardCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
+						formSchema={z.object({ spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
 						onSubmitData={async (data) => {
 							await createSpaceComponent.mutateAsync({
 								data: {
 									...data.spaceComponent,
 									spaceId: space.id,
 									type: "Dashboard",
-									dashboard: { create: { ...data.dashboard } }
+									dashboard: { create: {  } }
 								}
 							});
 						}} title={"Create Dashboard"}/>
@@ -76,7 +76,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 					{space?.spaceComponents?.map((spaceComponent) =>
 						<li key={spaceComponent.id}>
 							{spaceComponent.list && <TodoList list={spaceComponent.list} owner={spaceComponent.owner} spaceComponent={spaceComponent} />}
-							{spaceComponent.dashboard && <DashboardCard dashboard={spaceComponent.dashboard} spaceComponent={spaceComponent}/>}
+							{spaceComponent.dashboard && <DashboardCard spaceComponent={spaceComponent}/>}
 							{spaceComponent.property && <PropertyCard property={spaceComponent.property} spaceComponent={spaceComponent}/>}
 						</li>
 					)}

@@ -222,5 +222,5 @@ module.exports = {
 		project: "./tsconfig.json",
 		tsconfigRootDir: __dirname
 	},
-	ignorePatterns: ["lib/hooks/**/*.ts", "@/components/ui", "types/next.d.ts", "tailwind.config.js", "postcss.config.js", "next.config.js"]
+	ignorePatterns: ["lib/hooks/**/*.ts", "components/**/*.tsx", "components/**/*.ts", "types/next.d.ts", "tailwind.config.js", "postcss.config.js", "next.config.js"]
 };

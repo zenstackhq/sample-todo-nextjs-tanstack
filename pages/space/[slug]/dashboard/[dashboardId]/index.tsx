@@ -1,12 +1,13 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useCurrentSpace } from "@lib/context";
-import { useCreatePanel, useCreatePanelRow, useDeletePanelRow, useFindUniqueDashboard } from "@lib/hooks";
-import Avatar from "components/Avatar";
-import BreadCrumb from "components/BreadCrumb";
+import { useCurrentSpace } from "@/lib/context";
 import { PanelComponentRender } from "components/Dashboard/PanelComponentRender";
 import { PanelRender } from "components/Dashboard/PanelRender";
-import WithNavBar from "components/WithNavBar";
 import { useRouter } from "next/router";
+import BreadCrumb from "@/components/BreadCrumb";
+import { useFindUniqueDashboard, useCreatePanel, useCreatePanelRow, useDeletePanelRow } from "@/lib/hooks";
+import WithNavBar from "@/components/WithNavBar";
+import UserAvatar from "@/components/Avatar";
+
 
 export default function DashboardDetails() {
 	const space = useCurrentSpace();
@@ -50,14 +51,12 @@ export default function DashboardDetails() {
 	if (!space || !dashboard) {
 		return <></>;
 	}
-	return (
-		<WithNavBar>
-			<div className="px-8 py-2">
-				<BreadCrumb dashboard={dashboard} />
-			</div>
+	return <WithNavBar>
+		<div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
+			<BreadCrumb dashboard={dashboard} />
 			<div className="container w-full flex flex-col items-center py-12 mx-auto">
 				<h1 className="text-2xl font-semibold mb-4">{dashboard?.title}</h1>
-				<Avatar user={dashboard.spaceComponent.owner} size={18} />
+				<UserAvatar user={dashboard.spaceComponent.owner} size={18} />
 				<ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
 					{dashboard.panelRows.map(panelRow =>
 						<div key={panelRow.id}>
@@ -74,7 +73,7 @@ export default function DashboardDetails() {
 					<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => createPanelRow.mutate({ data: { title: "new panel row", dashboardId: dashboard.id } })}/>
 				</ul>
 			</div>
-		</WithNavBar>
-	);
+		</div>
+	</WithNavBar>;
 }
 

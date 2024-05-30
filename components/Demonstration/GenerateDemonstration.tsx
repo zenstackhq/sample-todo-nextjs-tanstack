@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { useCurrentSpace } from "@lib/context";
-import { useCreateManyCharge, useCreateManyDashboard, useCreateManyLease, useCreateManyList, useCreateManyPayment, useCreateManyProperty, useCreateManySpaceComponent } from "@lib/hooks";
+import { useCurrentSpace } from "@/lib/context";
+import { useCreateManyCharge, useCreateManyDashboard, useCreateManyLease, useCreateManyList, useCreateManyPayment, useCreateManyProperty, useCreateManySpaceComponent } from "@/lib/hooks";
 import { PropertyType, ChargeType } from "@prisma/client";
 
 

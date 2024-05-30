@@ -1,10 +1,10 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useCurrentUser } from "@lib/context";
-import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from "@lib/hooks";
-import { Space, SpaceUserRole } from "@prisma/client";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { toast } from "react-toastify";
-import Avatar from "./Avatar";
+import { useCurrentUser } from "@/lib/context";
+import { Space, SpaceUserRole } from "@prisma/client";
+import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from "@/lib/hooks";
+import UserAvatar from "./Avatar";
 
 type Props = {
 	space: Space;
@@ -97,7 +97,7 @@ export default function ManageMembers({ space }: Props) {
 					<li key={member.id} className="flex flex-wrap w-full justify-between">
 						<div className="flex items-center">
 							<div className="hidden md:block mr-2">
-								<Avatar user={member.user} size={32} />
+								<UserAvatar user={member.user} size={32} />
 							</div>
 							<p className="w-36 md:w-48 line-clamp-1 mr-2">{member.user.name || member.user.email}</p>
 							<p>{member.role}</p>

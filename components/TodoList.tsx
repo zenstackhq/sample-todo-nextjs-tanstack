@@ -1,14 +1,14 @@
 import { LockClosedIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useDeleteList } from "@lib/hooks";
+import { useDeleteList } from "@/lib/hooks";
 import { List } from "@prisma/client";
 import { customAlphabet } from "nanoid";
 import { User } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Avatar from "./Avatar";
 import TimeInfo from "./TimeInfo";
 import { SpaceComponent } from "@zenstackhq/runtime/models";
+import UserAvatar from "./Avatar";
 
 export default function TodoList({ list, owner, spaceComponent }: {list: List;owner: User;  spaceComponent: SpaceComponent;}) {
 	const router = useRouter();
@@ -44,7 +44,7 @@ export default function TodoList({ list, owner, spaceComponent }: {list: List;ow
 						<TimeInfo value={list} />
 					</div>
 					<div className="flex space-x-2">
-						<Avatar user={owner} size={18} />
+						<UserAvatar user={owner} size={18} />
 						{spaceComponent.private &&
                             <div className="tooltip" data-tip="Private"><LockClosedIcon className="w-4 h-4 text-gray-500" /></div>
 						}

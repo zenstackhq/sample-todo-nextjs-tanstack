@@ -12,5 +12,5 @@ test("Page", () => {
 		updatedAt: new Date(),
 		spaceComponents: []
 	}}/>, { wrapper: createWrapper() });
-	screen.getByText("Create a property");
+	screen.getByText("Components");
 });

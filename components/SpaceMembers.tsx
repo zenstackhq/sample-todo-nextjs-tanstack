@@ -1,9 +1,9 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useCurrentSpace } from "@lib/context";
-import { useFindManySpaceUser } from "@lib/hooks";
+import { useCurrentSpace } from "@/lib/context";
+import { useFindManySpaceUser } from "@/lib/hooks";
 import { Space } from "@prisma/client";
-import Avatar from "./Avatar";
 import ManageMembers from "./ManageMembers";
+import UserAvatar from "./Avatar";
 
 function ManagementDialog(space?: Space) {
 	if (!space) {
@@ -59,7 +59,7 @@ export default function SpaceMembers() {
 			{members &&
 				<label className="mr-1 modal-button cursor-pointer" htmlFor="management-modal">
 					{members?.map((member) =>
-						<Avatar key={member.id} user={member.user} size={24} />
+						<UserAvatar key={member.id} user={member.user} size={24} />
 					)}
 				</label>
 			}

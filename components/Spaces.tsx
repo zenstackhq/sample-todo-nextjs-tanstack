@@ -1,4 +1,4 @@
-import { useCountSpaceComponent } from "@lib/hooks";
+import { useCountSpaceComponent } from "@/lib/hooks";
 import { Space } from "@prisma/client";
 import Link from "next/link";
 

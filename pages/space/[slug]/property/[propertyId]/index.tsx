@@ -1,12 +1,11 @@
-import { useCurrentSpace } from "@lib/context";
-import { useFindUniqueProperty  } from "@lib/hooks";
-import { PropertyElementType } from "@zenstackhq/runtime/models";
-import BreadCrumb from "components/BreadCrumb";
-import { PropertyModal } from "components/Form/PropertyModal";
+import { useCurrentSpace } from "@/lib/context";
+import { useCreateLease, useFindUniqueProperty  } from "@/lib/hooks";
+import BreadCrumb from "@/components/BreadCrumb";
 import LeaseDetail from "components/Lease/LeaseList";
 import WithNavBar from "components/WithNavBar";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { LeaseCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
+import { CreateForm } from "@/components/Form/CreateForm";
 
 export default function PropertyDetails() {
 
@@ -33,11 +32,12 @@ export default function PropertyDetails() {
 		}
 	);
 
-	const [propertyElementType, setPropertyElementType] = useState<PropertyElementType>();
+	const createLease = useCreateLease();
 
 	if (!space || !property) {
 		return <></>;
 	}
+
 	return (
 		<WithNavBar>
 			<div className="px-8 py-2">
@@ -47,9 +47,14 @@ export default function PropertyDetails() {
 				<h1 className="text-2xl font-semibold mb-4">{property?.address}</h1>
 				<div className="flex space-x-2">
 					<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-						<label htmlFor="create-lease-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setPropertyElementType("Lease")}>
-                        Create a lease
-						</label>
+						<CreateForm formSchema={LeaseCreateScalarSchema.omit({ type: true })} onSubmitData={async (data) => {
+							await createLease.mutateAsync({
+								data: {
+									...data,
+									propertyId: property.id
+								}
+							});
+						}} title={"Create Lease"}/>
 					</div>
 				</div>
 				<ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
@@ -58,7 +63,6 @@ export default function PropertyDetails() {
 					)}
 				</ul>
 			</div>
-			{propertyElementType && <PropertyModal type={propertyElementType} onClose={() => setPropertyElementType(void 0)} property={property}/>}
 		</WithNavBar>
 	);
 }

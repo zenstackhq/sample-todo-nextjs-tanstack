@@ -7,7 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { Provider as ZenStackHooksProvider } from "../lib/hooks";
 import "../styles/globals.css";
 import { ReactElement } from "react";
+import { ThemeProvider } from "next-themes";
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 
 const queryClient = new QueryClient();
 
@@ -17,12 +19,14 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 			{/* <ReactQueryDevtools /> */}
 			<SessionProvider session={session}>
 				<ZenStackHooksProvider value={{ endpoint: "/api/model", logging: true }}>
-					<AppContent>
-						<div className="flex-grow h-100">
-							<Component {...pageProps} />
-							<ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
-						</div>
-					</AppContent>
+					<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+						<AppContent>
+							<div className="flex-grow h-100">
+								<Component {...pageProps} />
+								<ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
+							</div>
+						</AppContent>
+					</ThemeProvider>
 				</ZenStackHooksProvider>
 			</SessionProvider>
 		</QueryClientProvider>

@@ -1,9 +1,9 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { useDeleteTodo, useUpdateTodo } from "@lib/hooks";
+import { useDeleteTodo, useUpdateTodo } from "@/lib/hooks";
 import { Todo, User } from "@prisma/client";
 import { ChangeEvent } from "react";
-import Avatar from "./Avatar";
 import TimeInfo from "./TimeInfo";
+import UserAvatar from "./Avatar";
 
 type Props = {
 	value: Todo & { owner: User; };
@@ -49,7 +49,7 @@ export default function TodoComponent({ value }: Props) {
 			</div>
 			<div className="flex justify-end w-full space-x-2">
 				<TimeInfo value={value} />
-				<Avatar user={value.owner} size={18} />
+				<UserAvatar user={value.owner} size={18} />
 			</div>
 		</div>
 	);

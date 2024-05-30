@@ -1,12 +1,11 @@
-import { useCreateSpaceComponent, useFindUniqueSpace } from "@lib/hooks";
-import BreadCrumb from "components/BreadCrumb";
+import { useCreateSpaceComponent, useFindUniqueSpace } from "@/lib/hooks";
+import BreadCrumb from "@/components/BreadCrumb";
 import SpaceMembers from "components/SpaceMembers";
 import TodoList from "components/TodoList";
 import WithNavBar from "components/WithNavBar";
 import PropertyCard from "components/Property/PropertyCard";
 import { GenerateDemonstration } from "components/Demonstration/GenerateDemonstration";
 import DashboardCard from "components/Dashboard/DashboardCard";
-import { ReactElement, useState } from "react";
 import { useRouter } from "next/router";
 import { CreateForm } from "components/Form/CreateForm";
 import { Property, List, Dashboard, Space, User } from "@prisma/client";
@@ -21,8 +20,6 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 	property?: Property | null;
 })[];};}) {
 
-	const [modalForm, setModalForm] = useState<ReactElement | undefined>();
-	const onClose = () => setModalForm(void 0);
 	const createSpaceComponent = useCreateSpaceComponent();
 
 	return (
@@ -32,7 +29,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 			</div>
 			<div className="p-8">
 				<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-					<label htmlFor="create-list-modal" className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm
+					<CreateForm
 						formSchema={z.object({ list: ListCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
 						onSubmitData={async (data) => {
 							await createSpaceComponent.mutateAsync({
@@ -43,10 +40,8 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 									list: { create: { ...data.list } }
 								}
 							});
-						}} onClose={onClose} title={"List"}/>)}>
-                        Create a list
-					</label>
-					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm
+						}} title={"Create List"}/>
+					<CreateForm
 						formSchema={z.object({ property: PropertyCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
 						onSubmitData={async (data) => {
 							await createSpaceComponent.mutateAsync({
@@ -59,10 +54,8 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 									} }
 								}
 							});
-						}} onClose={onClose} title={"Property"}/>)}>
-                        Create a property
-					</label>
-					<label className="btn btn-primary btn-wide modal-button" onClick={() => setModalForm(<CreateForm
+						}} title={"Create Property"}/>
+					<CreateForm
 						formSchema={z.object({ dashboard: DashboardCreateScalarSchema, spaceComponent: SpaceComponentCreateScalarSchema.omit({ type: true }) })}
 						onSubmitData={async (data) => {
 							await createSpaceComponent.mutateAsync({
@@ -73,9 +66,7 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 									dashboard: { create: { ...data.dashboard } }
 								}
 							});
-						}} onClose={onClose} title={"Dashboard"}/>)}>
-                        Create a dashboard
-					</label>
+						}} title={"Create Dashboard"}/>
 					<GenerateDemonstration/>
 					<SpaceMembers />
 				</div>
@@ -90,7 +81,6 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 						</li>
 					)}
 				</ul>
-				{modalForm && modalForm}
 			</div>
 		</WithNavBar>
 	);

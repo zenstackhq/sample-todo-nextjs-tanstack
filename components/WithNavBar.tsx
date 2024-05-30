@@ -1,18 +1,20 @@
-import { useCurrentUser } from "@lib/context";
-import NavBar from "./NavBar";
+import Sidebar from "@/components/layout/sidebar";
+import Header from "@/components/layout/header";
 import { ReactNode } from "react";
+
 
 type Props = {
 	children: ReactNode | ReactNode[] | undefined;
 };
 
 export default function WithNavBar({ children }: Props) {
-	const user = useCurrentUser();
-
 	return (
 		<>
-			<NavBar user={user} />
-			{children}
+			<Header />
+			<div className="flex h-screen overflow-hidden">
+				<Sidebar />
+				<main className="w-full pt-16">{children}</main>
+			</div>
 		</>
 	);
 }

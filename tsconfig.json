@@ -16,9 +16,7 @@
         "incremental": true,
         "baseUrl": ".",
         "paths": {
-            "@lib/*": ["lib/*"],
-            "@components/*": ["lib/components/*"],
-            "@components": ["lib/components/index"],
+            "@/*": ["./*"],
             ".zenstack/*": ["node_modules/.zenstack/*"]
         }
     },

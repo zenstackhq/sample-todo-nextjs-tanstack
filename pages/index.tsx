@@ -1,5 +1,5 @@
-import { useCurrentUser } from "@lib/context";
-import { useFindManySpace } from "@lib/hooks";
+import { useCurrentUser } from "@/lib/context";
+import { useFindManySpace } from "@/lib/hooks";
 import Spaces from "components/Spaces";
 import WithNavBar from "components/WithNavBar";
 import type { NextPage } from "next";

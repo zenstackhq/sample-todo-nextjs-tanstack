@@ -1,4 +1,4 @@
-import { useCreateSpace } from "@lib/hooks";
+import { useCreateSpace } from "@/lib/hooks";
 import { SpaceUserRole } from "@prisma/client";
 import WithNavBar from "components/WithNavBar";
 import { NextPage } from "next";

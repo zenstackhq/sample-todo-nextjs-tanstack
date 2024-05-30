@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useCurrentSpace } from "@lib/context";
-import { useCreateTodo, useFindUniqueList } from "@lib/hooks";
-import BreadCrumb from "components/BreadCrumb";
+import { useCurrentSpace } from "@/lib/context";
+import { useCreateTodo, useFindUniqueList } from "@/lib/hooks";
+import BreadCrumb from "@/components/BreadCrumb";
 import TodoComponent from "components/Todo";
 import WithNavBar from "components/WithNavBar";
 import { useRouter } from "next/router";

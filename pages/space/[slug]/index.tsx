@@ -12,8 +12,9 @@ import { Property, List, Dashboard, Space, User } from "@prisma/client";
 import { SpaceComponent } from "@zenstackhq/runtime/models";
 import { PropertyCreateScalarSchema, SpaceComponentCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
 import { z } from "zod";
+import { Applications } from "@/components/Application/Applications";
 
-export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: (SpaceComponent & {
+export function SpaceHomeComponent({ space }: {space: Space & {components: (SpaceComponent & {
 	owner: User;
 	dashboard?: Dashboard | null;
 	list?: List | null;
@@ -69,15 +70,16 @@ export function SpaceHomeComponent({ space }: {space: Space & {spaceComponents: 
 						}} title={"Create Dashboard"}/>
 					<GenerateDemonstration/>
 					<SpaceMembers />
+					<Applications/>
 				</div>
 
 				<h2 className="text-xl font-semibold mb-4">Components</h2>
 				<ul className="flex flex-wrap gap-6 mb-8">
-					{space?.spaceComponents?.map((spaceComponent) =>
-						<li key={spaceComponent.id}>
-							{spaceComponent.list && <TodoList list={spaceComponent.list} owner={spaceComponent.owner} spaceComponent={spaceComponent} />}
-							{spaceComponent.dashboard && <DashboardCard spaceComponent={spaceComponent}/>}
-							{spaceComponent.property && <PropertyCard property={spaceComponent.property} spaceComponent={spaceComponent}/>}
+					{space?.components?.map((component) =>
+						<li key={component.id}>
+							{component.list && <TodoList list={component.list} owner={component.owner} spaceComponent={component} />}
+							{component.dashboard && <DashboardCard spaceComponent={component}/>}
+							{component.property && <PropertyCard property={component.property} spaceComponent={component}/>}
 						</li>
 					)}
 				</ul>
@@ -93,7 +95,7 @@ export default function SpaceHome() {
 				slug: router.query.slug as string
 			},
 			include: {
-				spaceComponents: {
+				components: {
 					include: {
 						owner: true,
 						dashboard: true,

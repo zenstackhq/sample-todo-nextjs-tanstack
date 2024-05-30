@@ -1,7 +1,6 @@
 import { useCurrentSpace } from "@/lib/context";
 import { toast } from "react-toastify";
-import { Modal } from "./Modal";
-import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
+import AutoForm from "@/components/ui/auto-form";
 import { z } from "zod";
 import { ZodObjectOrWrapped } from "@/components/ui/auto-form/utils";
 import {

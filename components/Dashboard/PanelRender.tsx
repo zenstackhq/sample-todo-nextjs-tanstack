@@ -1,7 +1,7 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useCreatePanelComponent, useDeletePanel } from "@/lib/hooks";
 import { Panel } from "@zenstackhq/runtime/models";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { CreateForm } from "../Form/CreateForm";
 import { PanelComponentReportCreateScalarSchema, PanelComponentCounterCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
 

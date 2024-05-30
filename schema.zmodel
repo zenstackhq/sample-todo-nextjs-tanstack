@@ -45,7 +45,8 @@ model Space extends IdCreatedUpdatedAuth {
     name      String      @length(4, 50)
     slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
     members   SpaceUser[]
-    spaceComponents SpaceComponent[]
+    components SpaceComponent[]
+    applications SpaceApplication[]
 
     // everyone can create a space
     @@allow('create', true)
@@ -86,7 +87,8 @@ model User extends IdCreatedUpdated {
     spaces        SpaceUser[]
     image         String?     @url
     todos         Todo[]
-    spaceComponents    SpaceComponent[]
+    components    SpaceComponent[]
+
     leases        Lease[]
     payments      Payment[]
     charges         Charge[]
@@ -320,4 +322,28 @@ enum PanelComponentReportType {
 }
 model PanelComponentReport extends PanelComponentRelation {
     type PanelComponentReportType
+}
+
+
+model SpaceApplication extends IdCreatedUpdatedAuth {
+    space          Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId        String
+    application    Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    applicationId  String
+
+    @@unique([spaceId, applicationId])
+
+    @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
+
+    @@allow('read', space.members?[user == auth()])
+}
+
+
+model Application extends IdCreatedUpdated
+{
+    slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
+    activations SpaceApplication[]
+
+    // everyone can create and read an application, todo SRE can be dangerous
+    @@allow('create,read', true)
 }

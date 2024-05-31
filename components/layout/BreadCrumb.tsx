@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-export default function BreadCrumb() {
+export function BreadCrumb() {
 	const space = useCurrentSpace();
 	const spaceComponent = useCurrentSpaceComponent();
 	if (!space) {

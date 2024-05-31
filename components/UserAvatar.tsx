@@ -6,7 +6,7 @@ type Props = {
 	size?: number;
 };
 
-export default function UserAvatar({ user, size }: Props) {
+export function UserAvatar({ user, size }: Props) {
 	if (!user) {
 		return <></>;
 	}

@@ -1,7 +1,7 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { Counter } from "./Counter";
 import { Report } from "./Report";
-import { useDeletePanelComponent } from "@/lib/hooks";
+import { useDeletePanelComponent } from "@/zmodel/lib/hooks";
 import { PanelComponent, PanelComponentCounter, PanelComponentReport } from "@zenstackhq/runtime/models";
 
 export const PanelComponentRender = ({ panelComponent }: {

@@ -1,9 +1,9 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useCurrentSpace } from "@/lib/context";
-import { useFindManySpaceUser } from "@/lib/hooks";
+import { useFindManySpaceUser } from "@/zmodel/lib/hooks";
 import { Space } from "@prisma/client";
 import ManageMembers from "./ManageMembers";
-import UserAvatar from "./Avatar";
+import { UserAvatar } from "../UserAvatar";
 
 function ManagementDialog(space?: Space) {
 	if (!space) {
@@ -35,7 +35,7 @@ function ManagementDialog(space?: Space) {
 	);
 }
 
-export default function SpaceMembers() {
+export function SpaceMembers() {
 	const space = useCurrentSpace();
 
 	const { data: members } = useFindManySpaceUser(

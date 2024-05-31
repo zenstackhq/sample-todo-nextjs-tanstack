@@ -1,0 +1,24 @@
+import "schema"
+import "base"
+
+model SpaceApplication extends IdCreatedUpdatedAuth {
+    space          Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId        String
+    application    Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    applicationId  String
+
+    @@unique([spaceId, applicationId])
+
+    @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
+
+    @@allow('read', space.members?[user == auth()])
+}
+
+
+model Application extends IdCreatedUpdatedAuth
+{
+    slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
+    activations SpaceApplication[]
+
+    @@allow('read', auth() != null)
+}

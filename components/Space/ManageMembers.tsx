@@ -3,8 +3,8 @@ import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { useCurrentUser } from "@/lib/context";
 import { Space, SpaceUserRole } from "@prisma/client";
-import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from "@/lib/hooks";
-import UserAvatar from "./Avatar";
+import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from "@/zmodel/lib/hooks";
+import { UserAvatar } from "../UserAvatar";
 
 type Props = {
 	space: Space;

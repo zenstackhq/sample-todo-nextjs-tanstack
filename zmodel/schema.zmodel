@@ -1,7 +1,5 @@
-/*
-* Sample model for a collaborative Todo app
-*/
-
+import "base"
+import "application"
 /*
  * Data source definition
  */
@@ -31,15 +29,12 @@ plugin hooks {
     version = 'v5'
 }
 
-abstract model IdCreatedUpdated
-{
-    id        String      @id @default(uuid())
-    createdAt DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
-}
-abstract model IdCreatedUpdatedAuth extends IdCreatedUpdated
-{
-    @@deny('all', auth() == null)
+
+
+enum SpaceComponentType {
+  Dashboard
+  Property
+  List
 }
 model Space extends IdCreatedUpdatedAuth {
     name      String      @length(4, 50)
@@ -56,71 +51,6 @@ model Space extends IdCreatedUpdatedAuth {
 
     // space admin can update and delete
     @@allow('update,delete', members?[user == auth() && role == ADMIN])
-}
-
-abstract model IdCreatedUpdatedSpace extends IdCreatedUpdatedAuth {
-    space     Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId   String
-
-    @@allow('read', space.members?[user == auth()])
-}
-enum SpaceUserRole {
-    USER
-    ADMIN
-}
-
-model SpaceUser extends IdCreatedUpdatedSpace {
-    user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId    String
-    role      SpaceUserRole
-    @@unique([userId, spaceId])
-
-    // space admin can create/update/delete
-    @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
-}
-
-model User extends IdCreatedUpdated {
-    email         String      @unique @email
-    emailVerified DateTime?
-    password      String?     @password @omit
-    name          String?
-    spaces        SpaceUser[]
-    image         String?     @url
-    todos         Todo[]
-    components    SpaceComponent[]
-
-    leases        Lease[]
-    payments      Payment[]
-    charges         Charge[]
-    panelRows         PanelRow[]
-    panels           Panel[]
-    panelComponents     PanelComponent[]
-    panelComponentsCounter     PanelComponentCounter[]
-    panelComponentsReport     PanelComponentReport[]
-    
-    // next-auth
-    accounts      Account[]
-
-    // can be created by anyone, even not logged in
-    @@allow('create', true)
-
-    // can be read by users sharing any space
-    @@allow('read', spaces?[space.members?[user == auth()]])
-
-    // full access by oneself
-    @@allow('all', auth() == this)
-}
-
-abstract model Owner {
-    owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId   String   @default(auth().id)
-    @@deny('update', future().owner != owner)
-}
-
-enum SpaceComponentType {
-  Dashboard
-  Property
-  List
 }
 
 
@@ -150,9 +80,6 @@ model List extends SpaceComponentRelation {
     todos     Todo[]
 }
 
-abstract model Component extends IdCreatedUpdatedAuth, Owner {
-
-}
 model Todo extends Component {
     list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
     listId      String
@@ -223,24 +150,7 @@ model Charge  extends IdCreatedUpdatedAuthOwnerProperty {
     description String?
 }
 
-// next-auth
-model Account {
-    id                       String  @id @default(uuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String?
-    refresh_token_expires_in Int?
-    access_token             String?
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String?
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    @@unique([provider, providerAccountId])
-}
+
 
 abstract model SpaceComponentRelation extends IdCreatedUpdatedAuth {
     spaceComponent   SpaceComponent @relation(fields: [spaceComponentId], references: [id], onDelete: Cascade)
@@ -325,25 +235,4 @@ model PanelComponentReport extends PanelComponentRelation {
 }
 
 
-model SpaceApplication extends IdCreatedUpdatedAuth {
-    space          Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-    spaceId        String
-    application    Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
-    applicationId  String
 
-    @@unique([spaceId, applicationId])
-
-    @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
-
-    @@allow('read', space.members?[user == auth()])
-}
-
-
-model Application extends IdCreatedUpdated
-{
-    slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
-    activations SpaceApplication[]
-
-    // everyone can create and read an application, todo SRE can be dangerous
-    @@allow('create,read', true)
-}

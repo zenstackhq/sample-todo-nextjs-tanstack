@@ -7,7 +7,7 @@ type Props = {
 	children: ReactNode | ReactNode[] | undefined;
 };
 
-export default function WithNavBar({ children }: Props) {
+export function WithNavBar({ children }: Props) {
 	return (
 		<>
 			<Header />

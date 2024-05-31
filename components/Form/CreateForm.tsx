@@ -1,4 +1,3 @@
-import { useCurrentSpace } from "@/lib/context";
 import { toast } from "react-toastify";
 import AutoForm from "@/components/ui/auto-form";
 import { z } from "zod";
@@ -21,13 +20,7 @@ export function CreateForm<SchemaType extends ZodObjectOrWrapped>({ onSubmitData
 	title: string;
 	formSchema: SchemaType;
 }) {
-	const space = useCurrentSpace();
-
 	const [open, setOpen] = useState(false);
-	if (!space) {
-		return <></>;
-	}
-
 	const onSubmit = async (data: z.infer<SchemaType>) => {
 		toast.dismiss();
 		try {

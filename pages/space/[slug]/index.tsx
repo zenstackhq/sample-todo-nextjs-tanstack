@@ -1,11 +1,6 @@
-import { useCreateSpaceComponent, useFindUniqueSpace } from "@/lib/hooks";
-import BreadCrumb from "@/components/BreadCrumb";
-import SpaceMembers from "components/SpaceMembers";
-import TodoList from "components/TodoList";
-import WithNavBar from "components/WithNavBar";
-import PropertyCard from "components/Property/PropertyCard";
-import { GenerateDemonstration } from "components/Demonstration/GenerateDemonstration";
-import DashboardCard from "components/Dashboard/DashboardCard";
+import { useCreateSpaceComponent, useFindUniqueSpace } from "@/zmodel/lib/hooks";
+import { PropertyCard } from "@/components/SpaceComponent/Property/PropertyCard";
+import { SpaceComponentCard } from "@/components/SpaceComponent/Dashboard/DashboardCard";
 import { useRouter } from "next/router";
 import { CreateForm } from "components/Form/CreateForm";
 import { Property, List, Dashboard, Space, User } from "@prisma/client";
@@ -13,6 +8,11 @@ import { SpaceComponent } from "@zenstackhq/runtime/models";
 import { PropertyCreateScalarSchema, SpaceComponentCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
 import { z } from "zod";
 import { Applications } from "@/components/Application/Applications";
+import { SpaceMembers } from "@/components/Space/SpaceMembers";
+import { GenerateDemonstration } from "@/components/Space/GenerateDemonstration";
+import { WithNavBar } from "@/components/layout/WithNavBar";
+import { BreadCrumb } from "@/components/layout/BreadCrumb";
+import { ListCard } from "@/components/SpaceComponent/List/ListCard";
 
 export function SpaceHomeComponent({ space }: {space: Space & {components: (SpaceComponent & {
 	owner: User;
@@ -77,9 +77,10 @@ export function SpaceHomeComponent({ space }: {space: Space & {components: (Spac
 				<ul className="flex flex-wrap gap-6 mb-8">
 					{space?.components?.map((component) =>
 						<li key={component.id}>
-							{component.list && <TodoList list={component.list} owner={component.owner} spaceComponent={component} />}
-							{component.dashboard && <DashboardCard spaceComponent={component}/>}
-							{component.property && <PropertyCard property={component.property} spaceComponent={component}/>}
+							<SpaceComponentCard spaceComponent={component}>
+								{component.list && <ListCard list={component.list} />}
+								{component.property && <PropertyCard property={component.property}/>}
+							</SpaceComponentCard>
 						</li>
 					)}
 				</ul>

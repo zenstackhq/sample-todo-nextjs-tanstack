@@ -1,6 +1,6 @@
+import { useFindUniqueSpace, useFindUniqueSpaceComponent } from "@/zmodel/lib/hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useFindUniqueSpace, useFindUniqueSpaceComponent } from "./hooks";
 
 
 export function useCurrentUser() {

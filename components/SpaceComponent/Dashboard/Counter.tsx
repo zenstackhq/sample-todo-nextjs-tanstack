@@ -1,5 +1,5 @@
 import { useCurrentSpace } from "@/lib/context";
-import { useAggregateSpaceComponent } from "@/lib/hooks";
+import { useAggregateSpaceComponent } from "@/zmodel/lib/hooks";
 import { PanelComponentCounter } from "@zenstackhq/runtime/models";
 
 export const Counter = ({ counter }: {counter: PanelComponentCounter;}) => {

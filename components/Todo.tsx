@@ -1,9 +1,9 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { useDeleteTodo, useUpdateTodo } from "@/lib/hooks";
+import { useDeleteTodo, useUpdateTodo } from "@/zmodel/lib/hooks";
 import { Todo, User } from "@prisma/client";
 import { ChangeEvent } from "react";
 import TimeInfo from "./TimeInfo";
-import UserAvatar from "./Avatar";
+import { UserAvatar } from "./UserAvatar";
 
 type Props = {
 	value: Todo & { owner: User; };

@@ -1,9 +1,8 @@
 import { useCurrentSpace } from "@/lib/context";
-import { useAggregateSpaceComponent } from "@/lib/hooks";
+import { useAggregateSpaceComponent } from "@/zmodel/lib/hooks";
 import { PanelComponentReport } from "@zenstackhq/runtime/models";
 
 export const Report = ({ report }: {report: PanelComponentReport;}) => {
-
 	const space = useCurrentSpace();
 	if (!space) {
 		throw "!spaceId";

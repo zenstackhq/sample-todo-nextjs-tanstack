@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Provider as ZenStackHooksProvider } from "../lib/hooks";
+import { Provider as ZenStackHooksProvider } from "../zmodel/lib/hooks";
 import "../styles/globals.css";
 import { ReactElement } from "react";
 import { ThemeProvider } from "next-themes";

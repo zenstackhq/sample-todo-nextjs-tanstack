@@ -1,5 +1,5 @@
 import { useCurrentSpace } from "@/lib/context";
-import { useCreateSpaceApplication, useDeleteSpaceApplication, useFindManyApplication, useFindManySpaceApplication } from "@/lib/hooks";
+import { useCreateSpaceApplication, useDeleteSpaceApplication, useFindManyApplication, useFindManySpaceApplication } from "@/zmodel/lib/hooks";
 
 export const Applications = () => {
 	const { data: applications } = useFindManyApplication();
@@ -22,7 +22,7 @@ export const Applications = () => {
 		return <div key={application.id}>
 			{
 				<div onClick={onClick}>
-					{activated ? "Enable" : "Disable"}
+					{activated ? "Disable" : "Enable"}
 				</div>
 			}
 			{application.slug}

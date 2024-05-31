@@ -1,8 +1,8 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { useCreatePanelComponent, useDeletePanel } from "@/lib/hooks";
+import { useCreatePanelComponent, useDeletePanel } from "@/zmodel/lib/hooks";
 import { Panel } from "@zenstackhq/runtime/models";
 import { ReactNode } from "react";
-import { CreateForm } from "../Form/CreateForm";
+import { CreateForm } from "../../Form/CreateForm";
 import { PanelComponentReportCreateScalarSchema, PanelComponentCounterCreateScalarSchema } from "@zenstackhq/runtime/zod/models";
 
 export const PanelRender = ({ panel, children }: {panel: Panel; children: ReactNode;}) => {

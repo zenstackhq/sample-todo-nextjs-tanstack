@@ -3,9 +3,9 @@ import { beautifyObjectName } from '@/components/ui/auto-form/utils';
 import { DataTable } from '@/components/ui/data-table';
 import { Prisma } from '@prisma/client';
 
-export type GridCardTableInclude = {};
+export const GridCardTableInclude = {};
 
-export function CardTableComponent({ table }: { table: Prisma.GridCardTableGetPayload<GridCardTableInclude> }) {
+export function CardTableComponent({ table }: { table: Prisma.GridCardTableGetPayload<typeof GridCardTableInclude> }) {
     const { data } = useFindManyTable({
         where: {
             type: table.type,

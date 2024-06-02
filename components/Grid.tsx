@@ -12,10 +12,18 @@ import { Separator } from '@/components/ui/separator';
 import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination';
 import { useRouter } from 'next/router';
 import { useFindGridDetails } from '@/components/useFindGridDetails';
-import { GridCard } from './Grid/Card/GridCard';
-import { GridTabs } from './Grid/Tabs/GridTabs';
+import { GridCard, GridCardInclude } from './Grid/Card/GridCard';
+import { GridTabs, GridTabsInclude } from './Grid/Tabs/GridTabs';
 import { gridCols, colSpans, rowStarts, rowEnds, colStarts, colEnds } from './Grid/utils';
 
+export const GridInclude = {
+    elements: {
+        include: {
+            card: GridCardInclude,
+            tabs: GridTabsInclude,
+        },
+    },
+};
 export const Grid = () => {
     const router = useRouter();
     const gridId = router.query.gridId as string;

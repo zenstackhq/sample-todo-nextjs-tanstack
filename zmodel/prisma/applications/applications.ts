@@ -1,7 +1,7 @@
 import { GridCardFooterType, GridElementType } from '@prisma/client';
 import { Prisma, Type } from '@prisma/client';
 
-export const application: Prisma.ApplicationCreateInput = {
+export const coreApplication: Prisma.ApplicationCreateInput = {
     slug: 'assets',
     folders: {
         create: [

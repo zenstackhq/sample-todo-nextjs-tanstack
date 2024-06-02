@@ -38,7 +38,7 @@ export function UserAuthForm() {
                 callbackUrl: callbackUrl ?? '/',
             });
         },
-        [callbackUrl],
+        [callbackUrl]
     );
 
     const signup = useCreateUser();

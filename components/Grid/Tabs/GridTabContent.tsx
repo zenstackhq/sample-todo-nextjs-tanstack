@@ -3,16 +3,20 @@ import { GridCard, GridCardInclude } from '../Card/GridCard';
 
 import { Prisma } from '@prisma/client';
 
-export type GridTabContentInclude = {
+export const GridTabContentInclude = {
     include: {
         elements: {
             include: {
-                card: GridCardInclude;
-            };
-        };
-    };
+                card: GridCardInclude,
+            },
+        },
+    },
 };
-export function GridTabContent({ tabContent }: { tabContent: Prisma.GridTabContentGetPayload<GridTabContentInclude> }) {
+export function GridTabContent({
+    tabContent,
+}: {
+    tabContent: Prisma.GridTabContentGetPayload<typeof GridTabContentInclude>;
+}) {
     return (
         <TabsContent value={tabContent.name}>
             {tabContent.elements.map((element) => {

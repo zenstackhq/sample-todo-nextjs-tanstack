@@ -2,16 +2,16 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { CardTableComponent } from '../Table/CardTableComponent';
 import { paddingBottoms, textXl } from '../utils';
 import { Prisma } from '@prisma/client';
-import { GridCardFooterInclude, GridCardFooter } from './GridCardFooter';
+import { GridCardFooterInclude, GridCardFooter } from '@/components/Grid/Card/GridCardFooter';
 
-export type GridCardInclude = {
+export const GridCardInclude = {
     include: {
-        table: true;
-        footer: GridCardFooterInclude;
-    };
+        table: true,
+        footer: GridCardFooterInclude,
+    },
 };
 
-export function GridCard({ card }: { card: Prisma.GridCardGetPayload<GridCardInclude> }) {
+export function GridCard({ card }: { card: Prisma.GridCardGetPayload<typeof GridCardInclude> }) {
     const title = <CardTitle className={card.titleXl ? textXl[card.titleXl] : ''}>{card.title}</CardTitle>;
     const description = (
         <CardDescription className="max-w-lg text-balance leading-relaxed">{card.description}</CardDescription>

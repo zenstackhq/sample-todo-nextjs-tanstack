@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { clickButton, goToSpace, getByLabel, selectFromCombo, openSpace } from './utils';
 import { Lease, Property, SpaceComponent } from '@zenstackhq/runtime/models';
 import { userDemo } from '@/components/Auth/UserAuthForm';
-import { application } from '@/zmodel/prisma/applications/applications';
+import { coreApplication } from '@/zmodel/prisma/applications/applications';
 
 test('Should create property', async ({ page }) => {
     async function createProperty() {
@@ -64,7 +64,7 @@ test('Should create property', async ({ page }) => {
 
     await openSpace(page);
 
-    const applicationSlug = application.slug;
+    const applicationSlug = coreApplication.slug;
     await page.getByText(`Enable ${applicationSlug}`).click();
 
     await page.getByText(applicationSlug).click();

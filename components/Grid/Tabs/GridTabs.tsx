@@ -13,13 +13,13 @@ import { GridTabContent, GridTabContentInclude } from './GridTabContent';
 
 import { Prisma } from '@prisma/client';
 
-export type GridTabsInclude = {
+export const GridTabsInclude = {
     include: {
-        tabsContent: GridTabContentInclude;
-    };
+        tabsContent: GridTabContentInclude,
+    },
 };
 
-export function GridTabs({ tabs }: { tabs: Prisma.GridTabsGetPayload<GridTabsInclude> }) {
+export function GridTabs({ tabs }: { tabs: Prisma.GridTabsGetPayload<typeof GridTabsInclude> }) {
     const tabsContent = tabs.tabsContent;
     if (!tabsContent.length) {
         throw 'Not tabsContent lenght';

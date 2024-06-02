@@ -1,4 +1,5 @@
 import { useFindUniqueGrid } from '@/zmodel/lib/hooks';
+import { GridInclude } from './Grid';
 
 export const useFindGridDetails = (gridId: string) => {
     const { data: grid } = useFindUniqueGrid(
@@ -6,50 +7,11 @@ export const useFindGridDetails = (gridId: string) => {
             where: {
                 id: gridId,
             },
-            include: {
-                elements: {
-                    include: {
-                        card: {
-                            include: {
-                                table: true,
-                                footer: {
-                                    include: {
-                                        button: true,
-                                        progress: true,
-                                    },
-                                },
-                            },
-                        },
-                        tabs: {
-                            include: {
-                                tabsContent: {
-                                    include: {
-                                        elements: {
-                                            include: {
-                                                card: {
-                                                    include: {
-                                                        table: true,
-                                                        footer: {
-                                                            include: {
-                                                                button: true,
-                                                                progress: true,
-                                                            },
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+            include: GridInclude,
         },
         {
             enabled: !!gridId,
-        },
+        }
     );
     return grid;
 };

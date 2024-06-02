@@ -3,14 +3,14 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Prisma } from '@prisma/client';
 
-export type GridCardFooterInclude = {
+export const GridCardFooterInclude = {
     include: {
-        button: true;
-        progress: true;
-    };
+        button: true,
+        progress: true,
+    },
 };
 
-export function GridCardFooter({ footer }: { footer: Prisma.GridCardFooterGetPayload<GridCardFooterInclude> }) {
+export function GridCardFooter({ footer }: { footer: Prisma.GridCardFooterGetPayload<typeof GridCardFooterInclude> }) {
     return (
         <CardFooter>
             {footer.type === 'Button' && <Button>{footer.button?.text}</Button>}

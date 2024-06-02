@@ -12,7 +12,7 @@ import {
 } from '@/zmodel/lib/hooks';
 import { PropertyType, ChargeType } from '@prisma/client';
 
-const fakeProperty = () => {
+export const fakeProperty = () => {
     return {
         address: faker.location.streetAddress(),
         city: faker.location.city(),

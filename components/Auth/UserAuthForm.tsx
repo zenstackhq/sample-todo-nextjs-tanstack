@@ -27,7 +27,7 @@ export const userDemo = {
 export function UserAuthForm() {
     const searchParams = useSearchParams();
     const spaceSlug = useSpaceSlug();
-    const spaceSlugUrl = getSpaceUrl(spaceSlug);
+    const spaceSlugUrl = spaceSlug ? getSpaceUrl(spaceSlug) : '';
     const callbackUrl = searchParams.get('callbackUrl') ?? spaceSlugUrl ?? '/';
 
     const [loading, setLoading] = useState(false);

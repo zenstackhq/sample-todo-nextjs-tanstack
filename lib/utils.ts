@@ -6,61 +6,22 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // GPT4o
+type AnyObject = { [key: string]: any };
 
-export function transformWithParentDetails(entities, parentDetails = {}, parentKey = null) {
-    if (!Array.isArray(entities)) return [];
+export function replaceArraysWithFirstObject(obj: AnyObject): AnyObject {
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            const value = obj[key];
 
-    return entities.flatMap((entity) => {
-        // Extract related keys (those that are arrays)
-        const relatedKeys = Object.keys(entity).filter((key) => Array.isArray(entity[key]));
-
-        // Create an object with the current entity's own details
-        const currentEntityDetails = { ...entity };
-        relatedKeys.forEach((key) => delete currentEntityDetails[key]);
-
-        // Process each related entity
-        return relatedKeys
-            .flatMap((key) => transformWithParentDetails(entity[key], currentEntityDetails, key))
-            .concat(
-                parentKey
-                    ? [
-                          {
-                              [parentKey]: currentEntityDetails,
-                              ...parentDetails,
-                          },
-                      ]
-                    : []
-            );
-    });
+            // Check if the value is an array and the first element is an object
+            if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'object' && !Array.isArray(value[0])) {
+                // Replace the array with its first element
+                obj[key] = replaceArraysWithFirstObject(value[0]);
+            } else if (typeof value === 'object' && value !== null) {
+                // If the value is an object, recursively process it
+                obj[key] = replaceArraysWithFirstObject(value);
+            }
+        }
+    }
+    return obj;
 }
-
-/*
-export function transformWithParentDetails(entities?: any[], parentDetails = {}) {
-    if (!Array.isArray(entities)) return null;
-
-    // @ts-ignore
-    return entities.flatMap((entity) => {
-        // Extract related keys (excluding primitive fields)
-        const relatedKeys = Object.keys(entity).filter((key) => Array.isArray(entity[key]));
-
-        // Create an object with the current entity's details
-        const currentEntityDetails = { ...entity };
-        relatedKeys.forEach((key) => delete currentEntityDetails[key]);
-
-        // Combine the current entity's details with the parent's details
-        const combinedDetails = { ...parentDetails, ...currentEntityDetails };
-
-        // Process each related entity
-        return (
-            relatedKeys
-                // @ts-ignore
-                .flatMap((key) => transformWithParentDetails(entity[key], combinedDetails))
-                .concat([
-                    {
-                        ...combinedDetails,
-                        ...Object.fromEntries(relatedKeys.map((key) => [key, entity[key]])),
-                    },
-                ])
-        );
-    });
-}*/

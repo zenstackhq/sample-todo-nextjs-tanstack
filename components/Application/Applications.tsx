@@ -6,7 +6,11 @@ import {
     useFindManySpaceApplication,
 } from '@/zmodel/lib/hooks';
 import { Button } from '@/components/ui/button';
-import { ApplicationScalarSchema, SpaceApplicationScalarSchema } from '@zenstackhq/runtime/zod/models';
+import {
+    ApplicationScalarSchema,
+    SpaceApplicationScalarSchema,
+    SpaceScalarSchema,
+} from '@zenstackhq/runtime/zod/models';
 import { AutoTable } from '../ui/auto-table';
 import * as z from 'zod';
 
@@ -54,9 +58,14 @@ export const Applications = () => {
         );
     });
     return (
-        <AutoTable
-            formSchema={ApplicationScalarSchema.extend({ activations: z.array(SpaceApplicationScalarSchema) })}
-            data={applications}
-        />
+        <>
+            {applicationsData}
+            <AutoTable
+                formSchema={ApplicationScalarSchema.extend({
+                    activations: z.array(SpaceApplicationScalarSchema.extend({ space: SpaceScalarSchema })),
+                })}
+                data={applications}
+            />
+        </>
     );
 };

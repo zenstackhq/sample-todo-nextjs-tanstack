@@ -1,4 +1,3 @@
-import { transformWithParentDetails } from '@/lib/utils';
 import { CommonFormTable } from '../auto-common/types';
 import { handleIfZodNumber } from '../auto-form/fields/object';
 import {
@@ -10,6 +9,8 @@ import {
 } from '../auto-form/utils';
 import { DataTable } from '../data-table';
 import * as z from 'zod';
+import { ColumnDef } from '@tanstack/react-table';
+import { replaceArraysWithFirstObject } from '@/lib/utils';
 
 export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
     formSchema,
@@ -22,11 +23,11 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
         return null;
     }
 
-    function getAccessor(objectFormSchema, prefix = '') {
+    function getAccessor(objectFormSchema: z.AnyZodObject, prefix = ''): ColumnDef<z.infer<SchemaType>>[] {
         const { shape } = getBaseSchema(objectFormSchema) || {};
 
         if (!shape) {
-            return null;
+            return [];
         }
 
         return Object.keys(shape).flatMap((name) => {
@@ -40,20 +41,14 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
             const currentPrefix = `${prefix}${prefix ? '.' : ''}${name}`;
 
             if (zodBaseType === 'ZodObject') {
-                return getAccessor(item, currentPrefix);
+                return getAccessor(item as unknown as z.AnyZodObject, currentPrefix);
             } else if (zodBaseType === 'ZodArray') {
-                const arrayItemType = getBaseType(item._def.type);
+                const arrayItemType = getBaseType((item as unknown as z.ZodArray<z.ZodAny>)._def.type);
                 if (arrayItemType === 'ZodObject') {
-                    // Recursively get the accessor for objects within the array
-                    return getAccessor(item._def.type, `${currentPrefix}`);
-                } else {
-                    // For non-object arrays, return the current prefix with array notation
-                    return [
-                        {
-                            accessorKey: `${currentPrefix}`,
-                            header: beautifyObjectName(currentPrefix),
-                        },
-                    ];
+                    try {
+                        const recurse = item._def.type;
+                        return getAccessor(recurse, currentPrefix);
+                    } catch {}
                 }
             }
 
@@ -65,11 +60,8 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
             ];
         });
     }
-    const columns = getAccessor(objectFormSchema);
-    console.log(columns);
 
-    const transformedData = transformWithParentDetails(data);
-    console.log(transformedData);
-
-    return <DataTable columns={columns} data={transformedData} />;
+    console.log(getAccessor(objectFormSchema));
+    console.log(replaceArraysWithFirstObject(data));
+    return <DataTable columns={getAccessor(objectFormSchema)} data={replaceArraysWithFirstObject(data)} />;
 }

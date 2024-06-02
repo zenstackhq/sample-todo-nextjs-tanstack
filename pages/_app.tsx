@@ -21,7 +21,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             <SessionProvider session={session}>
                 <TooltipProvider>
                     <ZenStackHooksProvider value={{ endpoint: '/api/model', logging: true }}>
-                        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+                        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                             <AppContent>
                                 <div className="h-100 grow">
                                     <Component {...pageProps} />

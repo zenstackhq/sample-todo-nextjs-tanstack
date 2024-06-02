@@ -2,19 +2,15 @@
     "folders": [
         {
             "name": "App",
-            "path": "."
-        }
+            "path": ".",
+        },
     ],
     "settings": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "files.autoSave": "onFocusChange"
+        "files.autoSave": "onFocusChange",
     },
     "extensions": {
-        "recommendations": [
-            "dbaeumer.vscode-eslint",
-            "yoavbls.pretty-ts-errors",
-            "ms-playwright.playwright"
-        ]
-    }
+        "recommendations": ["dbaeumer.vscode-eslint", "yoavbls.pretty-ts-errors", "ms-playwright.playwright"],
+    },
 }

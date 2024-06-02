@@ -1,10 +1,11 @@
-import { List } from "@prisma/client";
-import TimeInfo from "../../TimeInfo";
+import { List } from '@prisma/client';
+import TimeInfo from '../../TimeInfo';
 
-export function ListCard({ list }: {list: List;}) {
-
-	return <>
-		List
-		<TimeInfo value={list} />
-	</>;
+export function ListCard({ list }: { list: List }) {
+    return (
+        <>
+            List
+            <TimeInfo value={list} />
+        </>
+    );
 }

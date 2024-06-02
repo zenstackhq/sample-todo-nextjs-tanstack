@@ -13,21 +13,21 @@ jobs:
     build:
         runs-on: ubuntu-latest
         env:
-          HOME: /root
-          POSTGRES_URL: postgresql://postgres:admin@postgres:5432/todo?schema=public
-          POSTGRES_URL_NON_POOLING: postgresql://postgres:admin@postgres:5432/todo?schema=public
-          NEXTAUTH_SECRET: test-secret-ci-insecure
-          DISCORD_CLIENT_ID: test-secret-ci-insecure
-          DISCORD_CLIENT_SECRET: test-secret-ci-insecure
+            HOME: /root
+            POSTGRES_URL: postgresql://postgres:admin@postgres:5432/todo?schema=public
+            POSTGRES_URL_NON_POOLING: postgresql://postgres:admin@postgres:5432/todo?schema=public
+            NEXTAUTH_SECRET: test-secret-ci-insecure
+            DISCORD_CLIENT_ID: test-secret-ci-insecure
+            DISCORD_CLIENT_SECRET: test-secret-ci-insecure
         services:
             postgres:
-              image: postgres:16.3
-              ports:
-                - "5432:5432"
-              env:
-                POSTGRES_DB: todo
-                POSTGRES_USER: postgres
-                POSTGRES_PASSWORD: admin
+                image: postgres:16.3
+                ports:
+                    - '5432:5432'
+                env:
+                    POSTGRES_DB: todo
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: admin
         container:
             image: mcr.microsoft.com/playwright:v1.44.1-jammy
         steps:
@@ -42,6 +42,3 @@ jobs:
             - run: npx vitest run
             - run: npm run db:push
             - run: npm run test:e2e
-
-
-                

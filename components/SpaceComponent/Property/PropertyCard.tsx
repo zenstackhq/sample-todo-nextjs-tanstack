@@ -1,9 +1,13 @@
-import { Property } from "@prisma/client";
+import { Property } from '@prisma/client';
 
-export function PropertyCard({ property }: {property: Property;}) {
-	return <div><p>Type: {property.propertyType}</p>
-		<p>Address: {property.address}</p>
-		<p>City: {property.city}</p>
-		<p>Postal Code: {property.postalCode}</p>
-		<p>Country: {property.country}</p></div>;
+export function PropertyCard({ property }: { property: Property }) {
+    return (
+        <div>
+            <p>Type: {property.propertyType}</p>
+            <p>Address: {property.address}</p>
+            <p>City: {property.city}</p>
+            <p>Postal Code: {property.postalCode}</p>
+            <p>Country: {property.country}</p>
+        </div>
+    );
 }

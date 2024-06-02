@@ -1,7 +1,7 @@
 export function getSpaceUrl(slug: string) {
-	return `/s/${slug}`;
+    return `/s/${slug}`;
 }
 
 export function getGridUrl(id: string) {
-	return `/g/${id}`;
+    return `/g/${id}`;
 }

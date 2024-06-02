@@ -3,10 +3,10 @@ const nextConfig = {
     experimental: {
         swcPlugins: [
             [
-            'next-superjson-plugin',
-            {
-                excluded: [],
-            },
+                'next-superjson-plugin',
+                {
+                    excluded: [],
+                },
             ],
         ],
     },

@@ -19,6 +19,7 @@ export async function selectFromCombo<T extends FieldValues>(page: Page, label: 
 export async function openSpace(page: Page) {
     await page.getByText(`${userDemo.email}'s space`).click();
 }
+
 export async function goToSpace(page: Page) {
     await page.goto('http://localhost:3000/');
     await openSpace(page);

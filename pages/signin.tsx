@@ -1,84 +1,74 @@
-import { UserAuthForm } from "@/components/Auth/UserAuthForm";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
+import { UserAuthForm } from '@/components/Auth/UserAuthForm';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export default function Signin() {
-	const router = useRouter();
+    const router = useRouter();
 
-	useEffect(() => {
-		if (router.query.error) {
-			if (router.query.error === "OAuthCreateAccount") {
-				toast.error("Unable to signin. The user email may be already in use.");
-			} else {
-				toast.error("Authentication error");
-			}
-		}
-	}, [router]);
+    useEffect(() => {
+        if (router.query.error) {
+            if (router.query.error === 'OAuthCreateAccount') {
+                toast.error('Unable to signin. The user email may be already in use.');
+            } else {
+                toast.error('Authentication error');
+            }
+        }
+    }, [router]);
 
-	return <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-		<div className="bg-muted relative hidden h-full flex-col p-10 text-white lg:flex dark:border-r">
-			<div className="absolute inset-0 bg-zinc-900" />
-			<div className="relative z-20 flex items-center text-lg font-medium">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					className="mr-2 size-6"
-				>
-					<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-				</svg>
-          Logo
-			</div>
-			<div className="relative z-20 mt-auto">
-				<blockquote className="space-y-2">
-					<p className="text-lg">
-              &ldquo;This library has saved me countless hours of work and
-              helped me deliver stunning designs to my clients faster than ever
-              before.&rdquo;
-					</p>
-					<footer className="text-sm">Sofia Davis</footer>
-				</blockquote>
-			</div>
-		</div>
+    return (
+        <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+            <div className="bg-muted relative hidden h-full flex-col p-10 text-white lg:flex dark:border-r">
+                <div className="absolute inset-0 bg-zinc-900" />
+                <div className="relative z-20 flex items-center text-lg font-medium">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="mr-2 size-6"
+                    >
+                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                    </svg>
+                    Logo
+                </div>
+                <div className="relative z-20 mt-auto">
+                    <blockquote className="space-y-2">
+                        <p className="text-lg">
+                            &ldquo;This library has saved me countless hours of work and helped me deliver stunning
+                            designs to my clients faster than ever before.&rdquo;
+                        </p>
+                        <footer className="text-sm">Sofia Davis</footer>
+                    </blockquote>
+                </div>
+            </div>
 
+            <div className="flex h-full items-center p-4 lg:p-8">
+                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+                    <div className="flex flex-col space-y-2 text-center">
+                        <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
+                        <p className="text-muted-foreground text-sm">Enter your email below to login</p>
+                    </div>
 
-		<div className="flex h-full items-center p-4 lg:p-8">
-			<div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-				<div className="flex flex-col space-y-2 text-center">
-					<h1 className="text-2xl font-semibold tracking-tight">
-              Login
-					</h1>
-					<p className="text-muted-foreground text-sm">
-              Enter your email below to login
-					</p>
-				</div>
+                    <UserAuthForm />
 
-				<UserAuthForm/>
-
-				<p className="text-muted-foreground px-8 text-center text-sm">
-            By clicking continue, you agree to our{" "}
-					<Link
-						href="/terms"
-						className="hover:text-primary underline underline-offset-4"
-					>
-              Terms of Service
-					</Link>{" "}
-            and{" "}
-					<Link
-						href="/privacy"
-						className="hover:text-primary underline underline-offset-4"
-					>
-              Privacy Policy
-					</Link>
-            .
-				</p>
-			</div>
-		</div>
-	</div>;
+                    <p className="text-muted-foreground px-8 text-center text-sm">
+                        By clicking continue, you agree to our{' '}
+                        <Link href="/terms" className="hover:text-primary underline underline-offset-4">
+                            Terms of Service
+                        </Link>{' '}
+                        and{' '}
+                        <Link href="/privacy" className="hover:text-primary underline underline-offset-4">
+                            Privacy Policy
+                        </Link>
+                        .
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
 }

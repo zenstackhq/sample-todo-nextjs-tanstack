@@ -21,7 +21,7 @@ export function useCurrentSpace() {
         },
         {
             enabled: !!slug,
-        }
+        },
     );
 
     return data;
@@ -37,7 +37,7 @@ export function useCurrentSpaceComponent() {
         },
         {
             enabled: !!router.query.componentId,
-        }
+        },
     );
 
     return data;

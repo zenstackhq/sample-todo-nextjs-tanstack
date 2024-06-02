@@ -1,6 +1,5 @@
-import { Application } from "@zenstackhq/runtime/models";
+import { Application } from '@zenstackhq/runtime/models';
 
-export function addIds(applications: any)
-{
-    applications.ma
+export function addIds(applications: any) {
+    applications.ma;
 }

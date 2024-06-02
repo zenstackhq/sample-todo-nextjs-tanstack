@@ -6,17 +6,16 @@ import { FieldConfig } from './types';
 // TODO: This should support recursive ZodEffects but TypeScript doesn't allow circular type definitions.
 export type ZodObjectOrWrapped = z.ZodObject<any, any> | z.ZodEffects<z.ZodObject<any, any>>;
 
-/**
- * Beautify a camelCase string.
- * e.g. "myString" -> "My String"
- */
 export function beautifyObjectName(string: string) {
-    // if numbers only return the string
-    let output = string.replace(/([A-Z])/g, ' $1');
-    output = output.charAt(0).toUpperCase() + output.slice(1);
-    return output;
+    return string
+        .split('.')
+        .map((segment) => {
+            let output = segment.replace(/([A-Z])/g, ' $1');
+            output = output.charAt(0).toUpperCase() + output.slice(1);
+            return output;
+        })
+        .join(' ');
 }
-
 /**
  * Get the lowest level Zod type.
  * This will unpack optionals, refinements, etc.

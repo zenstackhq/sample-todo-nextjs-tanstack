@@ -36,15 +36,16 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
             let item = shape[name] as z.ZodAny;
             item = handleIfZodNumber(item);
             const zodBaseType = getBaseType(item);
+            const currentPrefix = `${prefix}${prefix ? '.' : ''}${name}`;
 
             if (zodBaseType === 'ZodObject') {
-                return getAccessor(item, `${prefix}${prefix ? '.' : ''}${name}`);
+                return getAccessor(item, currentPrefix);
             }
 
             return [
                 {
-                    accessorKey: `${prefix}${prefix ? '.' : ''}${name}`,
-                    header: beautifyObjectName(name),
+                    accessorKey: currentPrefix,
+                    header: beautifyObjectName(currentPrefix),
                 },
             ];
         });

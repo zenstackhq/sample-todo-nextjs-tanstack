@@ -14,6 +14,7 @@ import {
     User,
     UserPlus,
     Users,
+    Moon,
 } from 'lucide-react';
 import { TopBreadCrumb } from './BreadCrumb';
 import { Input } from '@/components/ui/input';
@@ -35,6 +36,7 @@ import { signOut } from 'next-auth/react';
 import { MobileSideNav } from './MobileSideNav';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useCurrentUser } from '@/lib/context';
+import { ModeToggle } from './ModeToggle';
 
 export default function Header() {
     const user = useCurrentUser();
@@ -136,6 +138,7 @@ export default function Header() {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+            <ModeToggle />
         </header>
     );
 }

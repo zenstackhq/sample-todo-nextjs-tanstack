@@ -3,6 +3,8 @@ import { CardTableComponent } from '../Table/CardTableComponent';
 import { paddingBottoms, textXl } from '../utils';
 import { Prisma } from '@prisma/client';
 import { GridCardFooterInclude, GridCardFooter } from '@/components/Grid/Card/GridCardFooter';
+import { FallbackError } from '@/components/layout/FallbackError';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export const GridCardInclude = {
     include: {
@@ -18,26 +20,34 @@ export function GridCard({ card }: { card: Prisma.GridCardGetPayload<typeof Grid
     );
     return (
         <Card key={card.id}>
-            <CardHeader className={paddingBottoms[card.headerPb]}>
-                {card.invertTitleDescription ? (
-                    <>
-                        {description}
-                        {title}
-                    </>
-                ) : (
-                    <>
-                        {title}
-                        {description}
-                    </>
+            <ErrorBoundary fallback={<FallbackError />}>
+                <CardHeader className={paddingBottoms[card.headerPb]}>
+                    {card.invertTitleDescription ? (
+                        <>
+                            {description}
+                            {title}
+                        </>
+                    ) : (
+                        <>
+                            {title}
+                            {description}
+                        </>
+                    )}
+                </CardHeader>
+            </ErrorBoundary>
+            <ErrorBoundary fallback={<FallbackError />}>
+                {card.content && (
+                    <CardContent>
+                        <div className="text-muted-foreground text-xs">{card.content}</div>
+                    </CardContent>
                 )}
-            </CardHeader>
-            {card.content && (
-                <CardContent>
-                    <div className="text-muted-foreground text-xs">{card.content}</div>
-                </CardContent>
-            )}
-            {card.table && <CardTableComponent table={card.table} />}
-            {card.footer && <GridCardFooter footer={card.footer} />}
+            </ErrorBoundary>
+            <ErrorBoundary fallback={<FallbackError />}>
+                {card.table && <CardTableComponent table={card.table} />}
+            </ErrorBoundary>
+            <ErrorBoundary fallback={<FallbackError />}>
+                {card.footer && <GridCardFooter footer={card.footer} />}
+            </ErrorBoundary>
         </Card>
     );
 }

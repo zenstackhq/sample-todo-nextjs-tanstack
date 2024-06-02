@@ -52,7 +52,7 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
     const objectFormSchema = getObjectFormSchema(formSchema);
     const defaultValues: DefaultValues<z.infer<typeof objectFormSchema>> | null = getDefaultValues(
         objectFormSchema,
-        fieldConfig,
+        fieldConfig
     );
 
     const form = useForm<z.infer<typeof objectFormSchema>>({

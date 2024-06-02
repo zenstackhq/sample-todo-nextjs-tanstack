@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { FallbackError } from '../layout/FallbackError';
 
 export function CreateForm<SchemaType extends ZodObjectOrWrapped>({
     onSubmitData,
@@ -44,13 +46,15 @@ export function CreateForm<SchemaType extends ZodObjectOrWrapped>({
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{title}</DialogDescription>
                 </DialogHeader>
-                <AutoForm formSchema={formSchema} onSubmit={onSubmit}>
-                    <div className="modal-action">
-                        <DialogFooter>
-                            <Button type="submit">Save changes</Button>
-                        </DialogFooter>
-                    </div>
-                </AutoForm>
+                <ErrorBoundary fallback={<FallbackError />}>
+                    <AutoForm formSchema={formSchema} onSubmit={onSubmit}>
+                        <div className="modal-action">
+                            <DialogFooter>
+                                <Button type="submit">Save changes</Button>
+                            </DialogFooter>
+                        </div>
+                    </AutoForm>
+                </ErrorBoundary>
             </DialogContent>
         </Dialog>
     );

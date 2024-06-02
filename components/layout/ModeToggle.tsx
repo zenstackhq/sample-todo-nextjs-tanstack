@@ -1,12 +1,42 @@
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button';
+import {
+    Cloud,
+    CreditCard,
+    Keyboard,
+    LifeBuoy,
+    LogOut,
+    Mail,
+    MessageSquare,
+    Plus,
+    PlusCircle,
+    Search,
+    Settings,
+    User,
+    UserPlus,
+    Users,
+    Moon,
+    Sun,
+    Computer,
+} from 'lucide-react';
+import { TopBreadCrumb } from './BreadCrumb';
+import { Input } from '@/components/ui/input';
 import {
     DropdownMenu,
-    DropdownMenuTrigger,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuItem,
-} from '@radix-ui/react-dropdown-menu';
-import { Button } from '../ui/button';
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { signOut } from 'next-auth/react';
 
 export function ModeToggle() {
     const { setTheme } = useTheme();
@@ -20,10 +50,23 @@ export function ModeToggle() {
                     <span className="sr-only">Toggle theme</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
+            <DropdownMenuContent className="w-15 mr-3 mt-2">
+                <DropdownMenuLabel>Dark Mode</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => setTheme('light')}>
+                        <Sun className="mr-2 size-4" />
+                        <span>Light</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme('dark')}>
+                        <Moon className="mr-2 size-4" />
+                        <span>Dark</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme('system')}>
+                        <Computer className="mr-2 size-4" />
+                        <span>System</span>
+                    </DropdownMenuItem>
+                </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     );

@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import AutoFormObject from './fields/object';
 import { Dependency, FieldConfig } from './types';
 import { ZodObjectOrWrapped, getDefaultValues, getObjectFormSchema } from './utils';
+import { CommonFormTable } from '../auto-common/types';
 
 export function AutoFormSubmit({
     children,
@@ -39,7 +40,6 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
     className,
     dependencies,
 }: {
-    formSchema: SchemaType;
     values?: Partial<z.infer<SchemaType>>;
     onValuesChange?: (values: Partial<z.infer<SchemaType>>) => void;
     onParsedValuesChange?: (values: Partial<z.infer<SchemaType>>) => void;
@@ -48,7 +48,7 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
     children?: React.ReactNode;
     className?: string;
     dependencies?: Dependency<z.infer<SchemaType>>[];
-}) {
+} & CommonFormTable<SchemaType>) {
     const objectFormSchema = getObjectFormSchema(formSchema);
     const defaultValues: DefaultValues<z.infer<typeof objectFormSchema>> | null = getDefaultValues(
         objectFormSchema,

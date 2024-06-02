@@ -13,6 +13,19 @@ function DefaultParent({ children }: { children: ReactNode }) {
     return <>{children}</>;
 }
 
+export const handleIfZodNumber = (item: z.ZodAny) => {
+    const isZodNumber = (item as any)._def.typeName === 'ZodNumber';
+    const isInnerZodNumber = (item._def as any).innerType?._def?.typeName === 'ZodNumber';
+
+    if (isZodNumber) {
+        (item as any)._def.coerce = true;
+    } else if (isInnerZodNumber) {
+        (item._def as any).innerType._def.coerce = true;
+    }
+
+    return item;
+};
+
 export default function AutoFormObject<SchemaType extends z.ZodObject<any, any>>({
     schema,
     form,
@@ -36,19 +49,6 @@ export default function AutoFormObject<SchemaType extends z.ZodObject<any, any>>
     if (!shape) {
         return null;
     }
-
-    const handleIfZodNumber = (item: z.ZodAny) => {
-        const isZodNumber = (item as any)._def.typeName === 'ZodNumber';
-        const isInnerZodNumber = (item._def as any).innerType?._def?.typeName === 'ZodNumber';
-
-        if (isZodNumber) {
-            (item as any)._def.coerce = true;
-        } else if (isInnerZodNumber) {
-            (item._def as any).innerType._def.coerce = true;
-        }
-
-        return item;
-    };
 
     return (
         <Accordion type="multiple" className="space-y-5 border-none">

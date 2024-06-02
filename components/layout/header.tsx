@@ -54,7 +54,7 @@ export default function Header() {
             </div>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative size-8 rounded-full">
+                    <Button variant="ghost" className="relative size-8 rounded-full focus-visible:ring-0">
                         <Avatar className="size-8">
                             <AvatarImage src={user?.image ?? ''} alt={user?.name ?? ''} />
                             <AvatarFallback>{user?.email?.[0].toUpperCase()}</AvatarFallback>

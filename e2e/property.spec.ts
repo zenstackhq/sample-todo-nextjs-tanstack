@@ -2,7 +2,6 @@ import { test } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { clickButton, goToSpace, getByLabel, selectFromCombo, openSpace } from './utils';
 import { Lease, Property, SpaceComponent } from '@zenstackhq/runtime/models';
-import { userDemo } from '@/components/Auth/UserAuthForm';
 import { coreApplication } from '@/zmodel/prisma/applications/applications';
 
 test('Should create property', async ({ page }) => {

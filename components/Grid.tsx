@@ -15,6 +15,8 @@ import { useFindGridDetails } from '@/components/useFindGridDetails';
 import { GridCard, GridCardInclude } from './Grid/Card/GridCard';
 import { GridTabs, GridTabsInclude } from './Grid/Tabs/GridTabs';
 import { gridCols, colSpans, rowStarts, rowEnds, colStarts, colEnds } from './Grid/utils';
+import { FallbackError } from './layout/FallbackError';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export const GridInclude = {
     elements: {
@@ -54,14 +56,14 @@ export const Grid = () => {
                     <div
                         key={element.id}
                         className={`
-			${element.colSpan ? colSpans[element.colSpan] : ''}
-			${element.rowStart ? rowStarts[element.rowStart] : ''}
-			${element.rowEnd ? rowEnds[element.rowEnd] : ''}
-			${element.colStart ? colStarts[element.colStart] : ''}
-			${element.colEnd ? colEnds[element.colEnd] : ''}
-			`}
+                            ${element.colSpan ? colSpans[element.colSpan] : ''}
+                            ${element.rowStart ? rowStarts[element.rowStart] : ''}
+                            ${element.rowEnd ? rowEnds[element.rowEnd] : ''}
+                            ${element.colStart ? colStarts[element.colStart] : ''}
+                            ${element.colEnd ? colEnds[element.colEnd] : ''}
+                            `}
                     >
-                        {getComponentRender()}
+                        <ErrorBoundary fallback={<FallbackError />}>{getComponentRender()}</ErrorBoundary>
                     </div>
                 );
             })}

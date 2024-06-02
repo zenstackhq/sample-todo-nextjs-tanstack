@@ -15,7 +15,9 @@ function SpaceItem({ space }: { space: Space }) {
                 </div>
                 <div
                     className="card-body"
-                    title={`${space.name} ${spaceComponentCount ? ': ' + spaceComponentCount + ' space component' : ''}`}
+                    title={`${space.name} ${
+                        spaceComponentCount ? ': ' + spaceComponentCount + ' space component' : ''
+                    }`}
                 >
                     <h2 className="card-title line-clamp-1">{space.name}</h2>
                 </div>

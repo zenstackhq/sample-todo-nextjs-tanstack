@@ -20,6 +20,7 @@ export const coreApplication: Prisma.ApplicationCreateInput = {
                                                 create: [
                                                     {
                                                         type: GridElementType.Card,
+                                                        colSpan: 2,
                                                         card: {
                                                             create: {
                                                                 title: 'Your Orders',

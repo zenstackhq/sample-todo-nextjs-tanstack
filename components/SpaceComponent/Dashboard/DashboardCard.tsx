@@ -16,7 +16,7 @@ export function SpaceComponentCard({ spaceComponent, children }: {spaceComponent
 					<div className="card-actions flex w-full justify-between">
 						<div className="flex space-x-2">
 							{spaceComponent.private &&
-                        <div className="tooltip" data-tip="Private"><LockClosedIcon className="w-4 h-4 text-gray-500" /></div>
+                        <div className="tooltip" data-tip="Private"><LockClosedIcon className="size-4 text-gray-500" /></div>
 							}
 						</div>
 					</div>

@@ -1,5 +1,6 @@
 import { useCurrentSpace } from "@/lib/context";
 import { useCreateSpaceApplication, useDeleteSpaceApplication, useFindManyApplication, useFindManySpaceApplication } from "@/zmodel/lib/hooks";
+import { Button } from "@/components/ui/button";
 
 export const Applications = () => {
 	const { data: applications } = useFindManyApplication();
@@ -8,7 +9,7 @@ export const Applications = () => {
 	const desactivate = useDeleteSpaceApplication();
 	const { data: spaceApplications } = useFindManySpaceApplication({ where: { spaceId: space?.id } });
 	if (!applications || !space) {
-		return <></>;
+		return <>Loading...</>;
 	}
 	return applications.map(application => {
 
@@ -21,11 +22,10 @@ export const Applications = () => {
 		};
 		return <div key={application.id}>
 			{
-				<div onClick={onClick}>
-					{activated ? "Disable" : "Enable"}
-				</div>
+				<Button onClick={onClick} variant={activated ? "default" : "outline"}>
+					{activated ? "Disable" : "Enable"} {application.slug}
+				</Button>
 			}
-			{application.slug}
 		</div>;
 	});
 };

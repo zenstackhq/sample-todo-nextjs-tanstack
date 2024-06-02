@@ -1,0 +1,75 @@
+
+import "../../schema.zmodel"
+import "../space.zmodel"
+
+model Dashboard extends SpaceComponentRelation {
+    panelRows     PanelRow[]
+}
+
+model PanelRow extends Component {
+    dashboard        Dashboard      @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+    dashboardId      String
+    title       String    @length(1, 100)
+    panels     Panel[]
+
+    @@allow('all', dashboard.spaceComponent.owner == auth())
+    @@allow('all', dashboard.spaceComponent.space.members?[user == auth()] && !dashboard.spaceComponent.private)
+}
+
+
+model Panel extends Component {
+    panelRow        PanelRow      @relation(fields: [panelRowId], references: [id], onDelete: Cascade)
+    panelRowId      String
+    title       String    @length(1, 100)
+    panelComponents     PanelComponent[]
+
+    @@allow('all', panelRow.dashboard.spaceComponent.owner == auth())
+    @@allow('all', panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelRow.dashboard.spaceComponent.private)
+}
+
+enum PanelComponentType {
+    Counter
+    Report
+}
+model PanelComponent extends Component {
+    panel        Panel      @relation(fields: [panelId], references: [id], onDelete: Cascade)
+    panelId      String
+    title       String    @length(1, 100)
+    type PanelComponentType
+
+
+    counter PanelComponentCounter?
+    report PanelComponentReport?
+
+    @@allow('all', panel.panelRow.dashboard.spaceComponent.owner == auth())
+    @@allow('all', panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panel.panelRow.dashboard.spaceComponent.private)
+}
+
+abstract model PanelComponentRelation extends Component {
+    panelComponent   PanelComponent @relation(fields: [panelComponentId], references: [id], onDelete: Cascade)
+    panelComponentId String   @unique
+
+    spaceComponentType SpaceComponentType
+
+    @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.owner == auth())
+    @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelComponent.panel.panelRow.dashboard.spaceComponent.private)
+}
+
+
+enum PanelComponentCounterType
+{
+    Sum
+    Count
+}
+model PanelComponentCounter extends PanelComponentRelation {
+    type PanelComponentCounterType
+}
+
+enum PanelComponentReportType {
+    Histogram
+    Funel
+}
+model PanelComponentReport extends PanelComponentRelation {
+    type PanelComponentReportType
+}
+

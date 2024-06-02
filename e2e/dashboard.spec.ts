@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { SpaceComponent } from "@zenstackhq/runtime/models";
-import { clickButton, createAccount, getByLabel } from "./utils";
+import { clickButton, goToSpace, getByLabel } from "./utils";
 
 test("should navigate to the about page", async ({ page }) => {
 	async function createDashboard() {
@@ -16,7 +16,7 @@ test("should navigate to the about page", async ({ page }) => {
 		return name;
 	}
 
-	await createAccount(page);
+	await goToSpace(page);
 	const dashboardTitle = await createDashboard();
 	await page.getByText(dashboardTitle).click();
 	page.getByText(dashboardTitle);

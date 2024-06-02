@@ -20,6 +20,6 @@
             ".zenstack/*": ["node_modules/.zenstack/*"]
         }
     },
-    "include": ["next-env.d.ts", ".eslintrc.js", "**/*.ts", "**/*.tsx"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
     "exclude": ["node_modules"]
 }

@@ -15,11 +15,7 @@ export function DashboardDetails() {
 				spaceComponentId: spaceComponent?.id
 			},
 			include: {
-				spaceComponent: {
-					include: {
-						owner: true
-					}
-				},
+				owner: true,
 				panelRows: {
 					include: {
 						panels: {
@@ -49,9 +45,9 @@ export function DashboardDetails() {
 		return <></>;
 	}
 	return <>
-		<h1 className="text-2xl font-semibold mb-4">{spaceComponent?.name}</h1>
-		<UserAvatar user={dashboard.spaceComponent.owner} size={18} />
-		<ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
+		<h1 className="mb-4 text-2xl font-semibold">{spaceComponent?.name}</h1>
+		<UserAvatar user={dashboard.owner} size={18} />
+		<ul className="flex w-11/12 flex-col space-y-4 py-8 md:w-auto">
 			{dashboard.panelRows.map(panelRow =>
 				<div key={panelRow.id}>
 					{panelRow.title}
@@ -60,11 +56,11 @@ export function DashboardDetails() {
 							<PanelComponentRender key={panelComponent.id} panelComponent={panelComponent} />
 						)}
 					</PanelRender>)}
-					<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => createPanel.mutate({ data: { title: "new panel", panelRowId: panelRow.id } })}/>
-					<TrashIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => deletePanelRow.mutate({ where: { id: panelRow.id } })}/>
+					<PlusIcon className="size-6 cursor-pointer text-gray-500" onClick={() => createPanel.mutate({ data: { title: "new panel", panelRowId: panelRow.id } })}/>
+					<TrashIcon className="size-6 cursor-pointer text-gray-500" onClick={() => deletePanelRow.mutate({ where: { id: panelRow.id } })}/>
 				</div>
 			)}
-			<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => createPanelRow.mutate({ data: { title: "new panel row", dashboardId: dashboard.id } })}/>
+			<PlusIcon className="size-6 cursor-pointer text-gray-500" onClick={() => createPanelRow.mutate({ data: { title: "new panel row", dashboardId: dashboard.id } })}/>
 		</ul></>;
 }
 

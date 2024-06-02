@@ -37,10 +37,10 @@ export function PropertyDetails() {
 	}
 
 	return <>
-		<h1 className="text-2xl font-semibold mb-4">{property?.address}</h1>
+		<h1 className="mb-4 text-2xl font-semibold">{property?.address}</h1>
 		<div className="flex space-x-2">
-			<div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
-				<CreateForm formSchema={LeaseCreateScalarSchema.omit({ type: true })} onSubmitData={async (data) => {
+			<div className="mb-8 flex w-full flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+				<CreateForm formSchema={LeaseCreateScalarSchema} onSubmitData={async (data) => {
 					await createLease.mutateAsync({
 						data: {
 							...data,
@@ -50,7 +50,7 @@ export function PropertyDetails() {
 				}} title={"Create Lease"}/>
 			</div>
 		</div>
-		<ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
+		<ul className="flex w-11/12 flex-col space-y-4 py-8 md:w-auto">
 			{property.leases?.map((lease) =>
 				<LeaseDetail key={lease.id} {...{ lease }}/>
 			)}

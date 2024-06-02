@@ -1,0 +1,138 @@
+
+import "../../schema.zmodel"
+import "../space.zmodel"
+import "../../application"
+import "table"
+
+abstract model BaseGrid extends IdCreatedUpdatedAuth {
+    elements   GridElement[]
+
+}
+
+
+model Grid extends BaseGrid {
+    subTab          SubTabFolder         @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String
+
+    columns Int @gte(1) @lte(12)
+
+    slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
+
+
+    @@allow('read', auth() != null)
+
+}
+
+
+enum GridElementType {
+    Card
+    Tabs
+}
+
+model GridElement extends IdCreatedUpdatedAuth {
+
+    grid Grid?          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String?
+
+    gridTabContent GridTabContent?          @relation(fields: [gridTabContentId], references: [id], onDelete: Cascade)
+    gridTabContentId        String?
+
+    type GridElementType
+
+    colSpan  Int? @gte(1) @lte(12)
+    rowStart Int? @gte(1) @lte(12)
+    rowEnd Int? @gte(1) @lte(12)
+    colStart Int? @gte(1) @lte(12)
+    colEnd Int? @gte(1) @lte(12)
+
+    card GridCard?
+    tabs GridTabs?
+
+    @@allow('read', auth() != null)
+
+}
+
+
+
+
+model GridCard extends IdCreatedUpdatedAuth {
+
+    element GridElement          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String @unique
+
+    title   String
+    titleXl  Int? @gte(1) @lte(4)
+    description String
+    invertTitleDescription Boolean @default(false)
+    headerPb Int @default(2) @gte(1) @lte(6)
+
+
+
+    content String?
+
+    table GridCardTable?
+
+    footer  GridCardFooter?
+
+    @@allow('read', auth() != null)
+
+}
+
+model GridTabs extends IdCreatedUpdatedAuth {
+
+    element GridElement          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String @unique
+
+    tabsContent     GridTabContent[]
+
+    @@allow('read', auth() != null)
+}
+
+
+
+model GridTabContent extends BaseGrid {
+    tabs GridTabs          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String
+
+    name    String
+
+    @@allow('read', auth() != null)
+}
+ 
+
+enum GridCardFooterType {
+    Button
+    Progress
+}
+
+model GridCardFooter extends IdCreatedUpdatedAuth {
+
+    card GridCard          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String @unique
+
+    type GridCardFooterType
+
+    button GridCardFooterButton?
+    progress GridCardFooterProgress?
+
+    @@allow('read', auth() != null)
+
+}
+
+model GridCardFooterButton extends IdCreatedUpdatedAuth {
+
+    footer GridCardFooter          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String @unique
+
+    text    String
+    @@allow('read', auth() != null)
+}
+model GridCardFooterProgress extends IdCreatedUpdatedAuth {
+
+    footer GridCardFooter          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String @unique
+
+    value   Int
+    @@allow('read', auth() != null)
+}
+

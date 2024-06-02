@@ -1,0 +1,59 @@
+
+import "../../schema.zmodel"
+import "../space.zmodel"
+
+enum PropertyType {
+    APARTMENT
+    HOUSE
+    COMMERCIAL
+}
+
+model Property extends SpaceComponentRelation {
+    propertyType        PropertyType
+    address     String
+    city        String
+    postalCode  String
+    country     String
+    leases      Lease[]
+    charges     Charge[]
+}
+
+
+abstract model IdCreatedUpdatedAuthOwnerProperty extends Component {
+    property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+    propertyId  String
+    @@allow('all', property.spaceComponent.owner == auth())
+    @@allow('all', property.spaceComponent.space.members?[user == auth()] && !property.spaceComponent.private)
+}
+
+model Lease extends IdCreatedUpdatedAuthOwnerProperty {
+    startDate   DateTime
+    endDate     DateTime?
+    rentAmount  Int
+    payments    Payment[]
+    charges     Charge[]
+}
+
+model Payment extends Component {
+    lease       Lease      @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+    leaseId     String
+    amount      BigInt
+    date        DateTime
+
+    @@allow('all', lease.property.spaceComponent.owner == auth())
+    @@allow('all', lease.property.spaceComponent.space.members?[user == auth()] && !lease.property.spaceComponent.private)
+}
+enum ChargeType {
+    MAINTENANCE
+    UTILITIES
+    TAXES
+    OTHER
+}
+model Charge  extends IdCreatedUpdatedAuthOwnerProperty {
+    lease       Lease?     @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+    leaseId     String?
+    chargeType        ChargeType
+    amount      BigInt
+    dueDate     DateTime
+    description String?
+}

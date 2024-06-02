@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { useCurrentSpace } from "@/lib/context";
-import { useCreateManyCharge, useCreateManyDashboard, useCreateManyLease, useCreateManyList, useCreateManyPayment, useCreateManyProperty, useCreateManySpaceComponent } from "@/zmodel/lib/hooks";
+import { useCreateManyCharge, useCreateManyDashboard, useCreateManyLease, useCreateManyList, useCreateManyPayment, useCreateManyProperty, useCreateManySpaceComponent, useCreateManyTable } from "@/zmodel/lib/hooks";
 import { PropertyType, ChargeType } from "@prisma/client";
 
 
@@ -8,7 +8,7 @@ const fakeProperty = ()  => {
 	return {
 		address: faker.location.streetAddress(),
 		city: faker.location.city(),
-		type: PropertyType.COMMERCIAL,
+		propertyType: PropertyType.COMMERCIAL,
 		postalCode: faker.location.zipCode(),
 		country: faker.location.country(),
 		createdAt: faker.date.past()
@@ -37,7 +37,7 @@ const fakeCharge = ({ propertyId, leaseId }: {propertyId: string; leaseId: strin
 	return {
 		propertyId,
 		leaseId,
-		type: ChargeType.UTILITIES,
+		chargeType: ChargeType.UTILITIES,
 		amount: faker.number.bigInt({ min: 5, max: 100 }),
 		dueDate: faker.date.future(),
 		description: faker.lorem.sentence(),
@@ -51,6 +51,8 @@ export const GenerateDemonstration = () => {
 
 
 	const createManySpaceComponent = useCreateManySpaceComponent();
+	const createManyTable = useCreateManyTable();
+
 
 	const createManyProperty = useCreateManyProperty();
 	const createManyDashboard = useCreateManyDashboard();
@@ -76,9 +78,18 @@ export const GenerateDemonstration = () => {
 			}))
 		});
 
+		await createManyTable.mutateAsync({
+			data: Array.from({ length: 5 }).map((_, index) => ({
+				id: `${prefix}Dashboard${index}`,
+				type: "Dashboard"
+			}))
+		});
+
+
 		await createManyDashboard.mutateAsync({
 			data: Array.from({ length: 5 }).map((_, index) => ({
-				spaceComponentId: `${prefix}Dashboard${index}`
+				spaceComponentId: `${prefix}Dashboard${index}`,
+				tableId: `${prefix}Dashboard${index}`
 			}))
 		});
 
@@ -91,9 +102,18 @@ export const GenerateDemonstration = () => {
 			}))
 		});
 
+		await createManyTable.mutateAsync({
+			data: Array.from({ length: 5 }).map((_, index) => ({
+				id: `${prefix}List${index}`,
+				type: "List"
+			}))
+		});
+
+
 		await createManyList.mutateAsync({
 			data: Array.from({ length: 5 }).map((_, index) => ({
-				spaceComponentId: `${prefix}List${index}`
+				spaceComponentId: `${prefix}List${index}`,
+				tableId: `${prefix}List${index}`
 			}))
 		});
 
@@ -107,9 +127,18 @@ export const GenerateDemonstration = () => {
 			}))
 		});
 
+		await createManyTable.mutateAsync({
+			data: Array.from({ length: 5 }).map((_, index) => ({
+				id: `${prefix}Property${index}`,
+				type: "Property"
+			}))
+		});
+
+
 		await createManyProperty.mutateAsync({
 			data: Array.from({ length: 5 }).map((_, index) => ({
 				...fakeProperty(),
+				tableId: `${prefix}Property${index}`,
 				spaceComponentId: `${prefix}Property${index}`,
 				id: `${prefix}Property${index}`
 			}))

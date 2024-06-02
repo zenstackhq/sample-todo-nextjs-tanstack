@@ -1,0 +1,14 @@
+
+import "../../schema.zmodel"
+import "../space.zmodel"
+import "../../application"
+
+
+model View extends IdCreatedUpdatedAuth {
+    subTab          SubTabFolder         @relation(fields: [subTabId], references: [id], onDelete: Cascade)
+    subTabId        String
+
+    table Type
+
+    @@allow('read', auth() != null)
+}

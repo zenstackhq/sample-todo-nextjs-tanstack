@@ -1,5 +1,7 @@
 import "schema"
-import "base"
+import "space/space.zmodel"
+import "space/view/view"
+import "space/grid/grid"
 
 model SpaceApplication extends IdCreatedUpdatedAuth {
     space          Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
@@ -19,6 +21,38 @@ model Application extends IdCreatedUpdatedAuth
 {
     slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
     activations SpaceApplication[]
+    folders FolderApplication[]
 
     @@allow('read', auth() != null)
 }
+
+model FolderApplication extends IdCreatedUpdatedAuth
+{
+    application          Application         @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    applicationId        String
+    tabs TabFolder[]
+
+    path String
+    @@allow('read', auth() != null)
+}
+
+model TabFolder extends IdCreatedUpdatedAuth
+{
+    folder          FolderApplication         @relation(fields: [folderId], references: [id], onDelete: Cascade)
+    folderId        String
+
+    subTabs SubTabFolder[]
+    @@allow('read', auth() != null)
+}
+
+model SubTabFolder extends IdCreatedUpdatedAuth
+{
+    tab          TabFolder         @relation(fields: [tabId], references: [id], onDelete: Cascade)
+    tabId        String
+
+    views View[]
+    grids Grid[]
+    @@allow('read', auth() != null)
+}
+
+

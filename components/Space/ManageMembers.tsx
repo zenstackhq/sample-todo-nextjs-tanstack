@@ -60,11 +60,11 @@ export default function ManageMembers({ space }: Props) {
 
 	return (
 		<div>
-			<div className="flex flex-wrap gap-2 items-center mb-8 w-full">
+			<div className="mb-8 flex w-full flex-wrap items-center gap-2">
 				<input
 					type="text"
 					placeholder="Type user email and enter to invite"
-					className="input input-sm input-bordered flex-grow mr-2"
+					className="input input-sm input-bordered mr-2 grow"
 					value={email}
 					onChange={(e: ChangeEvent<HTMLInputElement>) => {
 						setEmail(e.currentTarget.value);
@@ -88,24 +88,24 @@ export default function ManageMembers({ space }: Props) {
 				</select>
 
 				<button onClick={() => void inviteUser()}>
-					<PlusIcon className="w-6 h-6 text-gray-500" />
+					<PlusIcon className="size-6 text-gray-500" />
 				</button>
 			</div>
 
 			<ul className="space-y-2">
 				{members?.map((member) =>
-					<li key={member.id} className="flex flex-wrap w-full justify-between">
+					<li key={member.id} className="flex w-full flex-wrap justify-between">
 						<div className="flex items-center">
-							<div className="hidden md:block mr-2">
+							<div className="mr-2 hidden md:block">
 								<UserAvatar user={member.user} size={32} />
 							</div>
-							<p className="w-36 md:w-48 line-clamp-1 mr-2">{member.user.name || member.user.email}</p>
+							<p className="mr-2 line-clamp-1 w-36 md:w-48">{member.user.name || member.user.email}</p>
 							<p>{member.role}</p>
 						</div>
 						<div className="flex items-center">
 							{user?.id !== member.user.id &&
 								<TrashIcon
-									className="w-4 h-4 text-gray-500"
+									className="size-4 text-gray-500"
 									onClick={() => {
 										removeMember(member.id);
 									}}

@@ -11,13 +11,13 @@ export const PanelComponentRender = ({ panelComponent }: {
 	};
 }) => {
 	const deletePanelComponent = useDeletePanelComponent();
-	return <div key={panelComponent.id} className="flex justify-between w-full mb-4">
-		<div className="border rounded-lg px-8 py-4 shadow-lg flex flex-col items-center">
+	return <div key={panelComponent.id} className="mb-4 flex w-full justify-between">
+		<div className="flex flex-col items-center rounded-lg border px-8 py-4 shadow-lg">
 			<h2>{panelComponent.title}</h2>
 			<h2>{panelComponent.type}</h2>
 			{panelComponent.report && <Report report={panelComponent.report}/>}
 			{panelComponent.counter && <Counter counter={panelComponent.counter}/>}
-			<TrashIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => deletePanelComponent.mutate({ where: { id: panelComponent.id } })}/>
+			<TrashIcon className="size-6 cursor-pointer text-gray-500" onClick={() => deletePanelComponent.mutate({ where: { id: panelComponent.id } })}/>
 		</div>
 	</div>;
 

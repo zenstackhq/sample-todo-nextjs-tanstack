@@ -12,15 +12,15 @@ function ManagementDialog(space?: Space) {
 	return (
 		<>
 			<label htmlFor="management-modal" className="modal-button">
-				<PlusIcon className="w-6 h-6 text-gray-500 cursor-pointer mr-1" />
+				<PlusIcon className="mr-1 size-6 cursor-pointer text-gray-500" />
 			</label>
 
 			<input type="checkbox" id="management-modal" className="modal-toggle" />
 			<div className="modal">
 				<div className="modal-box">
-					<h3 className="font-bold text-base md:text-lg">Manage Members of {space.name}</h3>
+					<h3 className="text-base font-bold md:text-lg">Manage Members of {space.name}</h3>
 
-					<div className="p-4 mt-4">
+					<div className="mt-4 p-4">
 						<ManageMembers space={space} />
 					</div>
 
@@ -57,7 +57,7 @@ export function SpaceMembers() {
 		<div className="flex items-center">
 			{ManagementDialog(space)}
 			{members &&
-				<label className="mr-1 modal-button cursor-pointer" htmlFor="management-modal">
+				<label className="modal-button mr-1 cursor-pointer" htmlFor="management-modal">
 					{members?.map((member) =>
 						<UserAvatar key={member.id} user={member.user} size={24} />
 					)}

@@ -11,3 +11,4 @@ zmodel/prisma/schema.prisma
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+tsconfig.tsbuildinfo

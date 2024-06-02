@@ -1,23 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import { createApplications } from "./applications/createApplications";
 
 const prisma = new PrismaClient();
-
 async function main() {
-	const slug = "core";
-	const application = await prisma.application.findUnique({
-		where: {
-			slug
-		}
-	});
-	if (application) {
-		return;
-	}
-	await prisma.application.create({
-		data: {
-			slug
-		}
-	});
-
+	createApplications(prisma);
 }
 
 main()

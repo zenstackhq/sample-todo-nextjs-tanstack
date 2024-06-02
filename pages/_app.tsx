@@ -8,6 +8,8 @@ import { Provider as ZenStackHooksProvider } from "../zmodel/lib/hooks";
 import "../styles/globals.css";
 import { ReactElement } from "react";
 import { ThemeProvider } from "next-themes";
+import { TooltipProvider } from "@/components/ui/tooltip";
+
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 
@@ -15,19 +17,22 @@ const queryClient = new QueryClient();
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	return (
+
 		<QueryClientProvider client={queryClient}>
 			{/* <ReactQueryDevtools /> */}
 			<SessionProvider session={session}>
-				<ZenStackHooksProvider value={{ endpoint: "/api/model", logging: true }}>
-					<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-						<AppContent>
-							<div className="flex-grow h-100">
-								<Component {...pageProps} />
-								<ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
-							</div>
-						</AppContent>
-					</ThemeProvider>
-				</ZenStackHooksProvider>
+				<TooltipProvider>
+					<ZenStackHooksProvider value={{ endpoint: "/api/model", logging: true }}>
+						<ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+							<AppContent>
+								<div className="h-100 grow">
+									<Component {...pageProps} />
+									<ToastContainer position="top-center" autoClose={2000} hideProgressBar={true} />
+								</div>
+							</AppContent>
+						</ThemeProvider>
+					</ZenStackHooksProvider>
+				</TooltipProvider>
 			</SessionProvider>
 		</QueryClientProvider>
 	);
@@ -36,7 +41,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 function AppContent(props: { children: ReactElement | ReactElement[]; }) {
 	return (
 		<AuthGuard>
-			<div className="h-screen flex flex-col">{props.children}</div>
+			<div className="flex h-screen flex-col">{props.children}</div>
 		</AuthGuard>
 	);
 }

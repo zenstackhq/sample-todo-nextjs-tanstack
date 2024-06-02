@@ -1,19 +1,16 @@
-import { useCountSpaceComponent } from "@/zmodel/lib/hooks";
+import { getSpaceUrl } from "@/lib/urls";
+import { useCountSpaceComponent, useFindManySpace } from "@/zmodel/lib/hooks";
 import { Space } from "@prisma/client";
 import Link from "next/link";
-
-type Props = {
-	spaces: Space[];
-};
 
 function SpaceItem({ space }: { space: Space; }) {
 	const { data: spaceComponentCount } = useCountSpaceComponent({
 		where: { spaceId: space.id }
 	});
 	return (
-		<Link href={`/space/${space.slug}`}>
-			<div className="w-full h-full flex relative justify-center items-center">
-				<div className="badge badge-outline badge-accent badge-sm absolute top-4 right-4">{spaceComponentCount}</div>
+		<Link href={getSpaceUrl(space.slug)}>
+			<div className="relative flex size-full items-center justify-center">
+				<div className="badge badge-outline badge-accent badge-sm absolute right-4 top-4">{spaceComponentCount}</div>
 				<div className="card-body" title={`${space.name} ${spaceComponentCount ? ": " + spaceComponentCount + " space component" : ""}`}>
 					<h2 className="card-title line-clamp-1">{space.name}</h2>
 				</div>
@@ -22,12 +19,13 @@ function SpaceItem({ space }: { space: Space; }) {
 	);
 }
 
-export function Spaces({ spaces }: Props) {
+export function Spaces() {
+	const { data: spaces } = useFindManySpace();
 	return (
 		<ul className="flex flex-wrap gap-4">
 			{spaces?.map((space) =>
 				<li
-					className="card w-80 h-32 shadow-xl text-gray-600 cursor-pointer hover:bg-gray-50 border"
+					className="card h-32 w-80 cursor-pointer border text-gray-600 shadow-xl hover:bg-gray-50"
 					key={space.id}
 				>
 					<SpaceItem space={space} />

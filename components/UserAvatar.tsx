@@ -1,5 +1,5 @@
 import { User } from "next-auth";
-import { Avatar, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 type Props = {
 	user: User;
@@ -11,7 +11,7 @@ export function UserAvatar({ user, size }: Props) {
 		return <></>;
 	}
 	return (
-		<Avatar className="h-8 w-8">
+		<Avatar className="size-8">
 			<AvatarImage
 				src={user.image || "/avatar.jpg"}
 				alt={user.name || user.email || ""}

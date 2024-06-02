@@ -24,7 +24,6 @@ function DefaultParent({ children }: { children: ReactNode; }) {
 }
 
 export default function AutoFormObject<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	SchemaType extends z.ZodObject<any, any>,
 >({
 	schema,
@@ -89,6 +88,7 @@ export default function AutoFormObject<
 				if (zodBaseType === "ZodObject") {
 					return (
 						<AutoFormObject
+							key={name}
 							schema={item as unknown as z.ZodObject<any, any>}
 							form={form}
 							fieldConfig={

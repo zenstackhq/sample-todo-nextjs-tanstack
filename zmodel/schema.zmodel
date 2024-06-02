@@ -1,8 +1,10 @@
-import "base"
 import "application"
-/*
- * Data source definition
- */
+import "space/space"
+import "space/dashboard/dashboard"
+import "space/property/property"
+import "space/list/list"
+import "space/view/view"
+
 datasource db {
     provider = 'postgresql'
     url = env('POSTGRES_URL')
@@ -31,208 +33,121 @@ plugin hooks {
 
 
 
-enum SpaceComponentType {
-  Dashboard
-  Property
-  List
-}
-model Space extends IdCreatedUpdatedAuth {
-    name      String      @length(4, 50)
-    slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
-    members   SpaceUser[]
-    components SpaceComponent[]
-    applications SpaceApplication[]
 
-    // everyone can create a space
+abstract model IdCreatedUpdated
+{
+    id        String      @id @default(uuid())
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+}
+abstract model IdCreatedUpdatedAuth extends IdCreatedUpdated
+{
+    @@deny('all', auth() == null)
+}
+
+abstract model IdCreatedUpdatedSpace extends IdCreatedUpdatedAuth {
+    space     Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId   String
+
+    @@allow('read', space.members?[user == auth()])
+}
+enum SpaceUserRole {
+    USER
+    ADMIN
+}
+
+model SpaceUser extends IdCreatedUpdatedSpace {
+    user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    role      SpaceUserRole
+    @@unique([userId, spaceId])
+
+    // space admin can create/update/delete
+    @@allow('create,update,delete', space.members?[user == auth() && role == ADMIN])
+}
+
+model User extends IdCreatedUpdated {
+    email         String      @unique @email
+    emailVerified DateTime?
+    password      String?     @password @omit
+    name          String?
+    spaces        SpaceUser[]
+    image         String?     @url
+    todos         Todo[]
+    components    SpaceComponent[]
+
+    leases        Lease[]
+    dashboards  Dashboard[]
+    properties  Property[]
+    lists  List[]
+    payments      Payment[]
+
+    tables      Table[]
+    charges         Charge[]
+    panelRows         PanelRow[]
+    panels           Panel[]
+    panelComponents     PanelComponent[]
+    panelComponentsCounter     PanelComponentCounter[]
+    panelComponentsReport     PanelComponentReport[]
+    
+    // next-auth
+    accounts      Account[]
+
+    // can be created by anyone, even not logged in
     @@allow('create', true)
 
-    // any user in the space can read the space
-    @@allow('read', members?[user == auth()])
+    // can be read by users sharing any space
+    @@allow('read', spaces?[space.members?[user == auth()]])
 
-    // space admin can update and delete
-    @@allow('update,delete', members?[user == auth() && role == ADMIN])
+    // full access by oneself
+    @@allow('all', auth() == this)
+}
+
+abstract model Owner {
+    owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId   String   @default(auth().id)
+    @@deny('update', future().owner != owner)
 }
 
 
-model SpaceComponent extends IdCreatedUpdatedSpace, Owner {
-    private   Boolean  @default(false)
-    type SpaceComponentType
-    name     String   @length(1, 100)
 
-    dashboard Dashboard?
+abstract model Component extends IdCreatedUpdatedAuth, Owner {
+
+}
+enum Type {
+    List
+    Todo
+    Dashboard
+    Property
+}
+
+model Table extends Component {
+    type Type
+
     list List?
+    todo Todo?
+    dashboard Dashboard?
     property Property?
 
-    // can be read by owner or space members (only if not private) 
-    @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
-
-    // when create, owner must be set to current user, and user must be in the space
-    @@allow('create', owner == auth() && space.members?[user == auth()])
-
-    // when create, owner must be set to current user, and user must be in the space
-    @@allow('update', owner == auth() && space.members?[user == auth()])
-
-    // can be deleted by owner
-    @@allow('delete', owner == auth())
+    @@allow('all', owner == auth())
 }
 
-model List extends SpaceComponentRelation {
-    todos     Todo[]
+// next-auth
+model Account {
+    id                       String  @id @default(uuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String?
+    refresh_token_expires_in Int?
+    access_token             String?
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String?
+    session_state            String?
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    @@unique([provider, providerAccountId])
 }
-
-model Todo extends Component {
-    list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
-    listId      String
-    title       String    @length(1, 100)
-    completedAt DateTime?
-
-    // owner has full access, also space members have full access (if the parent List is not private)
-    @@allow('all', list.spaceComponent.owner == auth())
-    @@allow('all', list.spaceComponent.space.members?[user == auth()] && !list.spaceComponent.private)
-}
-enum PropertyType {
-    APARTMENT
-    HOUSE
-    COMMERCIAL
-}
-
-model Property extends SpaceComponentRelation {
-    type        PropertyType
-    address     String
-    city        String
-    postalCode  String
-    country     String
-    leases      Lease[]
-    charges     Charge[]
-}
-
-enum PropertyElementType {
-    Lease
-}
-
-abstract model IdCreatedUpdatedAuthOwnerProperty extends Component {
-    property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-    propertyId  String
-    @@allow('all', property.spaceComponent.owner == auth())
-    @@allow('all', property.spaceComponent.space.members?[user == auth()] && !property.spaceComponent.private)
-}
-
-model Lease extends IdCreatedUpdatedAuthOwnerProperty {
-    startDate   DateTime
-    endDate     DateTime?
-    rentAmount  Int
-    payments    Payment[]
-    charges     Charge[]
-    type PropertyElementType @default(Lease)
-}
-
-model Payment extends Component {
-    lease       Lease      @relation(fields: [leaseId], references: [id], onDelete: Cascade)
-    leaseId     String
-    amount      BigInt
-    date        DateTime
-
-    @@allow('all', lease.property.spaceComponent.owner == auth())
-    @@allow('all', lease.property.spaceComponent.space.members?[user == auth()] && !lease.property.spaceComponent.private)
-}
-enum ChargeType {
-    MAINTENANCE
-    UTILITIES
-    TAXES
-    OTHER
-}
-model Charge  extends IdCreatedUpdatedAuthOwnerProperty {
-    lease       Lease?     @relation(fields: [leaseId], references: [id], onDelete: Cascade)
-    leaseId     String?
-    type        ChargeType
-    amount      BigInt
-    dueDate     DateTime
-    description String?
-}
-
-
-
-abstract model SpaceComponentRelation extends IdCreatedUpdatedAuth {
-    spaceComponent   SpaceComponent @relation(fields: [spaceComponentId], references: [id], onDelete: Cascade)
-    spaceComponentId String   @unique
-
-    @@allow('all', spaceComponent.owner == auth())
-    @@allow('all', spaceComponent.space.members?[user == auth()] && !spaceComponent.private)
-}
-
-
-model Dashboard extends SpaceComponentRelation {
-    panelRows     PanelRow[]
-}
-
-
-
-model PanelRow extends Component {
-    dashboard        Dashboard      @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
-    dashboardId      String
-    title       String    @length(1, 100)
-    panels     Panel[]
-
-    @@allow('all', dashboard.spaceComponent.owner == auth())
-    @@allow('all', dashboard.spaceComponent.space.members?[user == auth()] && !dashboard.spaceComponent.private)
-}
-
-
-model Panel extends Component {
-    panelRow        PanelRow      @relation(fields: [panelRowId], references: [id], onDelete: Cascade)
-    panelRowId      String
-    title       String    @length(1, 100)
-    panelComponents     PanelComponent[]
-
-    @@allow('all', panelRow.dashboard.spaceComponent.owner == auth())
-    @@allow('all', panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelRow.dashboard.spaceComponent.private)
-}
-
-enum PanelComponentType {
-    Counter
-    Report
-}
-model PanelComponent extends Component {
-    panel        Panel      @relation(fields: [panelId], references: [id], onDelete: Cascade)
-    panelId      String
-    title       String    @length(1, 100)
-    type PanelComponentType
-
-
-    counter PanelComponentCounter?
-    report PanelComponentReport?
-
-    @@allow('all', panel.panelRow.dashboard.spaceComponent.owner == auth())
-    @@allow('all', panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panel.panelRow.dashboard.spaceComponent.private)
-}
-
-abstract model PanelComponentRelation extends Component {
-    panelComponent   PanelComponent @relation(fields: [panelComponentId], references: [id], onDelete: Cascade)
-    panelComponentId String   @unique
-
-    spaceComponentType SpaceComponentType
-
-    @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.owner == auth())
-    @@allow('all', panelComponent.panel.panelRow.dashboard.spaceComponent.space.members?[user == auth()] && !panelComponent.panel.panelRow.dashboard.spaceComponent.private)
-}
-
-
-enum PanelComponentCounterType
-{
-    Sum
-    Count
-}
-model PanelComponentCounter extends PanelComponentRelation {
-    type PanelComponentCounterType
-}
-
-enum PanelComponentReportType {
-    Histogram
-    Funel
-}
-model PanelComponentReport extends PanelComponentRelation {
-    type PanelComponentReportType
-}
-
-
 

@@ -3,6 +3,7 @@ import { useCurrentSpace, useCurrentSpaceComponent } from "@/lib/context";
 import { useCreateTodo, useFindUniqueList } from "@/zmodel/lib/hooks";
 import TodoComponent from "components/Todo";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { Type } from "@prisma/client";
 
 export function ListDetails() {
 
@@ -30,7 +31,7 @@ export function ListDetails() {
 	);
 
 	const [title, setTitle] = useState("");
-	const { mutate: createTodo } = useCreateTodo({ optimisticUpdate: true });
+	const createTodo = useCreateTodo({ optimisticUpdate: true });
 
 
 	if (!space || !list) {
@@ -38,27 +39,34 @@ export function ListDetails() {
 	}
 
 
-	const onCreateTodo = () => {
+	const onCreateTodo = async() => {
 		if (!title) {
 			return;
 		}
 		setTitle("");
-		createTodo({
+		await createTodo.mutateAsync({
 			data: {
 				title,
-				listId: list.id
+				table: {
+					create: {
+						type: Type.Todo
+					}
+				},
+				list: {
+					connect: { id: list.id }
+				}
 			}
 		});
 	};
 
 
 	return <>
-		<h1 className="text-2xl font-semibold mb-4">{spaceComponent?.name}</h1>
+		<h1 className="mb-4 text-2xl font-semibold">{spaceComponent?.name}</h1>
 		<div className="flex space-x-2">
 			<input
 				type="text"
 				placeholder="Type a title and press enter"
-				className="input input-bordered w-72 max-w-xs mt-2"
+				className="input input-bordered mt-2 w-72 max-w-xs"
 				value={title}
 				onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
 					if (e.key === "Enter") {
@@ -70,10 +78,10 @@ export function ListDetails() {
 				}}
 			/>
 			<button onClick={() => onCreateTodo()}>
-				<PlusIcon className="w-6 h-6 text-gray-500" />
+				<PlusIcon className="size-6 text-gray-500" />
 			</button>
 		</div>
-		<ul className="flex flex-col space-y-4 py-8 w-11/12 md:w-auto">
+		<ul className="flex w-11/12 flex-col space-y-4 py-8 md:w-auto">
 			{list.todos?.map((todo) =>
 				<TodoComponent key={todo.id} value={todo}  />
 			)}

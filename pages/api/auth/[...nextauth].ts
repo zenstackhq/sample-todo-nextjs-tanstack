@@ -35,7 +35,6 @@ export const authOptions: NextAuthOptions = {
 		DiscordProvider({
 			clientId: process.env.DISCORD_CLIENT_ID!,
 			clientSecret: process.env.DISCORD_CLIENT_SECRET!,
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			scope: "read:user,user:email"
 		})

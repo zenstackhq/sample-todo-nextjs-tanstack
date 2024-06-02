@@ -28,11 +28,11 @@ export default function TodoComponent({ value }: Props) {
 	};
 
 	return (
-		<div className="border rounded-lg px-8 py-4 shadow-lg flex flex-col items-center w-full lg:w-[480px]">
-			<div className="flex justify-between w-full mb-4">
+		<div className="flex w-full flex-col items-center rounded-lg border px-8 py-4 shadow-lg lg:w-[480px]">
+			<div className="mb-4 flex w-full justify-between">
 				<h3
-					className={`text-xl line-clamp-1 flex items-center
-                        ${value.completedAt ? "line-through text-gray-400 italic" : "text-gray-700"}
+					className={`line-clamp-1 flex items-center text-xl
+                        ${value.completedAt ? "italic text-gray-400 line-through" : "text-gray-700"}
                     }`}
 				>
 					{value.title}
@@ -44,10 +44,10 @@ export default function TodoComponent({ value }: Props) {
 						checked={!!value.completedAt}
 						onChange={(e: ChangeEvent<HTMLInputElement>) => onToggleCompleted(e.currentTarget.checked)}
 					/>
-					<TrashIcon className="w-6 h-6 text-gray-500 cursor-pointer" onClick={onDelete} />
+					<TrashIcon className="size-6 cursor-pointer text-gray-500" onClick={onDelete} />
 				</div>
 			</div>
-			<div className="flex justify-end w-full space-x-2">
+			<div className="flex w-full justify-end space-x-2">
 				<TimeInfo value={value} />
 				<UserAvatar user={value.owner} size={18} />
 			</div>

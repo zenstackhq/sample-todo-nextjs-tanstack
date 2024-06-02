@@ -80,7 +80,7 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
 		if (parsedValues.success) {
 			onParsedValuesChange?.(parsedValues.data);
 		}
-	}, [valuesString]);
+	}, [formSchema, onParsedValuesChange, onValuesChangeProp, values, valuesString]);
 
 	return (
 		<div className="w-full">

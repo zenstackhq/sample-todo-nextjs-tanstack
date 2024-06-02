@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { SpaceComponent } from "@zenstackhq/runtime/models";
-import { clickButton, createAccount, getByLabel } from "./utils";
+import { clickButton, goToSpace, getByLabel } from "./utils";
 
 test("should create List", async ({ page }) => {
 
@@ -25,7 +25,7 @@ test("should create List", async ({ page }) => {
 		page.getByText(title);
 	}
 
-	await createAccount(page);
+	await goToSpace(page);
 
 
 	await createList();

@@ -1,0 +1,68 @@
+import "../schema"
+import "../application"
+import "dashboard/dashboard"
+import "property/property"
+import "list/list"
+import "view/view"
+
+model Space extends IdCreatedUpdatedAuth {
+    name      String      @length(4, 50)
+    slug      String      @unique @regex('^[0-9a-zA-Z]{4,16}$')
+    members   SpaceUser[]
+    components SpaceComponent[]
+    applications SpaceApplication[]
+
+    // everyone can create a space
+    @@allow('create', true)
+
+    // any user in the space can read the space
+    @@allow('read', members?[user == auth()])
+
+    // space admin can update and delete
+    @@allow('update,delete', members?[user == auth() && role == ADMIN])
+}
+
+
+enum SpaceComponentType {
+  Dashboard
+  Property
+  List
+}
+
+
+model SpaceComponent extends IdCreatedUpdatedSpace, Owner {
+    private   Boolean  @default(false)
+    type SpaceComponentType
+    name     String   @length(1, 100)
+
+    dashboard Dashboard?
+    list List?
+    property Property?
+
+    // can be read by owner or space members (only if not private) 
+    @@allow('read', owner == auth() || (space.members?[user == auth()] && !private))
+
+    // when create, owner must be set to current user, and user must be in the space
+    @@allow('create', owner == auth() && space.members?[user == auth()])
+
+    // when create, owner must be set to current user, and user must be in the space
+    @@allow('update', owner == auth() && space.members?[user == auth()])
+
+    // can be deleted by owner
+    @@allow('delete', owner == auth())
+}
+
+
+
+abstract model SpaceComponentRelation extends Component {
+    spaceComponent   SpaceComponent @relation(fields: [spaceComponentId], references: [id], onDelete: Cascade)
+    spaceComponentId String   @unique
+
+    table        Table      @relation(fields: [tableId], references: [id], onDelete: Cascade)
+    tableId      String @unique
+
+    @@allow('all', spaceComponent.owner == auth())
+    @@allow('all', spaceComponent.space.members?[user == auth()] && !spaceComponent.private)
+}
+
+

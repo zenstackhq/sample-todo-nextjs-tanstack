@@ -1,0 +1,24 @@
+
+import "../../schema.zmodel"
+import "../space.zmodel"
+
+
+model List extends SpaceComponentRelation {
+
+
+
+    todos     Todo[]
+}
+
+model Todo extends Component {
+    table        Table      @relation(fields: [tableId], references: [id], onDelete: Cascade)
+    tableId      String @unique
+    list        List      @relation(fields: [listId], references: [id], onDelete: Cascade)
+    listId      String
+    title       String    @length(1, 100)
+    completedAt DateTime?
+
+    // owner has full access, also space members have full access (if the parent List is not private)
+    @@allow('all', list.spaceComponent.owner == auth())
+    @@allow('all', list.spaceComponent.space.members?[user == auth()] && !list.spaceComponent.private)
+}

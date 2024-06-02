@@ -46,7 +46,7 @@ export default function AutoFormEnum({
 					defaultValue={field.value}
 					{...fieldProps}
 				>
-					<SelectTrigger className={fieldProps.className}>
+					<SelectTrigger data-testid={`${label}-button-combo`} className={fieldProps.className}>
 						<SelectValue placeholder={fieldConfigItem.inputProps?.placeholder}>
 							{field.value ? findItem(field.value)?.[1] : "Select an option"}
 						</SelectValue>

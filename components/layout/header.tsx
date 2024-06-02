@@ -1,41 +1,50 @@
-import ThemeToggle from "@/components/layout/ThemeToggle/theme-toggle";
-import { cn } from "@/lib/utils";
-import { MobileSidebar } from "./mobile-sidebar";
-import { UserNav } from "./user-nav";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { TopBreadCrumb } from "./BreadCrumb";
+import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
+import { signOut } from "next-auth/react";
+import { MobileSideNav } from "./MobileSideNav";
 
 export default function Header() {
 	return (
-		<div className="supports-backdrop-blur:bg-background/60 fixed left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur">
-			<nav className="flex h-14 items-center justify-between px-4">
-				<div className="hidden lg:block">
-					<Link
-						href={"https://github.com/Kiranism/next-shadcn-dashboard-starter"}
-						target="_blank"
+		<header className="bg-background sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+			<MobileSideNav/>
+			<TopBreadCrumb/>
+			<div className="relative ml-auto flex-1 md:grow-0">
+				<Search className="text-muted-foreground absolute left-2.5 top-2.5 size-4" />
+				<Input
+					type="search"
+					placeholder="Search..."
+					className="bg-background w-full rounded-lg pl-8 md:w-[200px] lg:w-[320px]"
+				/>
+			</div>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button
+						variant="outline"
+						size="icon"
+						className="overflow-hidden rounded-full"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							className="mr-2 h-6 w-6"
-						>
-							<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-						</svg>
-					</Link>
-				</div>
-				<div className={cn("block lg:!hidden")}>
-					<MobileSidebar />
-				</div>
-
-				<div className="flex items-center gap-2">
-					<UserNav />
-					<ThemeToggle />
-				</div>
-			</nav>
-		</div>
+						<Image
+							src="/placeholder-user.jpg"
+							width={36}
+							height={36}
+							alt="Avatar"
+							className="overflow-hidden rounded-full"
+						/>
+					</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end">
+					<DropdownMenuLabel>My Account</DropdownMenuLabel>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem>Settings</DropdownMenuItem>
+					<DropdownMenuItem>Support</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</header>
 	);
 }

@@ -1,0 +1,16 @@
+
+import "../../schema.zmodel"
+import "../space.zmodel"
+import "../../application"
+import "grid"
+
+model GridCardTable extends IdCreatedUpdatedAuth {
+    parent GridCard          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+    parentId        String @unique
+
+    type Type
+
+    columns String[]
+
+    @@allow('read', auth() != null)
+}

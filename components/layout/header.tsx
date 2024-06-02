@@ -37,6 +37,7 @@ import { MobileSideNav } from './MobileSideNav';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useCurrentUser } from '@/lib/context';
 import { ModeToggle } from './ModeToggle';
+import { SpaceSwitch } from './SpaceSwith';
 
 export default function Header() {
     const user = useCurrentUser();
@@ -139,6 +140,7 @@ export default function Header() {
                 </DropdownMenuContent>
             </DropdownMenu>
             <ModeToggle />
+            <SpaceSwitch />
         </header>
     );
 }

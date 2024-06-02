@@ -1,4 +1,4 @@
-import { useFindFirstSpace, useFindUniqueSpace, useFindUniqueSpaceComponent } from '@/zmodel/lib/hooks';
+import { useFindUniqueSpace, useFindUniqueSpaceComponent } from '@/zmodel/lib/hooks';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -21,7 +21,7 @@ export function useCurrentSpace() {
         },
         {
             enabled: !!slug,
-        },
+        }
     );
 
     return data;
@@ -37,7 +37,7 @@ export function useCurrentSpaceComponent() {
         },
         {
             enabled: !!router.query.componentId,
-        },
+        }
     );
 
     return data;

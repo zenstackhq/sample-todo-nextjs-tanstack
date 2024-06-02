@@ -1,3 +1,4 @@
+import { transformWithParentDetails } from '@/lib/utils';
 import { CommonFormTable } from '../auto-common/types';
 import { handleIfZodNumber } from '../auto-form/fields/object';
 import {
@@ -53,5 +54,5 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
     const columns = getAccessor(objectFormSchema);
     console.log(columns);
 
-    return <DataTable columns={columns} data={data} />;
+    return <DataTable columns={columns} data={transformWithParentDetails(data)} />;
 }

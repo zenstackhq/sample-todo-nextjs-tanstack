@@ -8,8 +8,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { ApplicationScalarSchema, SpaceApplicationScalarSchema } from '@zenstackhq/runtime/zod/models';
 import { AutoTable } from '../ui/auto-table';
-import { format } from 'date-fns';
-import { flat } from 'flatten';
 
 import * as z from 'zod';
 import { transformWithParentDetails } from '@/lib/utils';
@@ -31,10 +29,6 @@ export const Applications = () => {
         }
     );
 
-    console.log(applications);
-
-    const flatApplications = transformWithParentDetails(applications);
-    console.log(flatApplications);
     const activate = useCreateSpaceApplication();
     const desactivate = useDeleteSpaceApplication();
     const { data: spaceApplications } = useFindManySpaceApplication({ where: { spaceId: space?.id } });
@@ -65,7 +59,7 @@ export const Applications = () => {
     return (
         <AutoTable
             formSchema={z.object({ details: ApplicationScalarSchema, activations: SpaceApplicationScalarSchema })}
-            data={flatApplications}
+            data={applications}
         />
     );
 };

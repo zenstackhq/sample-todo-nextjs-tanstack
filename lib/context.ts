@@ -1,3 +1,4 @@
+import { localStorageSpace } from '@/components/layout/SpaceSwith';
 import { useFindUniqueSpace, useFindUniqueSpaceComponent } from '@/zmodel/lib/hooks';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -8,7 +9,14 @@ export function useCurrentUser() {
 }
 export function useSpaceSlug() {
     const router = useRouter();
-    return router.query.slug as string;
+    const slug = router.query.slug as string;
+    if (slug) {
+        return slug;
+    }
+    const localStorageSlug = localStorage.getItem(localStorageSpace);
+    if (localStorageSlug) {
+        return localStorageSlug;
+    }
 }
 
 export function useCurrentSpace() {

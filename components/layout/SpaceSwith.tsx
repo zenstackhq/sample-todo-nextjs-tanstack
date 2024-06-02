@@ -44,9 +44,21 @@ import { FallbackError } from '../layout/FallbackError';
 import { useFindManySpace } from '@/zmodel/lib/hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useCurrentSpace } from '@/lib/context';
+import { useState } from 'react';
+import { Space } from '@zenstackhq/runtime/models';
+import { getSpaceUrl } from '@/lib/urls';
 
+export const localStorageSpace = 'currentSpaceSlug';
 export function SpaceSwitch() {
     const { data: spaces } = useFindManySpace();
+
+    const currentSpace = useCurrentSpace();
+
+    function switchSpace(space: Space) {
+        localStorage.setItem(localStorageSpace, space.slug);
+        router.push(getSpaceUrl(space.slug));
+    }
 
     const router = useRouter();
     return (
@@ -63,7 +75,7 @@ export function SpaceSwitch() {
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                         {spaces?.map((space) => (
-                            <DropdownMenuItem key={space.id}>
+                            <DropdownMenuItem key={space.id} onClick={() => switchSpace(space)}>
                                 <IceCreamIcon className="mr-2 size-4" />
                                 <span>{space.name}</span>
                             </DropdownMenuItem>

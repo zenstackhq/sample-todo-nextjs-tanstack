@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
+import { useSpaceSlug } from '@/lib/context';
+import { getSpaceUrl } from '@/lib/urls';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'Enter a valid email address' }),
@@ -24,7 +26,9 @@ export const userDemo = {
 };
 export function UserAuthForm() {
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl');
+    const spaceSlug = useSpaceSlug();
+    const callbackUrl = searchParams.get('callbackUrl') ?? getSpaceUrl(spaceSlug);
+
     const [loading, setLoading] = useState(false);
     const form = useForm<UserFormValue>({
         resolver: zodResolver(formSchema),

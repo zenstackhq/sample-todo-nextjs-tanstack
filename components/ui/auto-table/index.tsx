@@ -15,7 +15,7 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
     formSchema,
     data,
 }: CommonFormTable<SchemaType> & {
-    data: SchemaType[];
+    data: z.infer<SchemaType>[];
 }) {
     const objectFormSchema = getObjectFormSchema(formSchema);
     if (!objectFormSchema) {
@@ -41,6 +41,20 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
 
             if (zodBaseType === 'ZodObject') {
                 return getAccessor(item, currentPrefix);
+            } else if (zodBaseType === 'ZodArray') {
+                const arrayItemType = getBaseType(item._def.type);
+                if (arrayItemType === 'ZodObject') {
+                    // Recursively get the accessor for objects within the array
+                    return getAccessor(item._def.type, `${currentPrefix}`);
+                } else {
+                    // For non-object arrays, return the current prefix with array notation
+                    return [
+                        {
+                            accessorKey: `${currentPrefix}`,
+                            header: beautifyObjectName(currentPrefix),
+                        },
+                    ];
+                }
             }
 
             return [
@@ -54,5 +68,8 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
     const columns = getAccessor(objectFormSchema);
     console.log(columns);
 
-    return <DataTable columns={columns} data={transformWithParentDetails(data)} />;
+    const transformedData = transformWithParentDetails(data);
+    console.log(transformedData);
+
+    return <DataTable columns={columns} data={transformedData} />;
 }

@@ -26,7 +26,7 @@ export function transformWithParentDetails(entities, parentDetails = {}, parentK
                     ? [
                           {
                               [parentKey]: currentEntityDetails,
-                              details: parentDetails,
+                              ...parentDetails,
                           },
                       ]
                     : []

@@ -8,9 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ApplicationScalarSchema, SpaceApplicationScalarSchema } from '@zenstackhq/runtime/zod/models';
 import { AutoTable } from '../ui/auto-table';
-
 import * as z from 'zod';
-import { transformWithParentDetails } from '@/lib/utils';
 
 export const Applications = () => {
     const space = useCurrentSpace();
@@ -55,10 +53,9 @@ export const Applications = () => {
             </div>
         );
     });
-
     return (
         <AutoTable
-            formSchema={z.object({ details: ApplicationScalarSchema, activations: SpaceApplicationScalarSchema })}
+            formSchema={ApplicationScalarSchema.extend({ activations: z.array(SpaceApplicationScalarSchema) })}
             data={applications}
         />
     );

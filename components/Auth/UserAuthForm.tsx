@@ -27,7 +27,8 @@ export const userDemo = {
 export function UserAuthForm() {
     const searchParams = useSearchParams();
     const spaceSlug = useSpaceSlug();
-    const callbackUrl = searchParams.get('callbackUrl') ?? getSpaceUrl(spaceSlug);
+    const spaceSlugUrl = getSpaceUrl(spaceSlug);
+    const callbackUrl = searchParams.get('callbackUrl') ?? spaceSlugUrl ?? '/';
 
     const [loading, setLoading] = useState(false);
     const form = useForm<UserFormValue>({
@@ -39,7 +40,7 @@ export function UserAuthForm() {
             await signIn('credentials', {
                 email,
                 password,
-                callbackUrl: callbackUrl ?? '/',
+                callbackUrl,
             });
         },
         [callbackUrl]
@@ -123,7 +124,7 @@ export function UserAuthForm() {
                 className="w-full"
                 variant="outline"
                 type="button"
-                onClick={() => signIn('discord', { callbackUrl: callbackUrl ?? '/' })}
+                onClick={() => signIn('discord', { callbackUrl })}
             >
                 Continue with Discord
             </Button>

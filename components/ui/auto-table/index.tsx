@@ -30,7 +30,7 @@ export function AutoTable<SchemaType extends ZodObjectOrWrapped>({
         }
 
         return Object.keys(shape).flatMap((name) => {
-            if (['id', 'updatedAt'].includes(name)) {
+            if (['id', 'createdAt'].includes(name)) {
                 return [];
             }
 

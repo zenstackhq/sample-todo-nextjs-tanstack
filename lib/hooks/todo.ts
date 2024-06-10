@@ -55,8 +55,8 @@ export function useFindManyTodo<TArgs extends Prisma.TodoFindManyArgs, TQueryFnD
     return useModelQuery<TQueryFnData, TData, TError>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }
 
-export function useInfiniteFindManyTodo<TArgs extends Prisma.TodoFindManyArgs, TQueryFnData = Array<Prisma.TodoGetPayload<TArgs>>, TData = TQueryFnData, TError = DefaultError>(args?: Prisma.SelectSubset<TArgs, Prisma.TodoFindManyArgs>, options?: Omit<UseInfiniteQueryOptions<TQueryFnData, TError, InfiniteData<TData>>, 'queryKey'>) {
-    options = options ?? { initialPageParam: undefined, getNextPageParam: () => null };
+export function useInfiniteFindManyTodo<TArgs extends Prisma.TodoFindManyArgs, TQueryFnData = Array<Prisma.TodoGetPayload<TArgs>>, TData = TQueryFnData, TError = DefaultError>(args?: Prisma.SelectSubset<TArgs, Prisma.TodoFindManyArgs>, options?: Omit<UseInfiniteQueryOptions<TQueryFnData, TError, InfiniteData<TData>>, 'queryKey' | 'initialPageParam'>) {
+    options = options ?? { getNextPageParam: () => null };
     const { endpoint, fetch } = getHooksContext();
     return useInfiniteModelQuery<TQueryFnData, TData, TError>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }
@@ -66,8 +66,8 @@ export function useSuspenseFindManyTodo<TArgs extends Prisma.TodoFindManyArgs, T
     return useSuspenseModelQuery<TQueryFnData, TData, TError>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }
 
-export function useSuspenseInfiniteFindManyTodo<TArgs extends Prisma.TodoFindManyArgs, TQueryFnData = Array<Prisma.TodoGetPayload<TArgs>>, TData = TQueryFnData, TError = DefaultError>(args?: Prisma.SelectSubset<TArgs, Prisma.TodoFindManyArgs>, options?: Omit<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, InfiniteData<TData>>, 'queryKey'>) {
-    options = options ?? { initialPageParam: undefined, getNextPageParam: () => null };
+export function useSuspenseInfiniteFindManyTodo<TArgs extends Prisma.TodoFindManyArgs, TQueryFnData = Array<Prisma.TodoGetPayload<TArgs>>, TData = TQueryFnData, TError = DefaultError>(args?: Prisma.SelectSubset<TArgs, Prisma.TodoFindManyArgs>, options?: Omit<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, InfiniteData<TData>>, 'queryKey' | 'initialPageParam'>) {
+    options = options ?? { getNextPageParam: () => null };
     const { endpoint, fetch } = getHooksContext();
     return useSuspenseInfiniteModelQuery<TQueryFnData, TData, TError>('Todo', `${endpoint}/todo/findMany`, args, options, fetch);
 }

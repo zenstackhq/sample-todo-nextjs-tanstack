@@ -24,7 +24,7 @@
         "@prisma/client": "^5.0.0",
         "@tanstack/react-query": "^5.8.4",
         "@tanstack/react-query-devtools": "^5.8.3",
-        "@zenstackhq/runtime": "^2.3.1",
+        "@zenstackhq/runtime": "^2.3.2",
         "@zenstackhq/server": "^2.3.1",
         "@zenstackhq/tanstack-query": "^2.3.1",
         "babel-plugin-superjson-next": "^0.4.5",

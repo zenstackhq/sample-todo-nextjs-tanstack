@@ -21,7 +21,7 @@
     "dependencies": {
         "@heroicons/react": "^2.0.12",
         "@next-auth/prisma-adapter": "^1.0.5",
-        "@prisma/client": "^5.0.0",
+        "@prisma/client": "^5.19.1",
         "@tanstack/react-query": "^5.8.4",
         "@tanstack/react-query-devtools": "^5.8.3",
         "@zenstackhq/runtime": "^2.5.0",
@@ -53,7 +53,7 @@
         "eslint-config-next": "12.3.1",
         "lower-case-first": "^2.0.2",
         "postcss": "^8.4.16",
-        "prisma": "^5.0.0",
+        "prisma": "^5.19.1",
         "tailwindcss": "^3.1.8",
         "typescript": "^5.3.2",
         "zenstack": "^2.5.0"

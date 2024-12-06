@@ -4,22 +4,28 @@ import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+
+function OAuthError() {
+    const params = useSearchParams();
+
+    useEffect(() => {
+        const error = params.get('error');
+        if (error) {
+            if (error === 'OAuthAccountNotLinked') {
+                toast.error('Unable to signin. The user email may be already in use.');
+            } else {
+                toast.error(`Authentication error: ${error.toString()}`);
+            }
+        }
+    }, [params]);
+    return null;
+}
 
 export default function Signin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const params = useSearchParams();
-
-    const error = params.get('error');
-    if (error) {
-        if (error === 'OAuthAccountNotLinked') {
-            toast.error('Unable to signin. The user email may be already in use.');
-        } else {
-            toast.error(`Authentication error: ${error.toString()}`);
-        }
-    }
 
     async function onSignin(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -115,6 +121,10 @@ export default function Signin() {
                     </form>
                 </div>
             </div>
+            <Suspense>
+                {/* Suspense is needed because 🤔: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout */}
+                <OAuthError />
+            </Suspense>
         </div>
     );
 }

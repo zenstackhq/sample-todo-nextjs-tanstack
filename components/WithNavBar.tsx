@@ -1,4 +1,4 @@
-import { useCurrentSpace, useCurrentUser } from '@lib/context';
+import { useCurrentSpace, useCurrentUser } from 'lib/context';
 import NavBar from './NavBar';
 
 type Props = {

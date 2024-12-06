@@ -1,11 +1,13 @@
+'use client';
+
 import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useCheckList, useDeleteList } from '@lib/hooks';
 import { List } from '@prisma/client';
+import { useCheckList, useDeleteList } from 'lib/hooks';
 import { customAlphabet } from 'nanoid';
 import { User } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import Avatar from './Avatar';
 import TimeInfo from './TimeInfo';
 
@@ -14,8 +16,7 @@ type Props = {
 };
 
 export default function TodoList({ value }: Props) {
-    const router = useRouter();
-
+    const path = usePathname();
     // check if the current user can delete the list (based on its owner)
     const { data: canDelete } = useCheckList({ operation: 'delete', where: { ownerId: value.ownerId } });
 
@@ -29,7 +30,7 @@ export default function TodoList({ value }: Props) {
 
     return (
         <div className="card w-80 bg-base-100 shadow-xl cursor-pointer hover:bg-gray-50">
-            <Link href={`${router.asPath}/${value.id}`}>
+            <Link href={`${path}/${value.id}`}>
                 <figure>
                     <Image
                         src={`https://picsum.photos/300/200?r=${customAlphabet('0123456789')(4)}`}
@@ -41,7 +42,7 @@ export default function TodoList({ value }: Props) {
                 </figure>
             </Link>
             <div className="card-body">
-                <Link href={`${router.asPath}/${value.id}`}>
+                <Link href={`${path}/${value.id}`}>
                     <h2 className="card-title line-clamp-1">{value.title || 'Missing Title'}</h2>
                 </Link>
                 <div className="card-actions flex w-full justify-between">

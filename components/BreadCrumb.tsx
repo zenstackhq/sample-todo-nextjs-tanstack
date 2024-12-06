@@ -1,6 +1,8 @@
+'use client';
+
 import { List, Space } from '@prisma/client';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 type Props = {
     space: Space;
@@ -8,9 +10,8 @@ type Props = {
 };
 
 export default function BreadCrumb({ space, list }: Props) {
-    const router = useRouter();
-
-    const parts = router.asPath.split('/').filter((p) => p);
+    const path = usePathname();
+    const parts = path.split('/').filter((p) => p);
     const [base] = parts;
     if (base !== 'space') {
         return <></>;

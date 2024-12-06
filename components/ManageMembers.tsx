@@ -1,9 +1,11 @@
+'use client';
+
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useCurrentUser } from '@lib/context';
-import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from '@lib/hooks';
 import { Space, SpaceUserRole } from '@prisma/client';
+import { useCurrentUser } from 'lib/context';
+import { useCreateSpaceUser, useDeleteSpaceUser, useFindManySpaceUser } from 'lib/hooks';
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import Avatar from './Avatar';

@@ -1,5 +1,5 @@
-import { useCountList } from '@lib/hooks';
 import { Space } from '@prisma/client';
+import { useCountList } from 'lib/hooks';
 import Link from 'next/link';
 
 type Props = {

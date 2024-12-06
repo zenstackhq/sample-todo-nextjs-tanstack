@@ -1,7 +1,9 @@
+'use client';
+
 import { Space } from '@prisma/client';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 import { createContext } from 'react';
 import { useFindManySpace } from './hooks';
 
@@ -15,15 +17,13 @@ export function useCurrentUser() {
 export const SpaceContext = createContext<Space | undefined>(undefined);
 
 export function useCurrentSpace() {
-    const router = useRouter();
+    const params = useParams<{ slug: string }>();
     const { data: spaces } = useFindManySpace(
         {
-            where: {
-                slug: router.query.slug as string,
-            },
+            where: { slug: params.slug },
         },
         {
-            enabled: !!router.query.slug,
+            enabled: !!params.slug,
         }
     );
 

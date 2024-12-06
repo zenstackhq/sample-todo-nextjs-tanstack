@@ -1,11 +1,13 @@
+'use client';
+
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCreateSpace } from '@lib/hooks';
 import { SpaceUserRole } from '@prisma/client';
 import WithNavBar from 'components/WithNavBar';
+import { useCreateSpace } from 'lib/hooks';
 import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 

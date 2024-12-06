@@ -1,7 +1,9 @@
+'use client';
+
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { useCurrentSpace } from '@lib/context';
-import { useFindManySpaceUser } from '@lib/hooks';
 import { Space } from '@prisma/client';
+import { useCurrentSpace } from 'lib/context';
+import { useFindManySpaceUser } from 'lib/hooks';
 import Avatar from './Avatar';
 import ManageMembers from './ManageMembers';
 

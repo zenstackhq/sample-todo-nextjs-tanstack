@@ -1,20 +1,19 @@
+'use client';
+
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SpaceContext } from '@lib/context';
-import { useCreateList, useFindManyList } from '@lib/hooks';
-import { List, Space, User } from '@prisma/client';
 import BreadCrumb from 'components/BreadCrumb';
 import SpaceMembers from 'components/SpaceMembers';
 import TodoList from 'components/TodoList';
 import WithNavBar from 'components/WithNavBar';
-import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
+import { useCurrentSpace } from 'lib/context';
+import { useCreateList, useFindManyList } from 'lib/hooks';
+import { useParams } from 'next/navigation';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getEnhancedPrisma } from 'server/enhanced-db';
 
 function CreateDialog() {
-    const space = useContext(SpaceContext);
+    const space = useCurrentSpace();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [title, setTitle] = useState('');
@@ -106,38 +105,30 @@ function CreateDialog() {
     );
 }
 
-type Props = {
-    space: Space;
-    lists: (List & { owner: User })[];
-};
+export default function SpaceHome() {
+    const params = useParams<{ slug: string }>();
+    const space = useCurrentSpace();
 
-export default function SpaceHome(props: Props) {
-    const router = useRouter();
-
-    const { data: lists } = useFindManyList(
-        {
-            where: {
-                space: {
-                    slug: router.query.slug as string,
-                },
-            },
-            include: {
-                owner: true,
-            },
-            orderBy: {
-                updatedAt: 'desc',
-            },
+    const { data: lists } = useFindManyList({
+        where: {
+            space: { slug: params.slug },
         },
-        {
-            enabled: !!router.query.slug,
-            initialData: props.lists,
-        }
-    );
+        include: {
+            owner: true,
+        },
+        orderBy: {
+            updatedAt: 'desc',
+        },
+    });
+
+    if (!space) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <WithNavBar>
             <div className="px-8 py-2">
-                <BreadCrumb space={props.space} />
+                <BreadCrumb space={space} />
             </div>
             <div className="p-8">
                 <div className="w-full flex flex-col md:flex-row mb-8 space-y-4 md:space-y-0 md:space-x-4">
@@ -160,32 +151,3 @@ export default function SpaceHome(props: Props) {
         </WithNavBar>
     );
 }
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res, params }) => {
-    const db = await getEnhancedPrisma({ req, res });
-
-    const space = await db.space.findUnique({
-        where: { slug: params!.slug as string },
-    });
-    if (!space) {
-        return {
-            notFound: true,
-        };
-    }
-
-    const lists = await db.list.findMany({
-        where: {
-            space: { slug: params?.slug as string },
-        },
-        include: {
-            owner: true,
-        },
-        orderBy: {
-            updatedAt: 'desc',
-        },
-    });
-
-    return {
-        props: { space, lists },
-    };
-};

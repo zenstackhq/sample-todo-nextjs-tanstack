@@ -1,6 +1,8 @@
 # A Collaborative Todo Sample - ZenStack + Next.js
 
-This project is a collaborative todo app built with [Next.js](https://nextjs.org), [Next-Auth](nextauth.org), and [ZenStack](https://zenstack.dev).
+This project is a collaborative todo app built with [Next.js](https://nextjs.org) (app router), [Auth.js](https://authjs.dev/), and [ZenStack](https://zenstack.dev).
+
+> See the [pages-route](https://github.com/zenstackhq/sample-todo-nextjs-tanstack/tree/pages-route) branch for an implementation using Next.js's old pages router.
 
 In this fictitious app, users can be invited to workspaces where they can collaborate on todos. Public todo lists are visible to all members in the workspace.
 
@@ -23,6 +25,10 @@ See a live deployment at: https://zenstack-todo.vercel.app/.
     ```bash
     npm install
     ```
+
+1. Configure environment variables
+
+    Copy the `.env.example` file to `.env` and set the values for your environment. Github related variables can be left empty if you don't need GitHub OAuth login.
 
 1. Generate server and client-side code from model
 

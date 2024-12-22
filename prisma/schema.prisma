@@ -22,6 +22,8 @@ model Space {
   id        String      @id() @default(uuid())
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt()
+  owner     User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String
   name      String
   slug      String      @unique()
   members   SpaceUser[]
@@ -49,7 +51,8 @@ model User {
   emailVerified DateTime?
   password      String?
   name          String?
-  spaces        SpaceUser[]
+  ownedSpaces   Space[]
+  memberships   SpaceUser[]
   image         String?
   lists         List[]
   todos         Todo[]

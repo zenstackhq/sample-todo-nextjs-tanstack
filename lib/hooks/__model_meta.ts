@@ -22,6 +22,20 @@ const metadata = {
                     name: "updatedAt",
                     type: "DateTime",
                     attributes: [{ "name": "@updatedAt", "args": [] }],
+                }, owner: {
+                    name: "owner",
+                    type: "User",
+                    isDataModel: true,
+                    backLink: 'ownedSpaces',
+                    isRelationOwner: true,
+                    foreignKeyMapping: { "id": "ownerId" },
+                }, ownerId: {
+                    name: "ownerId",
+                    type: "String",
+                    attributes: [{ "name": "@default", "args": [] }],
+                    defaultValueProvider: $default$Space$ownerId,
+                    isForeignKey: true,
+                    relationField: 'owner',
                 }, name: {
                     name: "name",
                     type: "String",
@@ -85,7 +99,7 @@ const metadata = {
                     name: "user",
                     type: "User",
                     isDataModel: true,
-                    backLink: 'spaces',
+                    backLink: 'memberships',
                     isRelationOwner: true,
                     foreignKeyMapping: { "id": "userId" },
                 }, userId: {
@@ -140,8 +154,14 @@ const metadata = {
                     name: "name",
                     type: "String",
                     isOptional: true,
-                }, spaces: {
-                    name: "spaces",
+                }, ownedSpaces: {
+                    name: "ownedSpaces",
+                    type: "Space",
+                    isDataModel: true,
+                    isArray: true,
+                    backLink: 'owner',
+                }, memberships: {
+                    name: "memberships",
                     type: "SpaceUser",
                     isDataModel: true,
                     isArray: true,
@@ -384,12 +404,16 @@ const metadata = {
     ,
     deleteCascade: {
         space: ['SpaceUser', 'List'],
-        user: ['SpaceUser', 'List', 'Todo', 'Account'],
+        user: ['Space', 'SpaceUser', 'List', 'Todo', 'Account'],
         list: ['Todo'],
     }
     ,
     authModel: 'User'
 };
+function $default$Space$ownerId(user: any): unknown {
+    return user?.id;
+}
+
 function $default$List$ownerId(user: any): unknown {
     return user?.id;
 }

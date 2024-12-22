@@ -7,10 +7,14 @@ import { prisma } from 'server/db';
 async function getPrisma() {
     const authObj = await auth();
     if (authObj?.user) {
-        const user = await prisma.user.findUnique({ where: { id: authObj.user.id }, include: { memberships: true } });
+        const user = await prisma.user.findUniqueOrThrow({
+            where: { id: authObj.user.id },
+            include: { memberships: true },
+        });
         return enhance(prisma, { user });
     } else {
-        return enhance(prisma, { user: authObj?.user });
+        // anonymous user
+        return enhance(prisma);
     }
 }
 

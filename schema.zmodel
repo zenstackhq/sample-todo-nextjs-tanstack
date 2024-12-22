@@ -83,7 +83,7 @@ model SpaceUser {
     @@allow('create', space.owner == auth())
     
     // space admin can add anyone but not himself
-    @@allow('create', auth() != this.user && space.members?[user == auth() && role == ADMIN])
+    @@allow('create', auth() != user && space.members?[user == auth() && role == ADMIN])
 
     // space admin can update and delete
     @@allow('update,delete', space.members?[user == auth() && role == ADMIN])

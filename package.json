@@ -33,7 +33,7 @@
         "decimal.js": "^10.4.3",
         "moment": "^2.29.4",
         "nanoid": "^4.0.0",
-        "next": "^15.0.3",
+        "next": "^15.5.9",
         "next-auth": "^5.0.0-beta.25",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -41,7 +41,7 @@
         "superjson": "^1.12.0"
     },
     "devDependencies": {
-        "@tailwindcss/line-clamp": "^0.4.2",
+        "@tailwindcss/line-clamp": "^0.4.4",
         "@types/bcryptjs": "^2.4.2",
         "@types/node": "^18.19.130",
         "@types/react": "^18.2.0",
